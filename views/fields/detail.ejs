@@ -1,611 +1,261 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html class="light" lang="vi">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title><%= title %> | ĐặtSân.vn</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#006c49",
+            "primary-container": "#10b981",
+            "primary-fixed": "#6ffbbe",
+            "on-primary": "#ffffff",
+            "on-primary-container": "#00422b",
+            "tertiary": "#855300",
+            "tertiary-container": "#e29100",
+            "surface": "#f7f9fb",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f2f4f6",
+            "surface-container": "#eceef0",
+            "surface-container-high": "#e6e8ea",
+            "on-surface": "#191c1e",
+            "on-surface-variant": "#3c4a42",
+            "outline": "#6c7a71",
+          },
+          fontFamily: { headline: ["Inter"], body: ["Inter"] },
+        },
+      },
+    }
+  </script>
   <style>
-    :root {
-      --green: #22c55e;
-      --green-dark: #16a34a;
-      --green-light: #dcfce7;
-      --blue: #38bdf8;
-      --blue-dark: #0ea5e9;
-      --blue-light: #e0f2fe;
-      --orange: #f97316;
-      --orange-light: #fff7ed;
-      --yellow: #eab308;
-      --yellow-light: #fef9c3;
-      --bg: #f8fafc;
-      --white: #ffffff;
-      --dark: #0f172a;
-      --gray-900: #1e293b;
-      --gray-700: #334155;
-      --gray-500: #64748b;
-      --gray-300: #cbd5e1;
-      --gray-100: #f1f5f9;
-      --shadow: 0 4px 20px rgba(0,0,0,0.06);
-      --shadow-lg: 0 10px 40px rgba(0,0,0,0.1);
-      --radius: 16px;
-      --radius-sm: 10px;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: var(--bg);
-      color: var(--gray-700);
-      min-height: 100vh;
-    }
-
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    body { font-family: 'Inter', sans-serif; }
     @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    @keyframes pop { 0%{ transform: scale(1); } 50%{ transform: scale(1.1); } 100%{ transform: scale(1); } }
-    .animate-fade { animation: fadeInUp 0.5s ease-out both; }
-
-    /* ===== NAVBAR ===== */
-    .navbar {
-      background: var(--white);
-      box-shadow: 0 2px 20px rgba(0,0,0,0.05);
-      padding: 0 2rem;
-      height: 70px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-    .navbar-brand {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: var(--green);
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-    }
-    .navbar-brand i {
-      background: linear-gradient(135deg, var(--green), var(--blue));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .navbar-links { display: flex; align-items: center; gap: 0.5rem; }
-    .navbar-links a {
-      color: var(--gray-700);
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 500;
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      transition: all 0.2s;
-    }
-    .navbar-links a:hover { color: var(--green); background: var(--green-light); }
-    .btn-nav {
-      padding: 0.55rem 1.3rem !important;
-      border-radius: 10px !important;
-      font-weight: 600 !important;
-      font-size: 0.85rem !important;
-      transition: all 0.25s !important;
-    }
-    .btn-login { color: var(--green) !important; border: 2px solid var(--green); }
-    .btn-login:hover { background: var(--green) !important; color: var(--white) !important; }
-    .btn-register {
-      background: linear-gradient(135deg, var(--green), var(--green-dark)) !important;
-      color: var(--white) !important;
-      border: none;
-    }
-
-    /* ===== FLASH ===== */
-    .flash-container { padding: 0 2rem; max-width: 1200px; margin: 1rem auto 0; }
-    .flash-msg { padding: 0.85rem 1.2rem; border-radius: var(--radius-sm); margin-bottom: 0.5rem; font-size: 0.9rem; display: flex; align-items: center; gap: 0.6rem; animation: fadeInUp 0.4s; }
-    .flash-success { background: var(--green-light); border-left: 4px solid var(--green); color: var(--green-dark); }
-    .flash-error { background: #fef2f2; border-left: 4px solid #ef4444; color: #dc2626; }
-
-    /* ===== BREADCRUMB ===== */
-    .breadcrumb {
-      max-width: 1200px;
-      margin: 1.2rem auto 0;
-      padding: 0 2rem;
-      font-size: 0.85rem;
-      color: var(--gray-500);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .breadcrumb a {
-      color: var(--green);
-      text-decoration: none;
-      font-weight: 500;
-    }
-    .breadcrumb a:hover { text-decoration: underline; }
-    .breadcrumb .sep { color: var(--gray-300); }
-
-    /* ===== MAIN LAYOUT ===== */
-    .page-container {
-      max-width: 1200px;
-      margin: 1.5rem auto 0;
-      padding: 0 2rem 3rem;
-      display: grid;
-      grid-template-columns: 1fr 380px;
-      gap: 2rem;
-    }
-
-    /* ===== FIELD INFO CARD ===== */
-    .field-info-card {
-      background: var(--white);
-      border-radius: var(--radius);
-      overflow: hidden;
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(0,0,0,0.04);
-    }
-    .field-gallery {
-      position: relative;
-      width: 100%;
-      height: 360px;
-      overflow: hidden;
-    }
-    .field-gallery img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.4s;
-    }
-    .field-gallery:hover img { transform: scale(1.03); }
-    .field-gallery-placeholder {
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, var(--green-light), var(--blue-light));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--green);
-      font-size: 5rem;
-    }
-    .gallery-nav {
-      position: absolute;
-      bottom: 1rem;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 0.5rem;
-      background: rgba(255,255,255,0.7);
-      backdrop-filter: blur(8px);
-      padding: 0.4rem 0.8rem;
-      border-radius: 50px;
-    }
-    .gallery-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--gray-300);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .gallery-dot.active { background: var(--green); transform: scale(1.3); }
-
-    .field-details { padding: 1.5rem; }
-    .field-name {
-      font-size: 1.6rem;
-      font-weight: 800;
-      color: var(--dark);
-      margin-bottom: 0.5rem;
-    }
-    .field-address {
-      font-size: 0.9rem;
-      color: var(--gray-500);
-      margin-bottom: 1.2rem;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-    .field-address i { color: var(--orange); }
-    .field-meta {
-      display: flex;
-      gap: 0.8rem;
-      margin-bottom: 1.2rem;
-      flex-wrap: wrap;
-    }
-    .meta-chip {
-      padding: 0.5rem 1rem;
-      background: var(--gray-100);
-      border-radius: 50px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      transition: transform 0.2s;
-    }
-    .meta-chip:hover { transform: translateY(-2px); }
-    .meta-chip i { font-size: 0.9rem; }
-    .meta-chip .val { color: var(--dark); }
-    .chip-green { background: var(--green-light); color: var(--green-dark); }
-    .chip-blue { background: var(--blue-light); color: var(--blue-dark); }
-    .chip-orange { background: var(--orange-light); color: var(--orange); }
-    .field-desc {
-      font-size: 0.9rem;
-      color: var(--gray-500);
-      line-height: 1.7;
-      padding-top: 1rem;
-      border-top: 1px solid var(--gray-100);
-    }
-
-    /* ===== TIMESLOT PANEL ===== */
-    .timeslot-panel {
-      background: var(--white);
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      height: fit-content;
-      position: sticky;
-      top: 90px;
-      box-shadow: var(--shadow-lg);
-      border: 2px solid rgba(34, 197, 94, 0.1);
-    }
-    .panel-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--dark);
-      margin-bottom: 1.2rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .panel-title i { color: var(--green); }
-
-    /* Date Picker */
-    .date-picker-group { margin-bottom: 1.2rem; }
-    .date-picker-label {
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--gray-500);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 0.4rem;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-    .date-picker-label i { color: var(--green); }
-    .date-picker-input {
-      width: 100%;
-      padding: 0.7rem 1rem;
-      background: var(--gray-100);
-      border: 2px solid transparent;
-      border-radius: var(--radius-sm);
-      color: var(--gray-900);
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: all 0.25s;
-    }
-    .date-picker-input:focus {
-      outline: none;
-      border-color: var(--green);
-      background: var(--white);
-      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1);
-    }
-
-    /* Slot Legend */
-    .slot-legend {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
-    }
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.75rem;
-      font-weight: 500;
-      color: var(--gray-500);
-    }
-    .legend-dot { width: 14px; height: 14px; border-radius: 5px; }
-    .legend-dot.available { background: var(--green); }
-    .legend-dot.pending { background: var(--yellow); }
-    .legend-dot.booked { background: var(--gray-300); }
-
-    /* Slots Grid */
-    .slots-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.5rem;
-      margin-bottom: 1.2rem;
-      min-height: 200px;
-    }
-    .slot-item {
-      padding: 0.65rem;
-      border-radius: var(--radius-sm);
-      text-align: center;
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.25s;
-      border: 2px solid transparent;
-      user-select: none;
-    }
-    .slot-item .slot-time { display: block; margin-bottom: 0.15rem; }
-    .slot-item .slot-status { font-size: 0.68rem; font-weight: 500; }
-
-    /* Slot States */
-    .slot-available {
-      background: var(--green-light);
-      border-color: transparent;
-      color: var(--green-dark);
-    }
-    .slot-available:hover {
-      border-color: var(--green);
-      transform: scale(1.04);
-      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.15);
-    }
-    .slot-available.selected {
-      background: var(--green);
-      color: var(--white);
-      border-color: var(--green-dark);
-      box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
-      animation: pop 0.3s ease-out;
-    }
-    .slot-pending {
-      background: var(--yellow-light);
-      color: #a16207;
-      cursor: not-allowed;
-      opacity: 0.75;
-    }
-    .slot-booked {
-      background: var(--gray-100);
-      color: var(--gray-300);
-      cursor: not-allowed;
-      opacity: 0.5;
-      text-decoration: line-through;
-    }
-
-    /* Loading */
-    .slots-loading {
-      text-align: center;
-      padding: 2rem;
-      color: var(--gray-500);
-    }
-    .slots-loading i { font-size: 1.5rem; animation: spin 1s linear infinite; color: var(--green); }
-
-    /* Booking Summary */
-    .booking-summary {
-      background: var(--green-light);
-      border: 2px solid rgba(34, 197, 94, 0.2);
-      border-radius: var(--radius-sm);
-      padding: 1rem;
-      margin-bottom: 1rem;
-      display: none;
-      animation: fadeInUp 0.3s ease-out;
-    }
-    .booking-summary.show { display: block; }
-    .summary-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.82rem;
-      margin-bottom: 0.35rem;
-    }
-    .summary-label { color: var(--green-dark); opacity: 0.7; }
-    .summary-value { color: var(--dark); font-weight: 600; }
-    .summary-total {
-      border-top: 1px solid rgba(34, 197, 94, 0.2);
-      padding-top: 0.5rem;
-      margin-top: 0.3rem;
-    }
-    .summary-total .summary-value { color: var(--green-dark); font-size: 1.1rem; font-weight: 800; }
-
-    /* Book Button */
-    .btn-book {
-      width: 100%;
-      padding: 0.9rem;
-      background: linear-gradient(135deg, var(--green), var(--green-dark));
-      color: var(--white);
-      border: none;
-      border-radius: var(--radius-sm);
-      font-family: 'Poppins', sans-serif;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.3s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      box-shadow: 0 4px 15px rgba(34, 197, 94, 0.25);
-    }
-    .btn-book:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 30px rgba(34, 197, 94, 0.35);
-    }
-    .btn-book:active { transform: scale(0.97); }
-    .btn-book:disabled {
-      background: var(--gray-300);
-      color: var(--gray-500);
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
-
-    .footer {
-      text-align: center;
-      padding: 2rem;
-      color: var(--gray-500);
-      font-size: 0.85rem;
-      border-top: 1px solid var(--gray-100);
-      margin-top: 2rem;
-    }
-
-    @media (max-width: 900px) {
-      .page-container { grid-template-columns: 1fr; }
-      .timeslot-panel { position: static; }
-      .field-gallery { height: 250px; }
-    }
+    @keyframes pop { 0%{ transform: scale(1); } 50%{ transform: scale(1.08); } 100%{ transform: scale(1); } }
+    .animate-fade-in { animation: fadeInUp 0.5s ease-out both; }
+    .slot-pop { animation: pop 0.25s ease-out; }
   </style>
 </head>
-<body>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col">
 
   <!-- NAVBAR -->
-  <nav class="navbar">
-    <a href="/" class="navbar-brand"><i class="fas fa-futbol"></i> ĐặtSân.vn</a>
-    <div class="navbar-links">
-      <a href="/">Trang chủ</a>
-      <a href="/fields">Sân bóng</a>
-      <% if (typeof currentUser !== 'undefined' && currentUser) { %>
-        <a href="/history">Lịch sử</a>
-        <span style="color:var(--gray-500); font-size:0.85rem; padding:0.5rem 0;">Xin chào, <strong style="color:var(--dark);"><%= currentUser.name %></strong></span>
-        <a href="/auth/logout" class="btn-nav btn-login">Đăng xuất</a>
-      <% } else { %>
-        <a href="/auth/login" class="btn-nav btn-login">Đăng nhập</a>
-        <a href="/auth/register" class="btn-nav btn-register">Đăng ký</a>
-      <% } %>
-    </div>
-  </nav>
-
-  <!-- FLASH -->
-  <% if (typeof success !== 'undefined' && success && success.length > 0) { %>
-    <div class="flash-container">
-      <% success.forEach(msg => { %>
-        <div class="flash-msg flash-success"><i class="fas fa-check-circle"></i> <%= msg %></div>
-      <% }); %>
-    </div>
-  <% } %>
-  <% if (typeof error !== 'undefined' && error && error.length > 0) { %>
-    <div class="flash-container">
-      <% error.forEach(msg => { %>
-        <div class="flash-msg flash-error"><i class="fas fa-exclamation-triangle"></i> <%= msg %></div>
-      <% }); %>
-    </div>
-  <% } %>
-
-  <!-- BREADCRUMB -->
-  <div class="breadcrumb animate-fade">
-    <a href="/"><i class="fas fa-home"></i> Trang chủ</a>
-    <span class="sep"><i class="fas fa-chevron-right"></i></span>
-    <a href="/fields">Sân bóng</a>
-    <span class="sep"><i class="fas fa-chevron-right"></i></span>
-    <span style="color:var(--dark); font-weight:600;"><%= field.name %></span>
-  </div>
-
-  <!-- MAIN CONTENT -->
-  <div class="page-container">
-
-    <!-- LEFT: Field Info -->
-    <div class="field-info-card animate-fade">
-      <div class="field-gallery" id="field-gallery">
-        <% if (field.images && field.images.length > 0) { %>
-          <img src="<%= field.images[0] %>" alt="<%= field.name %>" id="gallery-img" />
-          <% if (field.images.length > 1) { %>
-            <div class="gallery-nav">
-              <% field.images.forEach((img, idx) => { %>
-                <span class="gallery-dot <%= idx === 0 ? 'active' : '' %>"
-                      data-src="<%= img %>"
-                      onclick="changeGallery(this, '<%= img %>')"></span>
-              <% }); %>
-            </div>
-          <% } %>
+  <header class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md shadow-sm">
+    <nav class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto w-full">
+      <a href="/" class="text-2xl font-black text-emerald-700 italic tracking-tight hover:scale-105 transition-transform">⚽ ĐặtSân.vn</a>
+      <div class="hidden md:flex items-center space-x-8">
+        <a class="text-slate-600 hover:text-emerald-600 font-bold tracking-tight transition-all" href="/">Home</a>
+        <a class="text-emerald-700 border-b-2 border-emerald-600 pb-1 font-bold tracking-tight" href="/fields">Sân bóng</a>
+        <a class="text-slate-600 hover:text-emerald-600 font-bold tracking-tight transition-all" href="#">Giới thiệu</a>
+      </div>
+      <div class="flex items-center gap-3">
+        <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+          <span class="text-slate-500 text-sm hidden md:inline">Xin chào, <strong class="text-slate-800"><%= currentUser.name %></strong></span>
+          <a href="/history" class="text-slate-600 hover:text-emerald-600 font-bold px-3 py-2 text-sm transition-all">Lịch sử</a>
+          <a href="/auth/logout" class="text-slate-600 hover:text-emerald-600 font-bold px-4 py-2 transition-all">Đăng xuất</a>
         <% } else { %>
-          <div class="field-gallery-placeholder"><i class="fas fa-futbol"></i></div>
+          <a href="/auth/login" class="text-slate-600 hover:text-emerald-600 font-bold px-4 py-2 transition-all">Đăng nhập</a>
+          <a href="/auth/register" class="bg-emerald-600 text-white px-6 py-2.5 rounded-xl font-bold shadow-md hover:bg-emerald-700 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200">Đăng ký</a>
         <% } %>
       </div>
+    </nav>
+  </header>
 
-      <div class="field-details">
-        <h1 class="field-name"><%= field.name %></h1>
-        <p class="field-address"><i class="fas fa-map-marker-alt"></i> <%= field.address %></p>
-
-        <div class="field-meta">
-          <div class="meta-chip chip-green">
-            <i class="fas fa-users"></i>
-            <span class="val">
-              <%= field.type === '5-a-side' ? 'Sân 5 người' : field.type === '7-a-side' ? 'Sân 7 người' : 'Sân 11 người' %>
-            </span>
-          </div>
-          <div class="meta-chip chip-orange">
-            <i class="fas fa-tag"></i>
-            <span class="val"><%= field.pricePerSlot.toLocaleString('vi-VN') %>đ</span> / slot
-          </div>
-          <div class="meta-chip" style="<%= field.status === 'active' ? 'background:var(--green-light); color:var(--green-dark);' : 'background:#fef2f2; color:#dc2626;' %>">
-            <i class="fas fa-circle" style="font-size:0.5rem;"></i>
-            <%= field.status === 'active' ? 'Đang hoạt động' : 'Bảo trì' %>
-          </div>
-        </div>
-
-        <% if (field.description) { %>
-          <p class="field-desc"><%= field.description %></p>
-        <% } %>
-      </div>
-    </div>
-
-    <!-- RIGHT: Timeslot Panel -->
-    <div class="timeslot-panel animate-fade" style="animation-delay: 0.2s;">
-      <h2 class="panel-title"><i class="fas fa-calendar-check"></i> Chọn khung giờ</h2>
-
-      <!-- Date Picker -->
-      <div class="date-picker-group">
-        <label class="date-picker-label" for="slot-date"><i class="fas fa-calendar-alt"></i> Chọn ngày</label>
-        <input
-          type="date"
-          id="slot-date"
-          class="date-picker-input"
-          value="<%= selectedDate %>"
-          min="<%= new Date().toISOString().split('T')[0] %>"
-        />
-      </div>
-
-      <!-- Legend -->
-      <div class="slot-legend">
-        <div class="legend-item"><span class="legend-dot available"></span> Trống</div>
-        <div class="legend-item"><span class="legend-dot pending"></span> Đang giữ chỗ</div>
-        <div class="legend-item"><span class="legend-dot booked"></span> Đã đặt</div>
-      </div>
-
-      <!-- Slots Grid -->
-      <div class="slots-grid" id="slots-grid">
-        <% slots.forEach(slot => { %>
-          <div class="slot-item slot-<%= slot.status %>"
-               data-slot-id="<%= slot._id %>"
-               data-start="<%= slot.startTime %>"
-               data-end="<%= slot.endTime %>"
-               data-status="<%= slot.status %>">
-            <span class="slot-time"><%= slot.startTime %> - <%= slot.endTime %></span>
-            <span class="slot-status">
-              <%= slot.status === 'available' ? 'Trống' : slot.status === 'pending' ? 'Đang giữ' : 'Đã đặt' %>
-            </span>
+  <main class="pt-[72px] flex-1">
+    <!-- FLASH -->
+    <% if (typeof success !== 'undefined' && success && success.length > 0) { %>
+      <div class="max-w-7xl mx-auto px-6 pt-4">
+        <% success.forEach(msg => { %>
+          <div class="bg-emerald-50 border-l-4 border-emerald-500 text-emerald-800 px-5 py-3 rounded-xl mb-2 flex items-center gap-3 animate-fade-in">
+            <span class="material-symbols-outlined text-emerald-600">check_circle</span> <%= msg %>
           </div>
         <% }); %>
       </div>
+    <% } %>
+    <% if (typeof error !== 'undefined' && error && error.length > 0) { %>
+      <div class="max-w-7xl mx-auto px-6 pt-4">
+        <% error.forEach(msg => { %>
+          <div class="bg-red-50 border-l-4 border-red-500 text-red-800 px-5 py-3 rounded-xl mb-2 flex items-center gap-3 animate-fade-in">
+            <span class="material-symbols-outlined text-red-600">error</span> <%= msg %>
+          </div>
+        <% }); %>
+      </div>
+    <% } %>
 
-      <!-- Booking Summary -->
-      <div class="booking-summary" id="booking-summary">
-        <div class="summary-row">
-          <span class="summary-label">Sân</span>
-          <span class="summary-value"><%= field.name %></span>
+    <!-- BREADCRUMB -->
+    <div class="max-w-7xl mx-auto px-6 pt-6 animate-fade-in">
+      <div class="flex items-center gap-2 text-sm text-slate-500">
+        <a href="/" class="hover:text-emerald-600 transition-colors flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm">home</span> Trang chủ
+        </a>
+        <span class="material-symbols-outlined text-xs text-slate-300">chevron_right</span>
+        <a href="/fields" class="hover:text-emerald-600 transition-colors">Sân bóng</a>
+        <span class="material-symbols-outlined text-xs text-slate-300">chevron_right</span>
+        <span class="text-on-surface font-semibold"><%= field.name %></span>
+      </div>
+    </div>
+
+    <!-- MAIN LAYOUT -->
+    <div class="max-w-7xl mx-auto px-6 py-6 grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-8">
+
+      <!-- LEFT: Field Info -->
+      <div class="animate-fade-in">
+        <!-- Gallery -->
+        <div class="bg-white rounded-2xl overflow-hidden shadow-sm mb-6">
+          <div class="relative h-[400px] overflow-hidden" id="field-gallery">
+            <% if (field.images && field.images.length > 0) { %>
+              <img id="gallery-img" class="w-full h-full object-cover transition-all duration-500" src="<%= field.images[0] %>" alt="<%= field.name %>" />
+              <% if (field.images.length > 1) { %>
+                <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 bg-white/70 backdrop-blur-md px-3 py-2 rounded-full">
+                  <% field.images.forEach((img, idx) => { %>
+                    <button onclick="changeGallery(this, '<%= img %>')"
+                            class="gallery-dot w-3 h-3 rounded-full transition-all duration-200 <%= idx === 0 ? 'bg-emerald-500 scale-125' : 'bg-slate-300 hover:bg-slate-400' %>"></button>
+                  <% }); %>
+                </div>
+              <% } %>
+            <% } else { %>
+              <div class="w-full h-full bg-gradient-to-br from-emerald-100 to-cyan-100 flex items-center justify-center">
+                <span class="material-symbols-outlined text-8xl text-emerald-300">sports_soccer</span>
+              </div>
+            <% } %>
+          </div>
         </div>
-        <div class="summary-row">
-          <span class="summary-label">Ngày</span>
-          <span class="summary-value" id="summary-date"><%= selectedDate %></span>
-        </div>
-        <div class="summary-row">
-          <span class="summary-label">Khung giờ</span>
-          <span class="summary-value" id="summary-time">—</span>
-        </div>
-        <div class="summary-row summary-total">
-          <span class="summary-label">Tổng tiền</span>
-          <span class="summary-value" id="summary-price"><%= field.pricePerSlot.toLocaleString('vi-VN') %>đ</span>
+
+        <!-- Field Details -->
+        <div class="bg-white rounded-2xl p-8 shadow-sm">
+          <h1 class="text-3xl font-extrabold text-on-surface mb-3"><%= field.name %></h1>
+          <p class="text-on-surface-variant text-sm mb-5 flex items-center gap-2">
+            <span class="material-symbols-outlined text-orange-400 text-sm">location_on</span>
+            <%= field.address %>
+          </p>
+
+          <!-- Meta chips -->
+          <div class="flex gap-3 mb-6 flex-wrap">
+            <div class="flex items-center gap-2 px-4 py-2.5 rounded-2xl text-sm font-semibold transition-all hover:-translate-y-0.5
+                        <%= field.type === '5-a-side' ? 'bg-emerald-50 text-emerald-700' : field.type === '7-a-side' ? 'bg-sky-50 text-sky-700' : 'bg-orange-50 text-orange-700' %>">
+              <span class="material-symbols-outlined text-sm">groups</span>
+              <%= field.type === '5-a-side' ? 'Sân 5 người' : field.type === '7-a-side' ? 'Sân 7 người' : 'Sân 11 người' %>
+            </div>
+            <div class="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-amber-50 text-amber-700 text-sm font-semibold hover:-translate-y-0.5 transition-all">
+              <span class="material-symbols-outlined text-sm">payments</span>
+              <%= field.pricePerSlot.toLocaleString('vi-VN') %>đ / slot
+            </div>
+            <div class="flex items-center gap-2 px-4 py-2.5 rounded-2xl text-sm font-semibold hover:-translate-y-0.5 transition-all
+                        <%= field.status === 'active' ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700' %>">
+              <span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">circle</span>
+              <%= field.status === 'active' ? 'Đang hoạt động' : 'Bảo trì' %>
+            </div>
+          </div>
+
+          <% if (field.description) { %>
+            <div class="pt-5 border-t border-slate-100">
+              <p class="text-on-surface-variant leading-relaxed"><%= field.description %></p>
+            </div>
+          <% } %>
         </div>
       </div>
 
-      <!-- Book Button -->
-      <button type="button" class="btn-book" id="btn-book" disabled>
-        <i class="fas fa-bolt"></i>
-        Tiếp tục đặt sân
-      </button>
-    </div>
-  </div>
+      <!-- RIGHT: Timeslot Panel -->
+      <div class="animate-fade-in" style="animation-delay: 0.15s;">
+        <div class="bg-white rounded-2xl p-6 shadow-lg border-2 border-emerald-100 sticky top-[90px]">
+          <h2 class="text-lg font-bold text-on-surface mb-5 flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">calendar_month</span>
+            Chọn khung giờ
+          </h2>
 
-  <footer class="footer">
-    <p>© 2026 ĐặtSân.vn — Hệ thống đặt sân bóng đá online</p>
+          <!-- Date Picker -->
+          <div class="mb-5">
+            <label class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-1" for="slot-date">
+              <span class="material-symbols-outlined text-xs text-primary">calendar_today</span> Chọn ngày
+            </label>
+            <input type="date" id="slot-date"
+                   value="<%= selectedDate %>"
+                   min="<%= new Date().toISOString().split('T')[0] %>"
+                   class="w-full px-4 py-3 bg-slate-50 border-2 border-transparent rounded-xl text-on-surface font-medium focus:border-emerald-500 focus:ring-0 focus:bg-white transition-all cursor-pointer" />
+          </div>
+
+          <!-- Legend -->
+          <div class="flex gap-4 mb-4 flex-wrap">
+            <div class="flex items-center gap-2 text-xs font-medium text-slate-500">
+              <span class="w-3.5 h-3.5 rounded bg-emerald-500"></span> Trống
+            </div>
+            <div class="flex items-center gap-2 text-xs font-medium text-slate-500">
+              <span class="w-3.5 h-3.5 rounded bg-amber-400"></span> Đang giữ
+            </div>
+            <div class="flex items-center gap-2 text-xs font-medium text-slate-500">
+              <span class="w-3.5 h-3.5 rounded bg-slate-200"></span> Đã đặt
+            </div>
+          </div>
+
+          <!-- Slots Grid -->
+          <div class="grid grid-cols-2 gap-2 mb-5 min-h-[200px]" id="slots-grid">
+            <% slots.forEach(slot => { %>
+              <div class="slot-item rounded-xl text-center py-3 px-2 text-sm font-semibold cursor-pointer transition-all duration-200 border-2 select-none
+                          <%= slot.status === 'available'
+                              ? 'bg-emerald-50 border-transparent text-emerald-700 hover:border-emerald-400 hover:shadow-md hover:scale-[1.03]'
+                              : slot.status === 'pending'
+                              ? 'bg-amber-50 border-transparent text-amber-600 opacity-70 cursor-not-allowed'
+                              : 'bg-slate-50 border-transparent text-slate-300 line-through opacity-50 cursor-not-allowed' %>"
+                   data-slot-id="<%= slot._id %>"
+                   data-start="<%= slot.startTime %>"
+                   data-end="<%= slot.endTime %>"
+                   data-status="<%= slot.status %>">
+                <span class="block text-xs font-bold"><%= slot.startTime %> - <%= slot.endTime %></span>
+                <span class="block text-[10px] mt-0.5 font-medium opacity-70">
+                  <%= slot.status === 'available' ? 'Trống' : slot.status === 'pending' ? 'Đang giữ' : 'Đã đặt' %>
+                </span>
+              </div>
+            <% }); %>
+          </div>
+
+          <!-- Booking Summary -->
+          <div id="booking-summary" class="hidden bg-emerald-50 border-2 border-emerald-200 rounded-xl p-4 mb-4 animate-fade-in">
+            <div class="flex justify-between text-sm mb-1.5">
+              <span class="text-emerald-600/70">Sân</span>
+              <span class="text-on-surface font-semibold"><%= field.name %></span>
+            </div>
+            <div class="flex justify-between text-sm mb-1.5">
+              <span class="text-emerald-600/70">Ngày</span>
+              <span class="text-on-surface font-semibold" id="summary-date"><%= selectedDate %></span>
+            </div>
+            <div class="flex justify-between text-sm mb-1.5">
+              <span class="text-emerald-600/70">Khung giờ</span>
+              <span class="text-on-surface font-semibold" id="summary-time">—</span>
+            </div>
+            <div class="flex justify-between text-sm pt-2 mt-2 border-t border-emerald-200">
+              <span class="text-emerald-600/70">Tổng tiền</span>
+              <span class="text-lg font-black text-primary" id="summary-price"><%= field.pricePerSlot.toLocaleString('vi-VN') %>đ</span>
+            </div>
+          </div>
+
+          <!-- Book Button -->
+          <button type="button" id="btn-book" disabled
+                  class="w-full py-4 rounded-xl font-bold text-white text-base flex items-center justify-center gap-2
+                         bg-primary hover:bg-emerald-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed
+                         transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 active:scale-95
+                         shadow-md shadow-emerald-200 disabled:shadow-none">
+            <span class="material-symbols-outlined">bolt</span>
+            Tiếp tục đặt sân
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="w-full py-8 border-t border-slate-200 bg-slate-50 mt-8">
+    <div class="flex flex-col md:flex-row justify-between items-center px-8 max-w-7xl mx-auto gap-4">
+      <p class="text-slate-500 text-xs uppercase tracking-widest">© 2026 ĐặtSân.vn — Nền tảng đặt sân bóng hàng đầu Việt Nam</p>
+      <div class="flex gap-6">
+        <a class="text-slate-400 text-xs uppercase tracking-widest hover:text-emerald-500 transition-all" href="#">Điều khoản</a>
+        <a class="text-slate-400 text-xs uppercase tracking-widest hover:text-emerald-500 transition-all" href="#">Liên hệ</a>
+      </div>
+    </div>
   </footer>
 
   <!-- SCRIPTS -->
@@ -620,18 +270,20 @@
       const img = document.getElementById('gallery-img');
       if (img) {
         img.style.opacity = '0';
+        img.style.transform = 'scale(1.05)';
         setTimeout(() => {
           img.src = src;
           img.style.opacity = '1';
-        }, 200);
+          img.style.transform = 'scale(1)';
+        }, 250);
       }
-      document.querySelectorAll('.gallery-dot').forEach(d => d.classList.remove('active'));
-      dotEl.classList.add('active');
+      document.querySelectorAll('.gallery-dot').forEach(d => {
+        d.classList.remove('bg-emerald-500', 'scale-125');
+        d.classList.add('bg-slate-300');
+      });
+      dotEl.classList.remove('bg-slate-300');
+      dotEl.classList.add('bg-emerald-500', 'scale-125');
     }
-    // Add smooth transition to gallery image
-    const galleryImg = document.getElementById('gallery-img');
-    if (galleryImg) galleryImg.style.transition = 'opacity 0.3s ease';
   </script>
-
 </body>
 </html>

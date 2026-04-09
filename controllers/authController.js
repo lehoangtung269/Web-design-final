@@ -28,19 +28,11 @@ const register = async (req, res) => {
     }
 
     // Tạo user mới (password sẽ tự động hash bởi pre-save hook)
-    const user = await User.create({ name, email, password, phone });
+    await User.create({ name, email, password, phone });
 
-    // Tự động đăng nhập sau khi đăng ký
-    req.session.user = {
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      phone: user.phone,
-      role: user.role,
-    };
-
-    req.flash('success', 'Đăng ký thành công! Chào mừng bạn đến với hệ thống đặt sân.');
-    return res.redirect('/');
+    // KHÔNG tự động đăng nhập — redirect về trang login
+    req.flash('success', 'Đăng ký thành công! Vui lòng đăng nhập để tiếp tục.');
+    return res.redirect('/auth/login');
   } catch (error) {
     // Xử lý lỗi validation từ Mongoose
     if (error.name === 'ValidationError') {

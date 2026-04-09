@@ -4,7 +4,7 @@
  * Sử dụng trên trang chi tiết sân (fields/detail.ejs)
  * Chức năng:
  *   1. Fetch danh sách slot qua AJAX khi đổi ngày
- *   2. Render slot với trạng thái màu sắc (available/pending/booked)
+ *   2. Render slot với trạng thái (available/pending/booked) dùng Tailwind classes
  *   3. Xử lý chọn slot và hiển thị tóm tắt đặt sân
  */
 
@@ -26,6 +26,17 @@
   let selectedSlot = null;
 
   // ===============================
+  // Tailwind class presets
+  // ===============================
+  const SLOT_CLASSES = {
+    base: 'slot-item rounded-xl text-center py-3 px-2 text-sm font-semibold cursor-pointer transition-all duration-200 border-2 select-none',
+    available: 'bg-emerald-50 border-transparent text-emerald-700 hover:border-emerald-400 hover:shadow-md hover:scale-[1.03]',
+    selected: 'bg-emerald-600 border-emerald-700 text-white shadow-lg shadow-emerald-200 scale-[1.03] slot-pop',
+    pending: 'bg-amber-50 border-transparent text-amber-600 opacity-70 cursor-not-allowed',
+    booked: 'bg-slate-50 border-transparent text-slate-300 line-through opacity-50 cursor-not-allowed',
+  };
+
+  // ===============================
   // Khi đổi ngày → fetch slots mới
   // ===============================
   if (dateInput) {
@@ -44,11 +55,10 @@
   // Fetch slots từ API
   // ===============================
   async function fetchSlots(date) {
-    // Hiển thị loading
     slotsGrid.innerHTML = `
-      <div class="slots-loading" style="grid-column: 1 / -1;">
-        <i class="fas fa-spinner"></i>
-        <p style="margin-top: 0.5rem;">Đang tải khung giờ...</p>
+      <div class="col-span-2 text-center py-8 text-slate-400">
+        <span class="material-symbols-outlined text-3xl animate-spin block mb-2">progress_activity</span>
+        <p class="text-sm">Đang tải khung giờ...</p>
       </div>
     `;
 
@@ -60,18 +70,18 @@
         renderSlots(result.data);
       } else {
         slotsGrid.innerHTML = `
-          <div class="slots-loading" style="grid-column: 1 / -1; color: #ef4444;">
-            <i class="fas fa-exclamation-circle"></i>
-            <p style="margin-top: 0.5rem;">${result.message}</p>
+          <div class="col-span-2 text-center py-8 text-red-500">
+            <span class="material-symbols-outlined text-3xl block mb-2">error</span>
+            <p class="text-sm">${result.message}</p>
           </div>
         `;
       }
     } catch (error) {
       console.error('Fetch slots error:', error);
       slotsGrid.innerHTML = `
-        <div class="slots-loading" style="grid-column: 1 / -1; color: #ef4444;">
-          <i class="fas fa-exclamation-circle"></i>
-          <p style="margin-top: 0.5rem;">Lỗi kết nối. Vui lòng thử lại!</p>
+        <div class="col-span-2 text-center py-8 text-red-500">
+          <span class="material-symbols-outlined text-3xl block mb-2">wifi_off</span>
+          <p class="text-sm">Lỗi kết nối. Vui lòng thử lại!</p>
         </div>
       `;
     }
@@ -85,9 +95,9 @@
 
     if (!slots || slots.length === 0) {
       slotsGrid.innerHTML = `
-        <div class="slots-loading" style="grid-column: 1 / -1;">
-          <i class="fas fa-calendar-times"></i>
-          <p style="margin-top: 0.5rem;">Không có khung giờ nào.</p>
+        <div class="col-span-2 text-center py-8 text-slate-400">
+          <span class="material-symbols-outlined text-3xl block mb-2">event_busy</span>
+          <p class="text-sm">Không có khung giờ nào.</p>
         </div>
       `;
       return;
@@ -95,7 +105,7 @@
 
     slots.forEach((slot) => {
       const div = document.createElement('div');
-      div.className = `slot-item slot-${slot.status}`;
+      div.className = `${SLOT_CLASSES.base} ${SLOT_CLASSES[slot.status] || SLOT_CLASSES.booked}`;
       div.dataset.slotId = slot._id;
       div.dataset.start = slot.startTime;
       div.dataset.end = slot.endTime;
@@ -109,8 +119,8 @@
           : 'Đã đặt';
 
       div.innerHTML = `
-        <span class="slot-time">${slot.startTime} - ${slot.endTime}</span>
-        <span class="slot-status">${statusText}</span>
+        <span class="block text-xs font-bold">${slot.startTime} - ${slot.endTime}</span>
+        <span class="block text-[10px] mt-0.5 font-medium opacity-70">${statusText}</span>
       `;
 
       // Chỉ cho phép click vào slot available
@@ -126,13 +136,15 @@
   // Xử lý click chọn slot
   // ===============================
   function handleSlotClick(element, slot) {
-    // Bỏ chọn tất cả
+    // Bỏ chọn tất cả — reset về available state
     document.querySelectorAll('.slot-item').forEach((el) => {
-      el.classList.remove('selected');
+      if (el.dataset.status === 'available') {
+        el.className = `${SLOT_CLASSES.base} ${SLOT_CLASSES.available}`;
+      }
     });
 
     // Chọn slot mới
-    element.classList.add('selected');
+    element.className = `${SLOT_CLASSES.base} ${SLOT_CLASSES.selected}`;
     selectedSlot = slot;
     updateSummary();
   }
@@ -142,13 +154,13 @@
   // ===============================
   function updateSummary() {
     if (selectedSlot) {
-      bookingSummary.classList.add('show');
+      bookingSummary.classList.remove('hidden');
       summaryDate.textContent = dateInput.value;
       summaryTime.textContent = `${selectedSlot.startTime} - ${selectedSlot.endTime}`;
       summaryPrice.textContent = FIELD_PRICE.toLocaleString('vi-VN') + 'đ';
       btnBook.disabled = false;
     } else {
-      bookingSummary.classList.remove('show');
+      bookingSummary.classList.add('hidden');
       summaryTime.textContent = '—';
       btnBook.disabled = true;
     }
@@ -164,8 +176,6 @@
         return;
       }
 
-      // Chuyển hướng sang trang checkout (sẽ xử lý ở milestone tiếp theo)
-      // Tạm thời: chuyển đến trang checkout với params
       const params = new URLSearchParams({
         field: FIELD_ID,
         slot: selectedSlot._id,
@@ -174,7 +184,6 @@
         end: selectedSlot.endTime,
       });
 
-      // Kiểm tra đăng nhập (nếu chưa → redirect đến login)
       window.location.href = `/checkout?${params.toString()}`;
     });
   }
@@ -183,17 +192,19 @@
   // Gắn sự kiện cho các slot render từ server (trang load lần đầu)
   // ===============================
   function initExistingSlots() {
-    const existingSlots = document.querySelectorAll('.slot-item.slot-available');
+    const existingSlots = document.querySelectorAll('.slot-item');
     existingSlots.forEach((el) => {
-      el.addEventListener('click', () => {
-        const slot = {
-          _id: el.dataset.slotId,
-          startTime: el.dataset.start,
-          endTime: el.dataset.end,
-          status: el.dataset.status,
-        };
-        handleSlotClick(el, slot);
-      });
+      if (el.dataset.status === 'available') {
+        el.addEventListener('click', () => {
+          const slot = {
+            _id: el.dataset.slotId,
+            startTime: el.dataset.start,
+            endTime: el.dataset.end,
+            status: el.dataset.status,
+          };
+          handleSlotClick(el, slot);
+        });
+      }
     });
   }
 
