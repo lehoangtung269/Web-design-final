@@ -4,22 +4,50 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title><%= title %> | ĐặtSân.vn</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
+    :root {
+      --green: #22c55e;
+      --green-dark: #16a34a;
+      --green-light: #dcfce7;
+      --blue: #38bdf8;
+      --blue-dark: #0ea5e9;
+      --blue-light: #e0f2fe;
+      --orange: #f97316;
+      --orange-light: #fff7ed;
+      --yellow: #eab308;
+      --yellow-light: #fef9c3;
+      --bg: #f8fafc;
+      --white: #ffffff;
+      --dark: #0f172a;
+      --gray-900: #1e293b;
+      --gray-700: #334155;
+      --gray-500: #64748b;
+      --gray-300: #cbd5e1;
+      --gray-100: #f1f5f9;
+      --shadow: 0 4px 20px rgba(0,0,0,0.06);
+      --shadow-lg: 0 10px 40px rgba(0,0,0,0.1);
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: 'Inter', sans-serif;
-      background: #0a0f1c;
-      color: #e0e6ed;
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--gray-700);
       min-height: 100vh;
     }
 
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes pop { 0%{ transform: scale(1); } 50%{ transform: scale(1.1); } 100%{ transform: scale(1); } }
+    .animate-fade { animation: fadeInUp 0.5s ease-out both; }
+
     /* ===== NAVBAR ===== */
     .navbar {
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background: var(--white);
+      box-shadow: 0 2px 20px rgba(0,0,0,0.05);
       padding: 0 2rem;
       height: 70px;
       display: flex;
@@ -32,196 +60,232 @@
     .navbar-brand {
       font-size: 1.5rem;
       font-weight: 800;
-      color: #34d399;
+      color: var(--green);
       text-decoration: none;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.6rem;
     }
-    .navbar-links { display: flex; align-items: center; gap: 1.5rem; }
+    .navbar-brand i {
+      background: linear-gradient(135deg, var(--green), var(--blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .navbar-links { display: flex; align-items: center; gap: 0.5rem; }
     .navbar-links a {
-      color: #94a3b8;
+      color: var(--gray-700);
       text-decoration: none;
       font-size: 0.9rem;
       font-weight: 500;
-      transition: color 0.2s;
-    }
-    .navbar-links a:hover { color: #34d399; }
-    .btn-nav {
-      padding: 0.5rem 1.2rem;
+      padding: 0.5rem 1rem;
       border-radius: 8px;
-      font-weight: 600;
-      font-size: 0.85rem;
-      text-decoration: none;
       transition: all 0.2s;
     }
-    .btn-login { color: #34d399; border: 1px solid #34d399; }
+    .navbar-links a:hover { color: var(--green); background: var(--green-light); }
+    .btn-nav {
+      padding: 0.55rem 1.3rem !important;
+      border-radius: 10px !important;
+      font-weight: 600 !important;
+      font-size: 0.85rem !important;
+      transition: all 0.25s !important;
+    }
+    .btn-login { color: var(--green) !important; border: 2px solid var(--green); }
+    .btn-login:hover { background: var(--green) !important; color: var(--white) !important; }
     .btn-register {
-      background: linear-gradient(135deg, #34d399, #059669);
-      color: #fff;
+      background: linear-gradient(135deg, var(--green), var(--green-dark)) !important;
+      color: var(--white) !important;
       border: none;
     }
 
     /* ===== FLASH ===== */
     .flash-container { padding: 0 2rem; max-width: 1200px; margin: 1rem auto 0; }
-    .flash-msg { padding: 0.8rem 1.2rem; border-radius: 8px; margin-bottom: 0.5rem; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; }
-    .flash-success { background: rgba(52, 211, 153, 0.15); border: 1px solid rgba(52, 211, 153, 0.3); color: #34d399; }
-    .flash-error { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; }
+    .flash-msg { padding: 0.85rem 1.2rem; border-radius: var(--radius-sm); margin-bottom: 0.5rem; font-size: 0.9rem; display: flex; align-items: center; gap: 0.6rem; animation: fadeInUp 0.4s; }
+    .flash-success { background: var(--green-light); border-left: 4px solid var(--green); color: var(--green-dark); }
+    .flash-error { background: #fef2f2; border-left: 4px solid #ef4444; color: #dc2626; }
 
     /* ===== BREADCRUMB ===== */
     .breadcrumb {
       max-width: 1200px;
-      margin: 1.5rem auto 0;
+      margin: 1.2rem auto 0;
       padding: 0 2rem;
       font-size: 0.85rem;
-      color: #64748b;
+      color: var(--gray-500);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
-    .breadcrumb a { color: #34d399; text-decoration: none; }
+    .breadcrumb a {
+      color: var(--green);
+      text-decoration: none;
+      font-weight: 500;
+    }
     .breadcrumb a:hover { text-decoration: underline; }
+    .breadcrumb .sep { color: var(--gray-300); }
 
-    /* ===== PAGE CONTAINER ===== */
+    /* ===== MAIN LAYOUT ===== */
     .page-container {
       max-width: 1200px;
       margin: 1.5rem auto 0;
       padding: 0 2rem 3rem;
       display: grid;
-      grid-template-columns: 1fr 400px;
+      grid-template-columns: 1fr 380px;
       gap: 2rem;
     }
 
-    /* ===== FIELD INFO ===== */
+    /* ===== FIELD INFO CARD ===== */
     .field-info-card {
-      background: rgba(30, 41, 59, 0.6);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 16px;
+      background: var(--white);
+      border-radius: var(--radius);
       overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(0,0,0,0.04);
     }
     .field-gallery {
       position: relative;
       width: 100%;
-      height: 350px;
+      height: 360px;
       overflow: hidden;
     }
     .field-gallery img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      transition: transform 0.4s;
     }
+    .field-gallery:hover img { transform: scale(1.03); }
     .field-gallery-placeholder {
       width: 100%;
       height: 100%;
-      background: linear-gradient(135deg, #1e293b, #0f172a);
+      background: linear-gradient(135deg, var(--green-light), var(--blue-light));
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #475569;
+      color: var(--green);
       font-size: 5rem;
     }
-    .field-gallery-nav {
+    .gallery-nav {
       position: absolute;
       bottom: 1rem;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
       gap: 0.5rem;
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(8px);
+      padding: 0.4rem 0.8rem;
+      border-radius: 50px;
     }
     .gallery-dot {
       width: 10px;
       height: 10px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.3);
+      background: var(--gray-300);
       cursor: pointer;
-      transition: background 0.2s;
+      transition: all 0.2s;
     }
-    .gallery-dot.active { background: #34d399; }
+    .gallery-dot.active { background: var(--green); transform: scale(1.3); }
 
     .field-details { padding: 1.5rem; }
     .field-name {
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       font-weight: 800;
-      color: #f1f5f9;
+      color: var(--dark);
       margin-bottom: 0.5rem;
     }
     .field-address {
       font-size: 0.9rem;
-      color: #64748b;
-      margin-bottom: 1rem;
+      color: var(--gray-500);
+      margin-bottom: 1.2rem;
       display: flex;
       align-items: center;
       gap: 0.4rem;
     }
+    .field-address i { color: var(--orange); }
     .field-meta {
       display: flex;
-      gap: 1rem;
+      gap: 0.8rem;
       margin-bottom: 1.2rem;
       flex-wrap: wrap;
     }
-    .meta-item {
+    .meta-chip {
       padding: 0.5rem 1rem;
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 10px;
-      font-size: 0.85rem;
+      background: var(--gray-100);
+      border-radius: 50px;
+      font-size: 0.82rem;
+      font-weight: 600;
       display: flex;
       align-items: center;
       gap: 0.4rem;
+      transition: transform 0.2s;
     }
-    .meta-item i { color: #34d399; }
-    .meta-item .meta-value { font-weight: 700; color: #f1f5f9; }
+    .meta-chip:hover { transform: translateY(-2px); }
+    .meta-chip i { font-size: 0.9rem; }
+    .meta-chip .val { color: var(--dark); }
+    .chip-green { background: var(--green-light); color: var(--green-dark); }
+    .chip-blue { background: var(--blue-light); color: var(--blue-dark); }
+    .chip-orange { background: var(--orange-light); color: var(--orange); }
     .field-desc {
       font-size: 0.9rem;
-      color: #94a3b8;
-      line-height: 1.6;
+      color: var(--gray-500);
+      line-height: 1.7;
+      padding-top: 1rem;
+      border-top: 1px solid var(--gray-100);
     }
 
     /* ===== TIMESLOT PANEL ===== */
     .timeslot-panel {
-      background: rgba(30, 41, 59, 0.6);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 16px;
+      background: var(--white);
+      border-radius: var(--radius);
       padding: 1.5rem;
       height: fit-content;
       position: sticky;
       top: 90px;
+      box-shadow: var(--shadow-lg);
+      border: 2px solid rgba(34, 197, 94, 0.1);
     }
     .panel-title {
       font-size: 1.1rem;
       font-weight: 700;
-      color: #f1f5f9;
+      color: var(--dark);
       margin-bottom: 1.2rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
     }
-    .panel-title i { color: #34d399; }
+    .panel-title i { color: var(--green); }
 
     /* Date Picker */
-    .date-picker-group {
-      margin-bottom: 1.2rem;
-    }
+    .date-picker-group { margin-bottom: 1.2rem; }
     .date-picker-label {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 600;
-      color: #94a3b8;
+      color: var(--gray-500);
       text-transform: uppercase;
       letter-spacing: 0.05em;
       margin-bottom: 0.4rem;
-      display: block;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
     }
+    .date-picker-label i { color: var(--green); }
     .date-picker-input {
       width: 100%;
       padding: 0.7rem 1rem;
-      background: rgba(15, 23, 42, 0.8);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 10px;
-      color: #e0e6ed;
-      font-family: 'Inter', sans-serif;
+      background: var(--gray-100);
+      border: 2px solid transparent;
+      border-radius: var(--radius-sm);
+      color: var(--gray-900);
+      font-family: 'Poppins', sans-serif;
       font-size: 0.9rem;
       cursor: pointer;
+      transition: all 0.25s;
     }
     .date-picker-input:focus {
       outline: none;
-      border-color: #34d399;
+      border-color: var(--green);
+      background: var(--white);
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1);
     }
 
     /* Slot Legend */
@@ -236,159 +300,147 @@
       align-items: center;
       gap: 0.4rem;
       font-size: 0.75rem;
-      color: #94a3b8;
+      font-weight: 500;
+      color: var(--gray-500);
     }
-    .legend-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 4px;
-    }
-    .legend-dot.available { background: #34d399; }
-    .legend-dot.pending { background: #fbbf24; }
-    .legend-dot.booked { background: #475569; }
+    .legend-dot { width: 14px; height: 14px; border-radius: 5px; }
+    .legend-dot.available { background: var(--green); }
+    .legend-dot.pending { background: var(--yellow); }
+    .legend-dot.booked { background: var(--gray-300); }
 
     /* Slots Grid */
     .slots-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 0.6rem;
-      margin-bottom: 1.5rem;
+      gap: 0.5rem;
+      margin-bottom: 1.2rem;
       min-height: 200px;
     }
     .slot-item {
-      padding: 0.7rem;
-      border-radius: 10px;
+      padding: 0.65rem;
+      border-radius: var(--radius-sm);
       text-align: center;
       font-size: 0.8rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.25s;
       border: 2px solid transparent;
       user-select: none;
     }
-    .slot-item .slot-time {
-      display: block;
-      margin-bottom: 0.2rem;
-    }
-    .slot-item .slot-status {
-      font-size: 0.7rem;
-      font-weight: 400;
-    }
+    .slot-item .slot-time { display: block; margin-bottom: 0.15rem; }
+    .slot-item .slot-status { font-size: 0.68rem; font-weight: 500; }
 
     /* Slot States */
     .slot-available {
-      background: rgba(52, 211, 153, 0.1);
-      border-color: rgba(52, 211, 153, 0.3);
-      color: #34d399;
+      background: var(--green-light);
+      border-color: transparent;
+      color: var(--green-dark);
     }
     .slot-available:hover {
-      background: rgba(52, 211, 153, 0.2);
-      border-color: #34d399;
-      transform: scale(1.03);
+      border-color: var(--green);
+      transform: scale(1.04);
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.15);
     }
     .slot-available.selected {
-      background: rgba(52, 211, 153, 0.3);
-      border-color: #34d399;
-      box-shadow: 0 0 15px rgba(52, 211, 153, 0.3);
+      background: var(--green);
+      color: var(--white);
+      border-color: var(--green-dark);
+      box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+      animation: pop 0.3s ease-out;
     }
-
     .slot-pending {
-      background: rgba(251, 191, 36, 0.1);
-      border-color: rgba(251, 191, 36, 0.2);
-      color: #fbbf24;
+      background: var(--yellow-light);
+      color: #a16207;
       cursor: not-allowed;
-      opacity: 0.7;
+      opacity: 0.75;
     }
     .slot-booked {
-      background: rgba(71, 85, 105, 0.2);
-      border-color: rgba(71, 85, 105, 0.2);
-      color: #475569;
+      background: var(--gray-100);
+      color: var(--gray-300);
       cursor: not-allowed;
       opacity: 0.5;
+      text-decoration: line-through;
     }
 
     /* Loading */
     .slots-loading {
       text-align: center;
       padding: 2rem;
-      color: #64748b;
+      color: var(--gray-500);
     }
-    .slots-loading i {
-      font-size: 1.5rem;
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    .slots-loading i { font-size: 1.5rem; animation: spin 1s linear infinite; color: var(--green); }
 
-    /* Book Button */
-    .btn-book {
-      width: 100%;
-      padding: 0.9rem;
-      background: linear-gradient(135deg, #34d399, #059669);
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      font-family: 'Inter', sans-serif;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-    .btn-book:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(52, 211, 153, 0.3);
-    }
-    .btn-book:disabled {
-      background: #334155;
-      color: #64748b;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
-
+    /* Booking Summary */
     .booking-summary {
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 10px;
+      background: var(--green-light);
+      border: 2px solid rgba(34, 197, 94, 0.2);
+      border-radius: var(--radius-sm);
       padding: 1rem;
       margin-bottom: 1rem;
       display: none;
+      animation: fadeInUp 0.3s ease-out;
     }
     .booking-summary.show { display: block; }
     .summary-row {
       display: flex;
       justify-content: space-between;
-      font-size: 0.85rem;
-      margin-bottom: 0.4rem;
+      font-size: 0.82rem;
+      margin-bottom: 0.35rem;
     }
-    .summary-label { color: #64748b; }
-    .summary-value { color: #f1f5f9; font-weight: 600; }
+    .summary-label { color: var(--green-dark); opacity: 0.7; }
+    .summary-value { color: var(--dark); font-weight: 600; }
     .summary-total {
-      border-top: 1px solid rgba(255,255,255,0.1);
-      padding-top: 0.6rem;
-      margin-top: 0.4rem;
+      border-top: 1px solid rgba(34, 197, 94, 0.2);
+      padding-top: 0.5rem;
+      margin-top: 0.3rem;
     }
-    .summary-total .summary-value { color: #34d399; font-size: 1.1rem; }
+    .summary-total .summary-value { color: var(--green-dark); font-size: 1.1rem; font-weight: 800; }
+
+    /* Book Button */
+    .btn-book {
+      width: 100%;
+      padding: 0.9rem;
+      background: linear-gradient(135deg, var(--green), var(--green-dark));
+      color: var(--white);
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 15px rgba(34, 197, 94, 0.25);
+    }
+    .btn-book:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(34, 197, 94, 0.35);
+    }
+    .btn-book:active { transform: scale(0.97); }
+    .btn-book:disabled {
+      background: var(--gray-300);
+      color: var(--gray-500);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
 
     .footer {
       text-align: center;
       padding: 2rem;
-      color: #475569;
+      color: var(--gray-500);
       font-size: 0.85rem;
-      border-top: 1px solid rgba(255,255,255,0.05);
+      border-top: 1px solid var(--gray-100);
       margin-top: 2rem;
     }
 
     @media (max-width: 900px) {
-      .page-container {
-        grid-template-columns: 1fr;
-      }
-      .timeslot-panel {
-        position: static;
-      }
+      .page-container { grid-template-columns: 1fr; }
+      .timeslot-panel { position: static; }
+      .field-gallery { height: 250px; }
     }
   </style>
 </head>
@@ -398,9 +450,11 @@
   <nav class="navbar">
     <a href="/" class="navbar-brand"><i class="fas fa-futbol"></i> ĐặtSân.vn</a>
     <div class="navbar-links">
-      <a href="/fields">Danh sách sân</a>
+      <a href="/">Trang chủ</a>
+      <a href="/fields">Sân bóng</a>
       <% if (typeof currentUser !== 'undefined' && currentUser) { %>
-        <span style="color:#64748b; font-size:0.85rem;">Xin chào, <strong style="color:#f1f5f9;"><%= currentUser.name %></strong></span>
+        <a href="/history">Lịch sử</a>
+        <span style="color:var(--gray-500); font-size:0.85rem; padding:0.5rem 0;">Xin chào, <strong style="color:var(--dark);"><%= currentUser.name %></strong></span>
         <a href="/auth/logout" class="btn-nav btn-login">Đăng xuất</a>
       <% } else { %>
         <a href="/auth/login" class="btn-nav btn-login">Đăng nhập</a>
@@ -409,7 +463,7 @@
     </div>
   </nav>
 
-  <!-- FLASH MESSAGES -->
+  <!-- FLASH -->
   <% if (typeof success !== 'undefined' && success && success.length > 0) { %>
     <div class="flash-container">
       <% success.forEach(msg => { %>
@@ -420,28 +474,30 @@
   <% if (typeof error !== 'undefined' && error && error.length > 0) { %>
     <div class="flash-container">
       <% error.forEach(msg => { %>
-        <div class="flash-msg flash-error"><i class="fas fa-exclamation-circle"></i> <%= msg %></div>
+        <div class="flash-msg flash-error"><i class="fas fa-exclamation-triangle"></i> <%= msg %></div>
       <% }); %>
     </div>
   <% } %>
 
   <!-- BREADCRUMB -->
-  <div class="breadcrumb">
-    <a href="/">Trang chủ</a> &rsaquo;
-    <a href="/fields">Danh sách sân</a> &rsaquo;
-    <span><%= field.name %></span>
+  <div class="breadcrumb animate-fade">
+    <a href="/"><i class="fas fa-home"></i> Trang chủ</a>
+    <span class="sep"><i class="fas fa-chevron-right"></i></span>
+    <a href="/fields">Sân bóng</a>
+    <span class="sep"><i class="fas fa-chevron-right"></i></span>
+    <span style="color:var(--dark); font-weight:600;"><%= field.name %></span>
   </div>
 
   <!-- MAIN CONTENT -->
   <div class="page-container">
 
     <!-- LEFT: Field Info -->
-    <div class="field-info-card">
+    <div class="field-info-card animate-fade">
       <div class="field-gallery" id="field-gallery">
         <% if (field.images && field.images.length > 0) { %>
           <img src="<%= field.images[0] %>" alt="<%= field.name %>" id="gallery-img" />
           <% if (field.images.length > 1) { %>
-            <div class="field-gallery-nav">
+            <div class="gallery-nav">
               <% field.images.forEach((img, idx) => { %>
                 <span class="gallery-dot <%= idx === 0 ? 'active' : '' %>"
                       data-src="<%= img %>"
@@ -459,20 +515,19 @@
         <p class="field-address"><i class="fas fa-map-marker-alt"></i> <%= field.address %></p>
 
         <div class="field-meta">
-          <div class="meta-item">
+          <div class="meta-chip chip-green">
             <i class="fas fa-users"></i>
-            <span class="meta-value">
+            <span class="val">
               <%= field.type === '5-a-side' ? 'Sân 5 người' : field.type === '7-a-side' ? 'Sân 7 người' : 'Sân 11 người' %>
             </span>
           </div>
-          <div class="meta-item">
+          <div class="meta-chip chip-orange">
             <i class="fas fa-tag"></i>
-            <span class="meta-value"><%= field.pricePerSlot.toLocaleString('vi-VN') %>đ</span>
-            <span>/ slot</span>
+            <span class="val"><%= field.pricePerSlot.toLocaleString('vi-VN') %>đ</span> / slot
           </div>
-          <div class="meta-item">
-            <i class="fas fa-circle" style="color: <%= field.status === 'active' ? '#34d399' : '#ef4444' %>; font-size: 0.5rem;"></i>
-            <span><%= field.status === 'active' ? 'Đang hoạt động' : 'Bảo trì' %></span>
+          <div class="meta-chip" style="<%= field.status === 'active' ? 'background:var(--green-light); color:var(--green-dark);' : 'background:#fef2f2; color:#dc2626;' %>">
+            <i class="fas fa-circle" style="font-size:0.5rem;"></i>
+            <%= field.status === 'active' ? 'Đang hoạt động' : 'Bảo trì' %>
           </div>
         </div>
 
@@ -483,8 +538,8 @@
     </div>
 
     <!-- RIGHT: Timeslot Panel -->
-    <div class="timeslot-panel">
-      <h2 class="panel-title"><i class="fas fa-clock"></i> Chọn khung giờ</h2>
+    <div class="timeslot-panel animate-fade" style="animation-delay: 0.2s;">
+      <h2 class="panel-title"><i class="fas fa-calendar-check"></i> Chọn khung giờ</h2>
 
       <!-- Date Picker -->
       <div class="date-picker-group">
@@ -543,7 +598,7 @@
 
       <!-- Book Button -->
       <button type="button" class="btn-book" id="btn-book" disabled>
-        <i class="fas fa-check-circle"></i>
+        <i class="fas fa-bolt"></i>
         Tiếp tục đặt sân
       </button>
     </div>
@@ -553,23 +608,29 @@
     <p>© 2026 ĐặtSân.vn — Hệ thống đặt sân bóng đá online</p>
   </footer>
 
-  <!-- TIMESLOT JS -->
+  <!-- SCRIPTS -->
   <script>
-    // Field info from server
     const FIELD_ID = '<%= field._id %>';
     const FIELD_PRICE = <%= field.pricePerSlot %>;
     const FIELD_NAME = '<%= field.name %>';
   </script>
   <script src="/public/js/timeslot.js"></script>
-
-  <!-- Gallery script -->
   <script>
     function changeGallery(dotEl, src) {
       const img = document.getElementById('gallery-img');
-      if (img) img.src = src;
+      if (img) {
+        img.style.opacity = '0';
+        setTimeout(() => {
+          img.src = src;
+          img.style.opacity = '1';
+        }, 200);
+      }
       document.querySelectorAll('.gallery-dot').forEach(d => d.classList.remove('active'));
       dotEl.classList.add('active');
     }
+    // Add smooth transition to gallery image
+    const galleryImg = document.getElementById('gallery-img');
+    if (galleryImg) galleryImg.style.transition = 'opacity 0.3s ease';
   </script>
 
 </body>
