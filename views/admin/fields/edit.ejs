@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %> | Admin</title>
+</head>
+<body>
+  <%- include('../partials/sidebar', { activeNav: 'fields' }) %>
+
+  <div class="main-content">
+    <div class="topbar">
+      <h1>✏️ Chỉnh sửa sân bóng</h1>
+      <div class="topbar-user">
+        <a href="/admin/fields" class="btn btn-sm btn-outline">← Quay lại</a>
+      </div>
+    </div>
+
+    <div class="page-content">
+      <% if (typeof error !== 'undefined' && error.length > 0) { %>
+        <div class="alert alert-error"><%= error[0] %></div>
+      <% } %>
+
+      <% if (!field) { %>
+        <div class="empty-state">
+          <div class="icon">🔍</div>
+          <p>Không tìm thấy sân bóng</p>
+          <a href="/admin/fields" class="btn btn-blue" style="margin-top: 16px;">Quay lại danh sách</a>
+        </div>
+      <% } else { %>
+        <div class="card" style="max-width: 700px;">
+          <form action="/admin/fields/<%= field._id %>" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+              <label for="name">Tên sân <span style="color: #ef4444;">*</span></label>
+              <input type="text" id="name" name="name" value="<%= field.name %>" required />
+            </div>
+
+            <div class="form-group">
+              <label for="address">Địa chỉ <span style="color: #ef4444;">*</span></label>
+              <input type="text" id="address" name="address" value="<%= field.address %>" required />
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="type">Loại sân</label>
+                <select id="type" name="type">
+                  <option value="5-a-side" <%= field.type === '5-a-side' ? 'selected' : '' %>>Sân 5 người</option>
+                  <option value="7-a-side" <%= field.type === '7-a-side' ? 'selected' : '' %>>Sân 7 người</option>
+                  <option value="11-a-side" <%= field.type === '11-a-side' ? 'selected' : '' %>>Sân 11 người</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="pricePerSlot">Giá mỗi slot (VNĐ)</label>
+                <input type="number" id="pricePerSlot" name="pricePerSlot" value="<%= field.pricePerSlot %>" min="0" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="status">Trạng thái</label>
+              <select id="status" name="status">
+                <option value="active" <%= field.status === 'active' ? 'selected' : '' %>>Hoạt động</option>
+                <option value="maintenance" <%= field.status === 'maintenance' ? 'selected' : '' %>>Bảo trì</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="description">Mô tả</label>
+              <textarea id="description" name="description"><%= field.description || '' %></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="images">Thay ảnh sân (bỏ trống nếu không thay)</label>
+              <input type="file" id="images" name="images" accept="image/*" multiple
+                     style="padding: 10px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #cbd5e1;" />
+            </div>
+
+            <!-- Ảnh hiện tại -->
+            <% if (field.images && field.images.length > 0) { %>
+              <div style="margin-bottom: 20px;">
+                <label style="color: #cbd5e1; font-size: 14px; display: block; margin-bottom: 8px;">Ảnh hiện tại:</label>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                  <% field.images.forEach(function(img) { %>
+                    <img src="/uploads/<%= img %>" alt="Ảnh sân"
+                         style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);" />
+                  <% }); %>
+                </div>
+              </div>
+            <% } %>
+
+            <div style="display: flex; gap: 12px; margin-top: 24px;">
+              <button type="submit" class="btn btn-blue">💾 Cập nhật</button>
+              <a href="/admin/fields" class="btn btn-outline">Hủy</a>
+            </div>
+          </form>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</body>
+</html>

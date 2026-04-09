@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %> | Admin</title>
+</head>
+<body>
+  <%- include('../partials/sidebar', { activeNav: 'users' }) %>
+
+  <div class="main-content">
+    <div class="topbar">
+      <h1>👥 Quản lý người dùng</h1>
+      <div class="topbar-user">
+        <span>Tổng: <strong><%= users.length %></strong> người dùng</span>
+      </div>
+    </div>
+
+    <div class="page-content">
+      <% if (typeof error !== 'undefined' && error.length > 0) { %>
+        <div class="alert alert-error"><%= error[0] %></div>
+      <% } %>
+      <% if (typeof success !== 'undefined' && success.length > 0) { %>
+        <div class="alert alert-success"><%= success[0] %></div>
+      <% } %>
+
+      <div class="card" style="padding: 0; overflow: hidden;">
+        <% if (users.length === 0) { %>
+          <div class="empty-state">
+            <div class="icon">👥</div>
+            <p>Chưa có người dùng nào</p>
+          </div>
+        <% } else { %>
+          <table>
+            <thead>
+              <tr>
+                <th>Họ tên</th>
+                <th>Email</th>
+                <th>Số điện thoại</th>
+                <th>Vai trò</th>
+                <th>Trạng thái</th>
+                <th>Ngày đăng ký</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% users.forEach(function(user) { %>
+                <tr>
+                  <td><strong><%= user.name %></strong></td>
+                  <td style="color: #94a3b8;"><%= user.email %></td>
+                  <td><%= user.phone %></td>
+                  <td>
+                    <% if (user.role === 'admin') { %>
+                      <span class="badge badge-admin">Admin</span>
+                    <% } else { %>
+                      <span class="badge badge-user">User</span>
+                    <% } %>
+                  </td>
+                  <td>
+                    <% if (user.isActive) { %>
+                      <span class="badge badge-active">Hoạt động</span>
+                    <% } else { %>
+                      <span class="badge badge-inactive">Đã khóa</span>
+                    <% } %>
+                  </td>
+                  <td style="color: #64748b; font-size: 13px;">
+                    <%= user.createdAt ? new Date(user.createdAt).toLocaleDateString('vi-VN') : 'N/A' %>
+                  </td>
+                  <td>
+                    <% if (user._id.toString() !== currentUser._id.toString()) { %>
+                      <form action="/admin/users/<%= user._id %>/toggle" method="POST" style="display: inline;">
+                        <% if (user.isActive) { %>
+                          <button type="submit" class="btn btn-sm btn-red"
+                                  onclick="return confirm('Khóa tài khoản <%= user.name %>?')">
+                            🔒 Khóa
+                          </button>
+                        <% } else { %>
+                          <button type="submit" class="btn btn-sm btn-green"
+                                  onclick="return confirm('Mở khóa tài khoản <%= user.name %>?')">
+                            🔓 Mở
+                          </button>
+                        <% } %>
+                      </form>
+                    <% } else { %>
+                      <span style="color: #64748b; font-size: 12px;">Bạn</span>
+                    <% } %>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

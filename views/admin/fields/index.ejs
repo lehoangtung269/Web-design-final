@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %> | Admin</title>
+</head>
+<body>
+  <%- include('../partials/sidebar', { activeNav: 'fields' }) %>
+
+  <div class="main-content">
+    <div class="topbar">
+      <h1>🏟️ Quản lý sân bóng</h1>
+      <div class="topbar-user">
+        <a href="/admin/fields/create" class="btn btn-sm btn-green">➕ Thêm sân mới</a>
+      </div>
+    </div>
+
+    <div class="page-content">
+      <% if (typeof error !== 'undefined' && error.length > 0) { %>
+        <div class="alert alert-error"><%= error[0] %></div>
+      <% } %>
+      <% if (typeof success !== 'undefined' && success.length > 0) { %>
+        <div class="alert alert-success"><%= success[0] %></div>
+      <% } %>
+
+      <div class="card" style="padding: 0; overflow: hidden;">
+        <% if (fields.length === 0) { %>
+          <div class="empty-state">
+            <div class="icon">🏟️</div>
+            <p>Chưa có sân bóng nào</p>
+            <a href="/admin/fields/create" class="btn btn-green" style="margin-top: 16px;">➕ Thêm sân mới</a>
+          </div>
+        <% } else { %>
+          <table>
+            <thead>
+              <tr>
+                <th>Tên sân</th>
+                <th>Địa chỉ</th>
+                <th>Loại</th>
+                <th>Giá/Slot</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% fields.forEach(function(field) { %>
+                <tr>
+                  <td><strong><%= field.name %></strong></td>
+                  <td style="color: #94a3b8;"><%= field.address || 'N/A' %></td>
+                  <td><%= field.type || 'N/A' %></td>
+                  <td style="color: #10b981; font-weight: 600;">
+                    <%= field.pricePerSlot ? field.pricePerSlot.toLocaleString('vi-VN') + 'đ' : 'N/A' %>
+                  </td>
+                  <td>
+                    <% if (field.status === 'active') { %>
+                      <span class="badge badge-active">Hoạt động</span>
+                    <% } else { %>
+                      <span class="badge badge-inactive">Bảo trì</span>
+                    <% } %>
+                  </td>
+                  <td>
+                    <div style="display: flex; gap: 6px;">
+                      <a href="/admin/fields/<%= field._id %>/edit" class="btn btn-sm btn-outline">✏️ Sửa</a>
+                      <form action="/admin/fields/<%= field._id %>/delete" method="POST" style="display: inline;">
+                        <button type="submit" class="btn btn-sm btn-red" onclick="return confirm('Xóa sân này?')">🗑️</button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

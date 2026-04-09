@@ -2,11 +2,18 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const path = require('path');
+const flash = require('connect-flash');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 
-const connectDB = require('./config/database');
+const connectDB = require('./config/db');
+const sessionConfig = require('./config/session');
+const { setLocals } = require('./middlewares/authMiddleware');
 const { errorHandler, notFound } = require('./middlewares/errorHandler');
-const routes = require('./routes');
+
+// Import Routes
+const authRoutes = require('./routes/authRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+const apiRoutes = require('./routes');
 
 // ================================
 // Khởi tạo app
@@ -40,16 +47,24 @@ app.use('/uploads', express.static(path.join(__dirname, 'backend/uploads')));
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
 // ================================
-// Route trang chủ "/"
+// Session & Flash Messages
+// ================================
+app.use(sessionConfig);
+app.use(flash());
+
+// Gắn user + flash messages vào tất cả views
+app.use(setLocals);
+
+// ================================
+// Routes
 // ================================
 app.get('/', (req, res) => {
   res.render('home/index', { title: 'Trang chủ' });
 });
 
-// ================================
-// API Routes
-// ================================
-app.use('/api', routes);
+app.use('/auth', authRoutes);
+app.use('/admin', adminRoutes);
+app.use('/api', apiRoutes);
 
 // ================================
 // Error Handlers

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %> | Đặt Sân Bóng</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .auth-container {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 40px;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+    }
+    .auth-container h1 {
+      color: #f8fafc;
+      font-size: 28px;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .auth-container p.subtitle {
+      color: #94a3b8;
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+    .form-group {
+      margin-bottom: 18px;
+    }
+    .form-group label {
+      display: block;
+      color: #cbd5e1;
+      margin-bottom: 6px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
+      color: #f1f5f9;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    .form-group input:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+    }
+    .form-group input::placeholder { color: #64748b; }
+    .form-row {
+      display: flex;
+      gap: 12px;
+    }
+    .form-row .form-group { flex: 1; }
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-top: 10px;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(5,150,105,0.4);
+    }
+    .auth-footer {
+      text-align: center;
+      margin-top: 24px;
+      color: #94a3b8;
+      font-size: 14px;
+    }
+    .auth-footer a {
+      color: #3b82f6;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .auth-footer a:hover { text-decoration: underline; }
+    .alert {
+      padding: 12px 16px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+    .alert-error {
+      background: rgba(239,68,68,0.15);
+      border: 1px solid rgba(239,68,68,0.3);
+      color: #fca5a5;
+    }
+    .alert-success {
+      background: rgba(34,197,94,0.15);
+      border: 1px solid rgba(34,197,94,0.3);
+      color: #86efac;
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <h1>📝 Đăng ký</h1>
+    <p class="subtitle">Tạo tài khoản để đặt sân bóng</p>
+
+    <% if (typeof error !== 'undefined' && error.length > 0) { %>
+      <div class="alert alert-error"><%= error[0] %></div>
+    <% } %>
+    <% if (typeof success !== 'undefined' && success.length > 0) { %>
+      <div class="alert alert-success"><%= success[0] %></div>
+    <% } %>
+
+    <form action="/auth/register" method="POST">
+      <div class="form-group">
+        <label for="name">Họ và tên</label>
+        <input type="text" id="name" name="name" placeholder="Nguyễn Văn A" required />
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" required />
+      </div>
+      <div class="form-group">
+        <label for="phone">Số điện thoại</label>
+        <input type="tel" id="phone" name="phone" placeholder="0912345678" required />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="password">Mật khẩu</label>
+          <input type="password" id="password" name="password" placeholder="Ít nhất 6 ký tự" required minlength="6" />
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Xác nhận</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Nhập lại" required />
+        </div>
+      </div>
+      <button type="submit" class="btn-primary">Đăng ký</button>
+    </form>
+
+    <div class="auth-footer">
+      Đã có tài khoản? <a href="/auth/login">Đăng nhập</a>
+    </div>
+  </div>
+</body>
+</html>
