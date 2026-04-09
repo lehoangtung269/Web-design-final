@@ -63,7 +63,7 @@
                   </td>
                   <td><%= booking.field ? booking.field.name : 'N/A' %></td>
                   <td><%= booking.date ? new Date(booking.date).toLocaleDateString('vi-VN') : 'N/A' %></td>
-                  <td><%= booking.timeSlot || 'N/A' %></td>
+                  <td><%= booking.startTime %> — <%= booking.endTime %></td>
                   <td><%= booking.totalPrice ? booking.totalPrice.toLocaleString('vi-VN') + 'đ' : 'N/A' %></td>
                   <td>
                     <% if (booking.status === 'pending') { %>

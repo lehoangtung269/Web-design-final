@@ -15,6 +15,7 @@ const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const homeRoutes = require('./routes/homeRoutes');
 const fieldRoutes = require('./routes/fieldRoutes');
+const bookingRoutes = require('./routes/bookingRoutes');
 const apiRoutes = require('./routes');
 
 // ================================
@@ -64,6 +65,7 @@ app.use('/', homeRoutes);
 app.use('/fields', fieldRoutes);
 app.use('/auth', authRoutes);
 app.use('/admin', adminRoutes);
+app.use('/', bookingRoutes);
 app.use('/api', apiRoutes);
 
 // ================================

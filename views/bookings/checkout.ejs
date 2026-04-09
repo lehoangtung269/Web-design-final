@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %> | ĐặtSân.vn</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0f1c;
+      color: #e0e6ed;
+      min-height: 100vh;
+    }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 0 2rem;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .navbar-brand {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #34d399;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .navbar-links { display: flex; align-items: center; gap: 1.5rem; }
+    .navbar-links a {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .navbar-links a:hover { color: #34d399; }
+    .btn-nav {
+      padding: 0.5rem 1.2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-login { color: #34d399; border: 1px solid #34d399; }
+
+    /* ===== FLASH ===== */
+    .flash-container { padding: 0 2rem; max-width: 900px; margin: 1rem auto 0; }
+    .flash-msg { padding: 0.8rem 1.2rem; border-radius: 8px; margin-bottom: 0.5rem; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; }
+    .flash-success { background: rgba(52, 211, 153, 0.15); border: 1px solid rgba(52, 211, 153, 0.3); color: #34d399; }
+    .flash-error { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; }
+
+    /* ===== BREADCRUMB ===== */
+    .breadcrumb {
+      max-width: 900px;
+      margin: 1.5rem auto 0;
+      padding: 0 2rem;
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+    .breadcrumb a { color: #34d399; text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+
+    /* ===== CHECKOUT CONTAINER ===== */
+    .checkout-container {
+      max-width: 900px;
+      margin: 1.5rem auto 0;
+      padding: 0 2rem 3rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    /* ===== CARDS ===== */
+    .card {
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 1.5rem;
+    }
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .card-title i { color: #34d399; }
+
+    /* ===== ORDER SUMMARY ===== */
+    .order-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.6rem 0;
+      font-size: 0.9rem;
+    }
+    .order-row:not(:last-child) {
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .order-label { color: #94a3b8; }
+    .order-value { color: #f1f5f9; font-weight: 600; }
+    .order-total {
+      border-top: 2px solid rgba(52, 211, 153, 0.3) !important;
+      margin-top: 0.5rem;
+      padding-top: 1rem !important;
+    }
+    .order-total .order-value {
+      color: #34d399;
+      font-size: 1.3rem;
+      font-weight: 800;
+    }
+
+    .field-type-badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      background: rgba(52, 211, 153, 0.15);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      border-radius: 6px;
+      font-size: 0.75rem;
+      color: #34d399;
+      font-weight: 600;
+    }
+
+    /* ===== QR SECTION ===== */
+    .qr-section {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    .qr-section img {
+      max-width: 220px;
+      border-radius: 12px;
+      border: 2px solid rgba(52, 211, 153, 0.3);
+      margin-bottom: 0.8rem;
+    }
+    .qr-instructions {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      line-height: 1.6;
+    }
+    .qr-instructions strong { color: #fbbf24; }
+    .qr-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      margin-bottom: 0.5rem;
+      text-align: left;
+    }
+    .step-number {
+      min-width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #34d399, #059669);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ===== UPLOAD SECTION ===== */
+    .upload-area {
+      border: 2px dashed rgba(255,255,255,0.15);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .upload-area:hover {
+      border-color: #34d399;
+      background: rgba(52, 211, 153, 0.05);
+    }
+    .upload-area.has-file {
+      border-color: #34d399;
+      border-style: solid;
+    }
+    .upload-icon {
+      font-size: 2.5rem;
+      color: #475569;
+      margin-bottom: 0.5rem;
+    }
+    .upload-text {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      margin-bottom: 0.3rem;
+    }
+    .upload-hint {
+      font-size: 0.75rem;
+      color: #475569;
+    }
+    .upload-preview {
+      display: none;
+    }
+    .upload-preview.show {
+      display: block;
+    }
+    .upload-preview img {
+      max-width: 100%;
+      max-height: 200px;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+    }
+    .upload-preview .file-name {
+      font-size: 0.8rem;
+      color: #34d399;
+      margin-top: 0.5rem;
+    }
+    .upload-input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    /* ===== SUBMIT BUTTON ===== */
+    .btn-submit {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, #34d399, #059669);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+    }
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(52, 211, 153, 0.3);
+    }
+    .btn-submit:disabled {
+      background: #334155;
+      color: #64748b;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.6rem 1rem;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #94a3b8;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+      margin-top: 1rem;
+    }
+    .btn-back:hover {
+      background: rgba(255,255,255,0.1);
+      color: #f1f5f9;
+    }
+
+    .warning-box {
+      background: rgba(251, 191, 36, 0.1);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      border-radius: 10px;
+      padding: 0.8rem 1rem;
+      font-size: 0.8rem;
+      color: #fbbf24;
+      margin-top: 1rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    .warning-box i { margin-top: 2px; }
+
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      color: #475569;
+      font-size: 0.85rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .checkout-container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="/" class="navbar-brand"><i class="fas fa-futbol"></i> ĐặtSân.vn</a>
+    <div class="navbar-links">
+      <a href="/fields">Danh sách sân</a>
+      <a href="/history">Lịch sử đặt</a>
+      <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+        <span style="color:#64748b; font-size:0.85rem;">Xin chào, <strong style="color:#f1f5f9;"><%= currentUser.name %></strong></span>
+        <a href="/auth/logout" class="btn-nav btn-login">Đăng xuất</a>
+      <% } %>
+    </div>
+  </nav>
+
+  <!-- FLASH MESSAGES -->
+  <% if (typeof success !== 'undefined' && success && success.length > 0) { %>
+    <div class="flash-container">
+      <% success.forEach(msg => { %>
+        <div class="flash-msg flash-success"><i class="fas fa-check-circle"></i> <%= msg %></div>
+      <% }); %>
+    </div>
+  <% } %>
+  <% if (typeof error !== 'undefined' && error && error.length > 0) { %>
+    <div class="flash-container">
+      <% error.forEach(msg => { %>
+        <div class="flash-msg flash-error"><i class="fas fa-exclamation-circle"></i> <%= msg %></div>
+      <% }); %>
+    </div>
+  <% } %>
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <a href="/">Trang chủ</a> &rsaquo;
+    <a href="/fields">Danh sách sân</a> &rsaquo;
+    <a href="/fields/<%= field._id %>"><%= field.name %></a> &rsaquo;
+    <span>Thanh toán</span>
+  </div>
+
+  <!-- CHECKOUT CONTENT -->
+  <div class="checkout-container">
+
+    <!-- LEFT: Order Summary + QR -->
+    <div>
+      <!-- Tóm tắt đơn hàng -->
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <h2 class="card-title"><i class="fas fa-receipt"></i> Tóm tắt đơn hàng</h2>
+
+        <div class="order-row">
+          <span class="order-label">Sân bóng</span>
+          <span class="order-value"><%= field.name %></span>
+        </div>
+        <div class="order-row">
+          <span class="order-label">Loại sân</span>
+          <span class="field-type-badge">
+            <%= field.type === '5-a-side' ? 'Sân 5 người' : field.type === '7-a-side' ? 'Sân 7 người' : 'Sân 11 người' %>
+          </span>
+        </div>
+        <div class="order-row">
+          <span class="order-label">Ngày đá</span>
+          <span class="order-value"><%= new Date(bookingDate).toLocaleDateString('vi-VN', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' }) %></span>
+        </div>
+        <div class="order-row">
+          <span class="order-label">Khung giờ</span>
+          <span class="order-value"><%= startTime %> — <%= endTime %></span>
+        </div>
+        <div class="order-row">
+          <span class="order-label">Địa chỉ</span>
+          <span class="order-value" style="font-size: 0.85rem; text-align: right; max-width: 60%;"><%= field.address %></span>
+        </div>
+        <div class="order-row order-total">
+          <span class="order-label" style="font-size: 1rem;">Tổng tiền</span>
+          <span class="order-value"><%= totalPrice.toLocaleString('vi-VN') %>đ</span>
+        </div>
+      </div>
+
+      <!-- QR Chuyển khoản -->
+      <div class="card">
+        <h2 class="card-title"><i class="fas fa-qrcode"></i> Chuyển khoản ngân hàng</h2>
+
+        <div class="qr-section">
+          <img src="/public/images/qr-bank.png" alt="Mã QR chuyển khoản" />
+          <div class="qr-instructions">
+            <div class="qr-step">
+              <span class="step-number">1</span>
+              <span>Mở ứng dụng ngân hàng trên điện thoại</span>
+            </div>
+            <div class="qr-step">
+              <span class="step-number">2</span>
+              <span>Quét mã QR bên trên và chuyển <strong><%= totalPrice.toLocaleString('vi-VN') %>đ</strong></span>
+            </div>
+            <div class="qr-step">
+              <span class="step-number">3</span>
+              <span>Nội dung chuyển khoản: <strong>DAT SAN <%= field.name.toUpperCase() %></strong></span>
+            </div>
+            <div class="qr-step">
+              <span class="step-number">4</span>
+              <span>Chụp màn hình bill chuyển khoản thành công</span>
+            </div>
+            <div class="qr-step">
+              <span class="step-number">5</span>
+              <span>Upload ảnh bill ở bên phải và bấm <strong>"Xác nhận đặt sân"</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Upload + Submit -->
+    <div>
+      <form action="/checkout" method="POST" enctype="multipart/form-data" id="checkout-form">
+        <!-- Hidden fields -->
+        <input type="hidden" name="fieldId" value="<%= field._id %>" />
+        <input type="hidden" name="slotId" value="<%= slot._id %>" />
+        <input type="hidden" name="bookingDate" value="<%= bookingDate %>" />
+        <input type="hidden" name="startTime" value="<%= startTime %>" />
+        <input type="hidden" name="endTime" value="<%= endTime %>" />
+        <input type="hidden" name="totalPrice" value="<%= totalPrice %>" />
+
+        <!-- Upload ảnh hóa đơn -->
+        <div class="card" style="margin-bottom: 1.5rem;">
+          <h2 class="card-title"><i class="fas fa-cloud-upload-alt"></i> Upload ảnh hóa đơn</h2>
+
+          <div class="upload-area" id="upload-area">
+            <input
+              type="file"
+              name="paymentImage"
+              id="payment-image"
+              accept="image/jpeg,image/png,image/jpg,image/webp"
+              class="upload-input"
+            />
+            <div class="upload-placeholder" id="upload-placeholder">
+              <div class="upload-icon"><i class="fas fa-image"></i></div>
+              <div class="upload-text">Bấm để chọn ảnh hoặc kéo thả vào đây</div>
+              <div class="upload-hint">Chỉ chấp nhận: JPG, PNG, WEBP — Tối đa 5MB</div>
+            </div>
+            <div class="upload-preview" id="upload-preview">
+              <img id="preview-img" src="" alt="Preview" />
+              <div class="file-name" id="file-name"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Thông tin khách hàng -->
+        <div class="card" style="margin-bottom: 1.5rem;">
+          <h2 class="card-title"><i class="fas fa-user"></i> Thông tin người đặt</h2>
+          <div class="order-row">
+            <span class="order-label">Họ tên</span>
+            <span class="order-value"><%= currentUser.name %></span>
+          </div>
+          <div class="order-row">
+            <span class="order-label">Số điện thoại</span>
+            <span class="order-value"><%= currentUser.phone %></span>
+          </div>
+          <div class="order-row">
+            <span class="order-label">Email</span>
+            <span class="order-value"><%= currentUser.email %></span>
+          </div>
+        </div>
+
+        <div class="warning-box">
+          <i class="fas fa-exclamation-triangle"></i>
+          <span>Sau khi bấm "Xác nhận đặt sân", khung giờ sẽ được giữ chỗ cho bạn. Admin sẽ kiểm tra bill chuyển khoản và duyệt đơn trong thời gian sớm nhất.</span>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn-submit" id="btn-submit">
+          <i class="fas fa-check-circle"></i>
+          Xác nhận đặt sân
+        </button>
+
+        <a href="/fields/<%= field._id %>" class="btn-back">
+          <i class="fas fa-arrow-left"></i> Quay lại chọn giờ
+        </a>
+      </form>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>© 2026 ĐặtSân.vn — Hệ thống đặt sân bóng đá online</p>
+  </footer>
+
+  <!-- Upload Preview JS -->
+  <script src="/public/js/upload-preview.js"></script>
+
+</body>
+</html>

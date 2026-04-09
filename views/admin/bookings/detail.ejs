@@ -50,7 +50,7 @@
               </div>
               <div>
                 <span style="color: #64748b; font-size: 13px;">Khung giờ</span>
-                <div style="color: #f1f5f9;"><%= booking.timeSlot || 'N/A' %></div>
+                <div style="color: #f1f5f9;"><%= booking.startTime %> — <%= booking.endTime %></div>
               </div>
               <div>
                 <span style="color: #64748b; font-size: 13px;">Giá tiền</span>
@@ -96,7 +96,7 @@
             <div class="card">
               <h3 style="color: #f8fafc; margin-bottom: 16px;">🧾 Ảnh hóa đơn chuyển khoản</h3>
               <% if (booking.paymentImage) { %>
-                <img src="/uploads/<%= booking.paymentImage %>"
+                <img src="<%= booking.paymentImage %>"
                      alt="Hóa đơn"
                      style="max-width: 100%; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);" />
               <% } else { %>
