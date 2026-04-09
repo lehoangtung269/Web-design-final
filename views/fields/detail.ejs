@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %> | ĐặtSân.vn</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0f1c;
+      color: #e0e6ed;
+      min-height: 100vh;
+    }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 0 2rem;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .navbar-brand {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #34d399;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .navbar-links { display: flex; align-items: center; gap: 1.5rem; }
+    .navbar-links a {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .navbar-links a:hover { color: #34d399; }
+    .btn-nav {
+      padding: 0.5rem 1.2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-login { color: #34d399; border: 1px solid #34d399; }
+    .btn-register {
+      background: linear-gradient(135deg, #34d399, #059669);
+      color: #fff;
+      border: none;
+    }
+
+    /* ===== FLASH ===== */
+    .flash-container { padding: 0 2rem; max-width: 1200px; margin: 1rem auto 0; }
+    .flash-msg { padding: 0.8rem 1.2rem; border-radius: 8px; margin-bottom: 0.5rem; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; }
+    .flash-success { background: rgba(52, 211, 153, 0.15); border: 1px solid rgba(52, 211, 153, 0.3); color: #34d399; }
+    .flash-error { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; }
+
+    /* ===== BREADCRUMB ===== */
+    .breadcrumb {
+      max-width: 1200px;
+      margin: 1.5rem auto 0;
+      padding: 0 2rem;
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+    .breadcrumb a { color: #34d399; text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+
+    /* ===== PAGE CONTAINER ===== */
+    .page-container {
+      max-width: 1200px;
+      margin: 1.5rem auto 0;
+      padding: 0 2rem 3rem;
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 2rem;
+    }
+
+    /* ===== FIELD INFO ===== */
+    .field-info-card {
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .field-gallery {
+      position: relative;
+      width: 100%;
+      height: 350px;
+      overflow: hidden;
+    }
+    .field-gallery img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .field-gallery-placeholder {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #475569;
+      font-size: 5rem;
+    }
+    .field-gallery-nav {
+      position: absolute;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 0.5rem;
+    }
+    .gallery-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .gallery-dot.active { background: #34d399; }
+
+    .field-details { padding: 1.5rem; }
+    .field-name {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #f1f5f9;
+      margin-bottom: 0.5rem;
+    }
+    .field-address {
+      font-size: 0.9rem;
+      color: #64748b;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .field-meta {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+      flex-wrap: wrap;
+    }
+    .meta-item {
+      padding: 0.5rem 1rem;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .meta-item i { color: #34d399; }
+    .meta-item .meta-value { font-weight: 700; color: #f1f5f9; }
+    .field-desc {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      line-height: 1.6;
+    }
+
+    /* ===== TIMESLOT PANEL ===== */
+    .timeslot-panel {
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 1.5rem;
+      height: fit-content;
+      position: sticky;
+      top: 90px;
+    }
+    .panel-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .panel-title i { color: #34d399; }
+
+    /* Date Picker */
+    .date-picker-group {
+      margin-bottom: 1.2rem;
+    }
+    .date-picker-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.4rem;
+      display: block;
+    }
+    .date-picker-input {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      color: #e0e6ed;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .date-picker-input:focus {
+      outline: none;
+      border-color: #34d399;
+    }
+
+    /* Slot Legend */
+    .slot-legend {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      color: #94a3b8;
+    }
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 4px;
+    }
+    .legend-dot.available { background: #34d399; }
+    .legend-dot.pending { background: #fbbf24; }
+    .legend-dot.booked { background: #475569; }
+
+    /* Slots Grid */
+    .slots-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6rem;
+      margin-bottom: 1.5rem;
+      min-height: 200px;
+    }
+    .slot-item {
+      padding: 0.7rem;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+      user-select: none;
+    }
+    .slot-item .slot-time {
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+    .slot-item .slot-status {
+      font-size: 0.7rem;
+      font-weight: 400;
+    }
+
+    /* Slot States */
+    .slot-available {
+      background: rgba(52, 211, 153, 0.1);
+      border-color: rgba(52, 211, 153, 0.3);
+      color: #34d399;
+    }
+    .slot-available:hover {
+      background: rgba(52, 211, 153, 0.2);
+      border-color: #34d399;
+      transform: scale(1.03);
+    }
+    .slot-available.selected {
+      background: rgba(52, 211, 153, 0.3);
+      border-color: #34d399;
+      box-shadow: 0 0 15px rgba(52, 211, 153, 0.3);
+    }
+
+    .slot-pending {
+      background: rgba(251, 191, 36, 0.1);
+      border-color: rgba(251, 191, 36, 0.2);
+      color: #fbbf24;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+    .slot-booked {
+      background: rgba(71, 85, 105, 0.2);
+      border-color: rgba(71, 85, 105, 0.2);
+      color: #475569;
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    /* Loading */
+    .slots-loading {
+      text-align: center;
+      padding: 2rem;
+      color: #64748b;
+    }
+    .slots-loading i {
+      font-size: 1.5rem;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Book Button */
+    .btn-book {
+      width: 100%;
+      padding: 0.9rem;
+      background: linear-gradient(135deg, #34d399, #059669);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .btn-book:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(52, 211, 153, 0.3);
+    }
+    .btn-book:disabled {
+      background: #334155;
+      color: #64748b;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .booking-summary {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      display: none;
+    }
+    .booking-summary.show { display: block; }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      margin-bottom: 0.4rem;
+    }
+    .summary-label { color: #64748b; }
+    .summary-value { color: #f1f5f9; font-weight: 600; }
+    .summary-total {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 0.6rem;
+      margin-top: 0.4rem;
+    }
+    .summary-total .summary-value { color: #34d399; font-size: 1.1rem; }
+
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      color: #475569;
+      font-size: 0.85rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 900px) {
+      .page-container {
+        grid-template-columns: 1fr;
+      }
+      .timeslot-panel {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="/" class="navbar-brand"><i class="fas fa-futbol"></i> ĐặtSân.vn</a>
+    <div class="navbar-links">
+      <a href="/fields">Danh sách sân</a>
+      <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+        <span style="color:#64748b; font-size:0.85rem;">Xin chào, <strong style="color:#f1f5f9;"><%= currentUser.name %></strong></span>
+        <a href="/auth/logout" class="btn-nav btn-login">Đăng xuất</a>
+      <% } else { %>
+        <a href="/auth/login" class="btn-nav btn-login">Đăng nhập</a>
+        <a href="/auth/register" class="btn-nav btn-register">Đăng ký</a>
+      <% } %>
+    </div>
+  </nav>
+
+  <!-- FLASH MESSAGES -->
+  <% if (typeof success !== 'undefined' && success && success.length > 0) { %>
+    <div class="flash-container">
+      <% success.forEach(msg => { %>
+        <div class="flash-msg flash-success"><i class="fas fa-check-circle"></i> <%= msg %></div>
+      <% }); %>
+    </div>
+  <% } %>
+  <% if (typeof error !== 'undefined' && error && error.length > 0) { %>
+    <div class="flash-container">
+      <% error.forEach(msg => { %>
+        <div class="flash-msg flash-error"><i class="fas fa-exclamation-circle"></i> <%= msg %></div>
+      <% }); %>
+    </div>
+  <% } %>
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <a href="/">Trang chủ</a> &rsaquo;
+    <a href="/fields">Danh sách sân</a> &rsaquo;
+    <span><%= field.name %></span>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="page-container">
+
+    <!-- LEFT: Field Info -->
+    <div class="field-info-card">
+      <div class="field-gallery" id="field-gallery">
+        <% if (field.images && field.images.length > 0) { %>
+          <img src="<%= field.images[0] %>" alt="<%= field.name %>" id="gallery-img" />
+          <% if (field.images.length > 1) { %>
+            <div class="field-gallery-nav">
+              <% field.images.forEach((img, idx) => { %>
+                <span class="gallery-dot <%= idx === 0 ? 'active' : '' %>"
+                      data-src="<%= img %>"
+                      onclick="changeGallery(this, '<%= img %>')"></span>
+              <% }); %>
+            </div>
+          <% } %>
+        <% } else { %>
+          <div class="field-gallery-placeholder"><i class="fas fa-futbol"></i></div>
+        <% } %>
+      </div>
+
+      <div class="field-details">
+        <h1 class="field-name"><%= field.name %></h1>
+        <p class="field-address"><i class="fas fa-map-marker-alt"></i> <%= field.address %></p>
+
+        <div class="field-meta">
+          <div class="meta-item">
+            <i class="fas fa-users"></i>
+            <span class="meta-value">
+              <%= field.type === '5-a-side' ? 'Sân 5 người' : field.type === '7-a-side' ? 'Sân 7 người' : 'Sân 11 người' %>
+            </span>
+          </div>
+          <div class="meta-item">
+            <i class="fas fa-tag"></i>
+            <span class="meta-value"><%= field.pricePerSlot.toLocaleString('vi-VN') %>đ</span>
+            <span>/ slot</span>
+          </div>
+          <div class="meta-item">
+            <i class="fas fa-circle" style="color: <%= field.status === 'active' ? '#34d399' : '#ef4444' %>; font-size: 0.5rem;"></i>
+            <span><%= field.status === 'active' ? 'Đang hoạt động' : 'Bảo trì' %></span>
+          </div>
+        </div>
+
+        <% if (field.description) { %>
+          <p class="field-desc"><%= field.description %></p>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- RIGHT: Timeslot Panel -->
+    <div class="timeslot-panel">
+      <h2 class="panel-title"><i class="fas fa-clock"></i> Chọn khung giờ</h2>
+
+      <!-- Date Picker -->
+      <div class="date-picker-group">
+        <label class="date-picker-label" for="slot-date"><i class="fas fa-calendar-alt"></i> Chọn ngày</label>
+        <input
+          type="date"
+          id="slot-date"
+          class="date-picker-input"
+          value="<%= selectedDate %>"
+          min="<%= new Date().toISOString().split('T')[0] %>"
+        />
+      </div>
+
+      <!-- Legend -->
+      <div class="slot-legend">
+        <div class="legend-item"><span class="legend-dot available"></span> Trống</div>
+        <div class="legend-item"><span class="legend-dot pending"></span> Đang giữ chỗ</div>
+        <div class="legend-item"><span class="legend-dot booked"></span> Đã đặt</div>
+      </div>
+
+      <!-- Slots Grid -->
+      <div class="slots-grid" id="slots-grid">
+        <% slots.forEach(slot => { %>
+          <div class="slot-item slot-<%= slot.status %>"
+               data-slot-id="<%= slot._id %>"
+               data-start="<%= slot.startTime %>"
+               data-end="<%= slot.endTime %>"
+               data-status="<%= slot.status %>">
+            <span class="slot-time"><%= slot.startTime %> - <%= slot.endTime %></span>
+            <span class="slot-status">
+              <%= slot.status === 'available' ? 'Trống' : slot.status === 'pending' ? 'Đang giữ' : 'Đã đặt' %>
+            </span>
+          </div>
+        <% }); %>
+      </div>
+
+      <!-- Booking Summary -->
+      <div class="booking-summary" id="booking-summary">
+        <div class="summary-row">
+          <span class="summary-label">Sân</span>
+          <span class="summary-value"><%= field.name %></span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Ngày</span>
+          <span class="summary-value" id="summary-date"><%= selectedDate %></span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Khung giờ</span>
+          <span class="summary-value" id="summary-time">—</span>
+        </div>
+        <div class="summary-row summary-total">
+          <span class="summary-label">Tổng tiền</span>
+          <span class="summary-value" id="summary-price"><%= field.pricePerSlot.toLocaleString('vi-VN') %>đ</span>
+        </div>
+      </div>
+
+      <!-- Book Button -->
+      <button type="button" class="btn-book" id="btn-book" disabled>
+        <i class="fas fa-check-circle"></i>
+        Tiếp tục đặt sân
+      </button>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>© 2026 ĐặtSân.vn — Hệ thống đặt sân bóng đá online</p>
+  </footer>
+
+  <!-- TIMESLOT JS -->
+  <script>
+    // Field info from server
+    const FIELD_ID = '<%= field._id %>';
+    const FIELD_PRICE = <%= field.pricePerSlot %>;
+    const FIELD_NAME = '<%= field.name %>';
+  </script>
+  <script src="/public/js/timeslot.js"></script>
+
+  <!-- Gallery script -->
+  <script>
+    function changeGallery(dotEl, src) {
+      const img = document.getElementById('gallery-img');
+      if (img) img.src = src;
+      document.querySelectorAll('.gallery-dot').forEach(d => d.classList.remove('active'));
+      dotEl.classList.add('active');
+    }
+  </script>
+
+</body>
+</html>

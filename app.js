@@ -13,6 +13,8 @@ const { errorHandler, notFound } = require('./middlewares/errorHandler');
 // Import Routes
 const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const homeRoutes = require('./routes/homeRoutes');
+const fieldRoutes = require('./routes/fieldRoutes');
 const apiRoutes = require('./routes');
 
 // ================================
@@ -58,10 +60,8 @@ app.use(setLocals);
 // ================================
 // Routes
 // ================================
-app.get('/', (req, res) => {
-  res.render('home/index', { title: 'Trang chủ' });
-});
-
+app.use('/', homeRoutes);
+app.use('/fields', fieldRoutes);
 app.use('/auth', authRoutes);
 app.use('/admin', adminRoutes);
 app.use('/api', apiRoutes);

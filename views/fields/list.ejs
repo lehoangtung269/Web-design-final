@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title><%= title %> | ĐặtSân.vn</title>
-  <meta name="description" content="Hệ thống đặt sân bóng đá online nhanh chóng, tiện lợi. Tìm sân, chọn giờ, đặt ngay!" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
@@ -40,11 +39,7 @@
       gap: 0.5rem;
     }
     .navbar-brand i { font-size: 1.3rem; }
-    .navbar-links {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-    }
+    .navbar-links { display: flex; align-items: center; gap: 1.5rem; }
     .navbar-links a {
       color: #94a3b8;
       text-decoration: none;
@@ -61,159 +56,91 @@
       text-decoration: none;
       transition: all 0.2s;
     }
-    .btn-login {
-      color: #34d399;
-      border: 1px solid #34d399;
-    }
+    .btn-login { color: #34d399; border: 1px solid #34d399; }
     .btn-login:hover { background: rgba(52, 211, 153, 0.1); }
     .btn-register {
       background: linear-gradient(135deg, #34d399, #059669);
       color: #fff;
       border: none;
     }
-    .btn-register:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(52, 211, 153, 0.3); }
 
-    /* ===== FLASH MESSAGES ===== */
+    /* ===== FLASH ===== */
     .flash-container { padding: 0 2rem; max-width: 1200px; margin: 1rem auto 0; }
-    .flash-msg {
-      padding: 0.8rem 1.2rem;
-      border-radius: 8px;
-      margin-bottom: 0.5rem;
-      font-size: 0.9rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
+    .flash-msg { padding: 0.8rem 1.2rem; border-radius: 8px; margin-bottom: 0.5rem; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; }
     .flash-success { background: rgba(52, 211, 153, 0.15); border: 1px solid rgba(52, 211, 153, 0.3); color: #34d399; }
     .flash-error { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; }
 
-    /* ===== HERO ===== */
-    .hero {
-      position: relative;
-      padding: 5rem 2rem 4rem;
-      text-align: center;
-      overflow: hidden;
-    }
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 800px;
-      height: 800px;
-      background: radial-gradient(circle, rgba(52, 211, 153, 0.12) 0%, transparent 70%);
-      z-index: 0;
-    }
-    .hero-content { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; }
-    .hero h1 {
-      font-size: 3rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, #34d399, #06b6d4);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 1rem;
-      line-height: 1.2;
-    }
-    .hero p {
-      font-size: 1.1rem;
-      color: #94a3b8;
-      margin-bottom: 2.5rem;
-      line-height: 1.6;
-    }
-
-    /* ===== SEARCH BOX ===== */
-    .search-box {
-      background: rgba(30, 41, 59, 0.8);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
-      padding: 1.5rem;
-      max-width: 900px;
-      margin: 0 auto 2rem;
-    }
-    .search-form {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr auto;
-      gap: 1rem;
-      align-items: end;
-    }
-    .form-group { text-align: left; }
-    .form-group label {
-      display: block;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: #94a3b8;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 0.4rem;
-    }
-    .form-group input,
-    .form-group select {
-      width: 100%;
-      padding: 0.7rem 1rem;
-      background: rgba(15, 23, 42, 0.8);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 10px;
-      color: #e0e6ed;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.9rem;
-      transition: border-color 0.2s;
-    }
-    .form-group input:focus,
-    .form-group select:focus {
-      outline: none;
-      border-color: #34d399;
-    }
-    .btn-search {
-      padding: 0.7rem 1.8rem;
-      background: linear-gradient(135deg, #34d399, #059669);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      white-space: nowrap;
-    }
-    .btn-search:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(52, 211, 153, 0.3);
-    }
-
-    /* ===== SECTION ===== */
-    .section {
+    /* ===== PAGE ===== */
+    .page-container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 3rem 2rem;
+      padding: 2rem;
     }
-    .section-header {
+    .page-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
-    .section-title {
+    .page-title {
       font-size: 1.6rem;
       font-weight: 700;
       color: #f1f5f9;
     }
-    .section-link {
-      color: #34d399;
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 0.9rem;
-      transition: color 0.2s;
-    }
-    .section-link:hover { color: #6ee7b7; }
 
-    /* ===== FIELD CARDS GRID ===== */
+    /* ===== FILTER BAR ===== */
+    .filter-bar {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: transparent;
+      color: #94a3b8;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .filter-btn:hover {
+      border-color: #34d399;
+      color: #34d399;
+    }
+    .filter-btn.active {
+      background: linear-gradient(135deg, #34d399, #059669);
+      color: #fff;
+      border-color: transparent;
+    }
+
+    /* ===== SEARCH INFO ===== */
+    .search-info {
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .search-tag {
+      padding: 0.3rem 0.8rem;
+      background: rgba(52, 211, 153, 0.1);
+      border: 1px solid rgba(52, 211, 153, 0.2);
+      border-radius: 20px;
+      font-size: 0.8rem;
+      color: #34d399;
+    }
+
+    /* ===== FIELDS GRID ===== */
     .fields-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
@@ -238,7 +165,6 @@
       width: 100%;
       height: 200px;
       object-fit: cover;
-      display: block;
     }
     .field-card-img-placeholder {
       width: 100%;
@@ -276,7 +202,6 @@
       font-size: 0.75rem;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.03em;
     }
     .badge-5 { background: rgba(52, 211, 153, 0.15); color: #34d399; }
     .badge-7 { background: rgba(6, 182, 212, 0.15); color: #06b6d4; }
@@ -292,16 +217,27 @@
       color: #64748b;
     }
 
+    /* ===== RESULT COUNT ===== */
+    .result-count {
+      font-size: 0.9rem;
+      color: #64748b;
+      margin-bottom: 1rem;
+    }
+
     /* ===== EMPTY STATE ===== */
     .empty-state {
       text-align: center;
       padding: 4rem 2rem;
       color: #64748b;
     }
-    .empty-state i { font-size: 3rem; margin-bottom: 1rem; }
-    .empty-state p { font-size: 1.1rem; }
+    .empty-state i { font-size: 3rem; margin-bottom: 1rem; display: block; }
+    .empty-state p { font-size: 1.1rem; margin-bottom: 1rem; }
+    .empty-state a {
+      color: #34d399;
+      text-decoration: none;
+      font-weight: 500;
+    }
 
-    /* ===== FOOTER ===== */
     .footer {
       text-align: center;
       padding: 2rem;
@@ -311,12 +247,9 @@
       margin-top: 2rem;
     }
 
-    /* ===== RESPONSIVE ===== */
     @media (max-width: 768px) {
-      .hero h1 { font-size: 2rem; }
-      .search-form { grid-template-columns: 1fr; }
       .fields-grid { grid-template-columns: 1fr; }
-      .navbar-links { gap: 0.8rem; }
+      .page-header { flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
@@ -328,7 +261,6 @@
     <div class="navbar-links">
       <a href="/fields">Danh sách sân</a>
       <% if (typeof currentUser !== 'undefined' && currentUser) { %>
-        <a href="/bookings/history">Lịch sử đặt</a>
         <span style="color:#64748b; font-size:0.85rem;">Xin chào, <strong style="color:#f1f5f9;"><%= currentUser.name %></strong></span>
         <a href="/auth/logout" class="btn-nav btn-login">Đăng xuất</a>
       <% } else { %>
@@ -338,7 +270,7 @@
     </div>
   </nav>
 
-  <!-- FLASH MESSAGES -->
+  <!-- FLASH -->
   <% if (typeof success !== 'undefined' && success && success.length > 0) { %>
     <div class="flash-container">
       <% success.forEach(msg => { %>
@@ -354,62 +286,40 @@
     </div>
   <% } %>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-content">
-      <h1>Đặt sân bóng đá<br/>nhanh chóng & dễ dàng</h1>
-      <p>Tìm sân phù hợp, chọn khung giờ yêu thích và đặt chỗ chỉ trong vài bước đơn giản.</p>
+  <div class="page-container">
+    <div class="page-header">
+      <h1 class="page-title"><i class="fas fa-list" style="color:#34d399; margin-right:0.5rem;"></i><%= title %></h1>
+      <div class="filter-bar">
+        <a href="/fields" class="filter-btn <%= (!searchParams || !searchParams.type || searchParams.type === 'all') ? 'active' : '' %>">Tất cả</a>
+        <a href="/fields?type=5-a-side" class="filter-btn <%= searchParams && searchParams.type === '5-a-side' ? 'active' : '' %>">Sân 5</a>
+        <a href="/fields?type=7-a-side" class="filter-btn <%= searchParams && searchParams.type === '7-a-side' ? 'active' : '' %>">Sân 7</a>
+        <a href="/fields?type=11-a-side" class="filter-btn <%= searchParams && searchParams.type === '11-a-side' ? 'active' : '' %>">Sân 11</a>
+      </div>
     </div>
 
-    <!-- SEARCH BOX -->
-    <div class="search-box">
-      <form class="search-form" action="/search" method="GET">
-        <div class="form-group">
-          <label for="search-date"><i class="fas fa-calendar-alt"></i> Ngày đá</label>
-          <input type="date" id="search-date" name="date" value="<%= new Date().toISOString().split('T')[0] %>" />
-        </div>
-        <div class="form-group">
-          <label for="search-time"><i class="fas fa-clock"></i> Khung giờ</label>
-          <select id="search-time" name="time">
-            <option value="">Tất cả giờ</option>
-            <option value="06:00">06:00 - 07:30</option>
-            <option value="07:30">07:30 - 09:00</option>
-            <option value="09:00">09:00 - 10:30</option>
-            <option value="10:30">10:30 - 12:00</option>
-            <option value="12:00">12:00 - 13:30</option>
-            <option value="13:30">13:30 - 15:00</option>
-            <option value="15:00">15:00 - 16:30</option>
-            <option value="16:30">16:30 - 18:00</option>
-            <option value="18:00">18:00 - 19:30</option>
-            <option value="19:30">19:30 - 21:00</option>
-            <option value="21:00">21:00 - 22:30</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="search-type"><i class="fas fa-users"></i> Loại sân</label>
-          <select id="search-type" name="type">
-            <option value="all">Tất cả loại sân</option>
-            <option value="5-a-side">Sân 5 người</option>
-            <option value="7-a-side">Sân 7 người</option>
-            <option value="11-a-side">Sân 11 người</option>
-          </select>
-        </div>
-        <button type="submit" class="btn-search"><i class="fas fa-search"></i> Tìm sân</button>
-      </form>
-    </div>
-  </section>
+    <!-- Search info (if coming from search) -->
+    <% if (searchParams && (searchParams.date || searchParams.keyword || searchParams.time)) { %>
+      <div class="search-info">
+        <span style="color:#94a3b8; font-size:0.85rem;"><i class="fas fa-filter"></i> Bộ lọc:</span>
+        <% if (searchParams.keyword) { %>
+          <span class="search-tag"><i class="fas fa-search"></i> "<%= searchParams.keyword %>"</span>
+        <% } %>
+        <% if (searchParams.date) { %>
+          <span class="search-tag"><i class="fas fa-calendar"></i> <%= searchParams.date %></span>
+        <% } %>
+        <% if (searchParams.time) { %>
+          <span class="search-tag"><i class="fas fa-clock"></i> <%= searchParams.time %></span>
+        <% } %>
+        <a href="/fields" style="color:#64748b; font-size:0.8rem; text-decoration:none;"><i class="fas fa-times"></i> Xóa lọc</a>
+      </div>
+    <% } %>
 
-  <!-- FEATURED FIELDS -->
-  <section class="section">
-    <div class="section-header">
-      <h2 class="section-title"><i class="fas fa-star" style="color: #fbbf24; margin-right: 0.5rem;"></i>Sân nổi bật</h2>
-      <a href="/fields" class="section-link">Xem tất cả <i class="fas fa-arrow-right"></i></a>
-    </div>
+    <p class="result-count">Tìm thấy <strong style="color:#f1f5f9;"><%= fields.length %></strong> sân</p>
 
-    <% if (featuredFields && featuredFields.length > 0) { %>
+    <% if (fields && fields.length > 0) { %>
       <div class="fields-grid">
-        <% featuredFields.forEach(field => { %>
-          <a href="/fields/<%= field._id %>" class="field-card">
+        <% fields.forEach(field => { %>
+          <a href="/fields/<%= field._id %><%= searchParams && searchParams.date ? '?date=' + searchParams.date : '' %>" class="field-card">
             <% if (field.images && field.images.length > 0) { %>
               <img src="<%= field.images[0] %>" alt="<%= field.name %>" class="field-card-img" />
             <% } else { %>
@@ -431,13 +341,13 @@
       </div>
     <% } else { %>
       <div class="empty-state">
-        <i class="fas fa-soccer-ball"></i>
-        <p>Chưa có sân nào. Vui lòng quay lại sau!</p>
+        <i class="fas fa-search"></i>
+        <p>Không tìm thấy sân nào phù hợp.</p>
+        <a href="/fields"><i class="fas fa-arrow-left"></i> Xem tất cả sân</a>
       </div>
     <% } %>
-  </section>
+  </div>
 
-  <!-- FOOTER -->
   <footer class="footer">
     <p>© 2026 ĐặtSân.vn — Hệ thống đặt sân bóng đá online</p>
   </footer>
