@@ -4,114 +4,285 @@
     <p>Không tìm thấy đơn đặt sân</p>
     <a href="/admin/bookings" class="btn btn-blue" style="margin-top: 16px;">Quay lại danh sách</a>
   </div>
-  <% } else { %>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
-      <!-- Thông tin đơn -->
-      <div class="card">
-        <h3 style="color: #f8fafc; margin-bottom: 20px;">📋 Thông tin đơn hàng</h3>
-        <div style="display: grid; gap: 12px;">
-          <div>
-            <span style="color: #64748b; font-size: 13px;">Mã đơn</span>
-            <div style="color: #f1f5f9;">
-              <%= booking._id %>
-            </div>
-          </div>
-          <div>
-            <span style="color: #64748b; font-size: 13px;">Sân</span>
-            <div style="color: #f1f5f9;">
-              <%= booking.field ? booking.field.name : 'N/A' %>
-            </div>
-          </div>
-          <div>
-            <span style="color: #64748b; font-size: 13px;">Ngày đá</span>
-            <div style="color: #f1f5f9;">
-              <%= booking.date ? new Date(booking.date).toLocaleDateString('vi-VN') : 'N/A' %>
-            </div>
-          </div>
-          <div>
-            <span style="color: #64748b; font-size: 13px;">Khung giờ</span>
-            <div style="color: #f1f5f9;">
-              <%= booking.startTime %> — <%= booking.endTime %>
-            </div>
-          </div>
-          <div>
-            <span style="color: #64748b; font-size: 13px;">Giá tiền</span>
-            <div style="color: #10b981; font-size: 20px; font-weight: 700;">
-              <%= booking.totalPrice ? booking.totalPrice.toLocaleString('vi-VN') + 'đ' : 'N/A' %>
-            </div>
-          </div>
-          <div>
-            <span style="color: #64748b; font-size: 13px;">Trạng thái</span>
-            <div>
-              <% if (booking.status==='pending' ) { %>
-                <span class="badge badge-pending">Chờ duyệt</span>
-                <% } else if (booking.status==='confirmed' ) { %>
-                  <span class="badge badge-confirmed">Đã duyệt</span>
-                  <% } else { %>
-                    <span class="badge badge-rejected">Từ chối</span>
-                    <% } %>
-            </div>
-          </div>
+<% } else { %>
+<style>
+  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 1024px) {
+    .detail-grid { grid-template-columns: 1fr; }
+  }
+  .info-row { display: grid; gap: 14px; }
+  .info-item { padding: 12px 0; border-bottom: 1px solid #1F2937; }
+  .info-item:last-child { border-bottom: none; }
+  .info-label { color: #6B7280; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  .info-value { color: #F3F4F6; font-size: 13px; font-weight: 500; }
+  
+  .action-card {
+    margin-top: 24px;
+    background: #111827;
+    border: 1px solid #1F2937;
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .action-title {
+    color: #F9FAFB;
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #1F2937;
+  }
+  .action-row { display: flex; gap: 20px; align-items: stretch; flex-wrap: wrap; }
+  .approve-section { flex: 1; min-width: 180px; }
+  .reject-section { flex: 2; min-width: 280px; }
+  .section-label { color: #9CA3AF; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+
+  .btn-approve {
+    width: 100%;
+    padding: 12px 20px;
+    background: #10B981;
+    color: white;
+    border: 1px solid #10B981;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.15s ease;
+    font-family: 'Inter', sans-serif;
+  }
+  .btn-approve:hover {
+    background: #059669;
+    border-color: #059669;
+  }
+  .btn-approve:active { transform: scale(0.97); }
+
+  .reject-form { display: flex; flex-direction: column; gap: 10px; height: 100%; }
+  .reject-input {
+    width: 100%;
+    padding: 10px 14px;
+    background: #0B0F14;
+    border: 1px solid #1F2937;
+    border-radius: 8px;
+    color: #F3F4F6;
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s;
+    box-sizing: border-box;
+    flex: 1;
+  }
+  .reject-input:focus {
+    outline: none;
+    border-color: #EF4444;
+    box-shadow: 0 0 0 3px rgba(239,68,68,0.1);
+  }
+  .reject-input::placeholder { color: #6B7280; }
+  .btn-reject {
+    padding: 12px 20px;
+    background: rgba(239,68,68,0.1);
+    color: #F87171;
+    border: 1px solid rgba(239,68,68,0.2);
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.15s ease;
+    font-family: 'Inter', sans-serif;
+  }
+  .btn-reject:hover {
+    background: rgba(239,68,68,0.2);
+    border-color: rgba(239,68,68,0.3);
+  }
+  .btn-reject:active { transform: scale(0.97); }
+
+  .divider { width: 1px; background: #1F2937; align-self: stretch; margin: 0 4px; }
+  @media (max-width: 600px) {
+    .divider { width: 100%; height: 1px; margin: 10px 0; }
+  }
+
+  .status-banner {
+    padding: 16px 20px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 24px;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .status-banner.confirmed {
+    background: rgba(16,185,129,0.1);
+    border: 1px solid rgba(16,185,129,0.2);
+    color: #10B981;
+  }
+  .status-banner.rejected {
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.2);
+    color: #EF4444;
+  }
+  
+  .card-title {
+    color: #F9FAFB;
+    margin-bottom: 20px;
+    font-size: 15px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+</style>
+
+<a href="/admin/bookings" class="btn btn-outline" style="margin-bottom: 20px; font-size: 12px; padding: 6px 12px;">← Quay lại danh sách</a>
+
+<div class="detail-grid">
+  <!-- Thông tin đơn -->
+  <div class="card">
+    <div class="card-title"><span>📋</span> Thông tin đơn đặt sân</div>
+    <div class="info-row">
+      <div class="info-item">
+        <div class="info-label">Mã đơn</div>
+        <div class="info-value" style="font-family: monospace; color: #9CA3AF;"><%= booking._id %></div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Sân bóng</div>
+        <div class="info-value"><%= booking.field ? booking.field.name : 'N/A' %></div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Ngày đá</div>
+        <div class="info-value"><%= booking.date ? new Date(booking.date).toLocaleDateString('vi-VN', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' }) : 'N/A' %></div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Khung giờ</div>
+        <div class="info-value">
+          <span style="background: rgba(59,130,246,0.1); color: #60A5FA; padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 12px;">
+            <%= booking.startTime %> — <%= booking.endTime %>
+          </span>
         </div>
       </div>
-
-      <!-- Thông tin khách + Ảnh bill -->
-      <div>
-        <div class="card" style="margin-bottom: 20px;">
-          <h3 style="color: #f8fafc; margin-bottom: 16px;">👤 Thông tin khách hàng</h3>
-          <div style="display: grid; gap: 10px;">
-            <div>
-              <span style="color: #64748b; font-size: 13px;">Họ tên</span>
-              <div style="color: #f1f5f9;">
-                <%= booking.user ? booking.user.name : 'N/A' %>
-              </div>
-            </div>
-            <div>
-              <span style="color: #64748b; font-size: 13px;">Email</span>
-              <div style="color: #f1f5f9;">
-                <%= booking.user ? booking.user.email : 'N/A' %>
-              </div>
-            </div>
-            <div>
-              <span style="color: #64748b; font-size: 13px;">Số điện thoại</span>
-              <div style="color: #f1f5f9;">
-                <%= booking.user ? booking.user.phone : 'N/A' %>
-              </div>
-            </div>
-          </div>
+      <div class="info-item">
+        <div class="info-label">Giá tiền</div>
+        <div class="info-value" style="color: #10B981; font-size: 20px; font-weight: 700;">
+          <%= booking.totalPrice ? booking.totalPrice.toLocaleString('vi-VN') + 'đ' : 'N/A' %>
         </div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Trạng thái</div>
+        <div>
+          <% if (booking.status === 'pending') { %>
+            <span class="badge badge-pending">Chờ duyệt</span>
+          <% } else if (booking.status === 'confirmed') { %>
+            <span class="badge badge-confirmed">Đã duyệt</span>
+          <% } else { %>
+            <span class="badge badge-rejected">Từ chối</span>
+          <% } %>
+        </div>
+      </div>
+      <% if (booking.rejectedReason) { %>
+      <div class="info-item">
+        <div class="info-label">Lý do từ chối</div>
+        <div class="info-value" style="color: #FCA5A5; font-style: italic;">"<%= booking.rejectedReason %>"</div>
+      </div>
+      <% } %>
+    </div>
+  </div>
 
-        <div class="card">
-          <h3 style="color: #f8fafc; margin-bottom: 16px;">🧾 Ảnh hóa đơn chuyển khoản</h3>
-          <% if (booking.paymentImage) { %>
-            <img src="<%= booking.paymentImage %>" alt="Hóa đơn"
-              style="max-width: 100%; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);" />
-            <% } else { %>
-              <p style="color: #64748b; font-size: 14px;">Khách chưa upload ảnh hóa đơn</p>
-              <% } %>
+  <!-- Thông tin khách + Ảnh bill -->
+  <div>
+    <div class="card" style="margin-bottom: 24px;">
+      <div class="card-title"><span>👤</span> Thông tin khách hàng</div>
+      <div class="info-row">
+        <div class="info-item">
+          <div class="info-label">Họ tên</div>
+          <div class="info-value"><%= booking.user ? booking.user.name : 'N/A' %></div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Email</div>
+          <div class="info-value" style="color: #9CA3AF;"><%= booking.user ? booking.user.email : 'N/A' %></div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Số điện thoại</div>
+          <div class="info-value"><%= booking.user ? booking.user.phone : 'N/A' %></div>
         </div>
       </div>
     </div>
 
-    <!-- Action Buttons -->
-    <% if (booking.status==='pending' ) { %>
-      <div class="card" style="margin-top: 24px;">
-        <h3 style="color: #f8fafc; margin-bottom: 16px;">⚡ Hành động</h3>
-        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-          <form action="/admin/bookings/<%= booking._id %>/approve" method="POST" style="display: inline;">
-            <button type="submit" class="btn btn-green" onclick="return confirm('Xác nhận DUYỆT đơn này?')">
-              ✅ Duyệt đơn
-            </button>
-          </form>
-          <form action="/admin/bookings/<%= booking._id %>/reject" method="POST"
-            style="display: inline-flex; gap: 8px; align-items: center;">
-            <input type="text" name="reason" placeholder="Lý do từ chối (tùy chọn)"
-              style="padding: 10px 14px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #f1f5f9; width: 250px;" />
-            <button type="submit" class="btn btn-red" onclick="return confirm('Xác nhận TỪ CHỐI đơn này?')">
-              ❌ Từ chối
-            </button>
-          </form>
+    <div class="card">
+      <div class="card-title"><span>🧾</span> Hóa đơn chuyển khoản</div>
+      <% if (booking.paymentImage) { %>
+        <img src="<%= booking.paymentImage %>" alt="Hóa đơn"
+          style="max-width: 100%; border-radius: 8px; border: 1px solid #1F2937;" />
+      <% } else { %>
+        <div style="text-align: center; padding: 32px 20px; background: #0B0F14; border-radius: 8px; border: 1px dashed #1F2937;">
+          <p style="color: #6B7280; font-size: 13px; margin: 0;">Khách chưa tải lên hóa đơn</p>
         </div>
-      </div>
       <% } %>
-        <% } %>
+    </div>
+  </div>
+</div>
+
+<!-- Action Section -->
+<% if (booking.status === 'pending') { %>
+  <div class="action-card">
+    <div class="action-title">
+      Xử lý đơn đặt sân
+    </div>
+    <div class="action-row">
+      <!-- Duyệt đơn -->
+      <div class="approve-section">
+        <div class="section-label">✅ Chấp thuận đơn</div>
+        <form action="/admin/bookings/<%= booking._id %>/approve" method="POST">
+          <button type="submit" class="btn-approve">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Duyệt đơn
+          </button>
+        </form>
+        <p style="color: #6B7280; font-size: 11px; margin-top: 10px; text-align: center;">Slot sẽ được khóa cho khách này</p>
+      </div>
+
+      <!-- Divider -->
+      <div class="divider"></div>
+
+      <!-- Từ chối đơn -->
+      <div class="reject-section">
+        <div class="section-label">❌ Từ chối đơn</div>
+        <form action="/admin/bookings/<%= booking._id %>/reject" method="POST" class="reject-form">
+          <input type="text" name="reason" placeholder="Nhập lý do từ chối (có thể bỏ trống)..."
+            class="reject-input" />
+          <button type="submit" class="btn-reject">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            Từ chối đơn
+          </button>
+        </form>
+        <p style="color: #6B7280; font-size: 11px; margin-top: 10px; text-align: center;">Khoản thanh toán không hợp lệ hoặc sân đã kẹt</p>
+      </div>
+    </div>
+  </div>
+<% } else if (booking.status === 'confirmed') { %>
+  <div class="status-banner confirmed">
+    <span style="font-size: 18px;">✅</span>
+    <div>
+      <div>Đơn đã được duyệt thành công</div>
+      <div style="font-size: 12px; font-weight: 500; color: #34D399; margin-top: 2px;">Khung giờ đã được khóa cho đơn này.</div>
+    </div>
+  </div>
+<% } else { %>
+  <div class="status-banner rejected">
+    <span style="font-size: 18px;">❌</span>
+    <div>
+      <div>Đơn đã bị từ chối</div>
+      <% if (booking.rejectedReason) { %>
+        <div style="font-size: 12px; font-weight: 500; color: #FCA5A5; margin-top: 2px;">Lý do: "<%= booking.rejectedReason %>"</div>
+      <% } %>
+    </div>
+  </div>
+<% } %>
+<% } %>

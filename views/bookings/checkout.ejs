@@ -1,134 +1,792 @@
-<!-- Custom styles for checkout file input -->
 <style>
-  .custom-file-input::-webkit-file-upload-button { visibility: hidden; display: none; }
-  .custom-file-input::before {
-    content: 'Tải ảnh lên';
-    display: inline-block;
-    background: #059669;
+  /* ============================================
+     CHECKOUT PAGE — EmeraldPlay Style
+  ============================================ */
+  @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&display=swap');
+
+  .checkout-wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 24px 60px;
+    font-family: 'Public Sans', sans-serif;
+  }
+
+  /* ---- Progress Stepper ---- */
+  .progress-stepper {
+    max-width: 600px;
+    margin: 0 auto 48px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .stepper-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #d1fae5;
+    transform: translateY(-50%);
+    z-index: 0;
+    border-radius: 9999px;
+  }
+  .stepper-line-fill {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 75%;
+    height: 4px;
+    background: linear-gradient(90deg, #10b981, #059669);
+    transform: translateY(-50%);
+    z-index: 1;
+    border-radius: 9999px;
+    transition: width 0.6s ease;
+  }
+  .stepper-step {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+  .stepper-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 16px;
+    box-shadow: 0 4px 16px rgba(16,185,129,0.25);
+    transition: all 0.3s;
+  }
+  .stepper-circle.done {
+    background: #10b981;
     color: white;
-    border-radius: 8px;
+    border: 3px solid #059669;
+  }
+  .stepper-circle.active {
+    background: white;
+    color: #059669;
+    border: 4px solid #10b981;
+    box-shadow: 0 0 0 6px rgba(16,185,129,0.15), 0 4px 20px rgba(16,185,129,0.3);
+    animation: pulse-step 2s infinite;
+  }
+  @keyframes pulse-step {
+    0%, 100% { box-shadow: 0 0 0 6px rgba(16,185,129,0.15), 0 4px 20px rgba(16,185,129,0.3); }
+    50% { box-shadow: 0 0 0 10px rgba(16,185,129,0.08), 0 4px 20px rgba(16,185,129,0.3); }
+  }
+  .stepper-label {
+    position: absolute;
+    bottom: -28px;
+    white-space: nowrap;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #6ee7b7;
+  }
+  .stepper-label.active { color: #064e3b; }
+
+  /* ---- Main Grid ---- */
+  .checkout-grid {
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .checkout-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ---- QR Card ---- */
+  .qr-card {
+    background: white;
+    border-radius: 32px;
+    padding: 32px 28px;
+    box-shadow: 0 20px 60px rgba(16,185,129,0.12), 0 2px 12px rgba(0,0,0,0.06);
+    border: 1px solid #d1fae5;
+    position: relative;
+    overflow: hidden;
+  }
+  .qr-card::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 160px; height: 160px;
+    background: radial-gradient(circle, rgba(16,185,129,0.12), transparent 70%);
+    border-radius: 50%;
+  }
+  .qr-card::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: -60px;
+    width: 160px; height: 160px;
+    background: radial-gradient(circle, rgba(16,185,129,0.08), transparent 70%);
+    border-radius: 50%;
+  }
+  .qr-card-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: #064e3b;
+    margin-bottom: 6px;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+  .qr-card-sub {
+    font-size: 13px;
+    color: #6b7280;
+    text-align: center;
+    margin-bottom: 24px;
+    line-height: 1.6;
+    position: relative;
+    z-index: 2;
+  }
+  .qr-image-wrapper {
+    background: white;
+    border: 2px solid #d1fae5;
+    border-radius: 20px;
+    padding: 20px;
+    position: relative;
+    z-index: 2;
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1;
+  }
+  .qr-placeholder {
+    width: 100%;
+    aspect-ratio: 1;
+    background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+  .qr-placeholder-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    width: 160px;
+  }
+  .qr-cell {
+    aspect-ratio: 1;
+    border-radius: 2px;
+    background: #064e3b;
+  }
+  .qr-cell.light { background: transparent; }
+  .secure-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f0fdf4;
+    border: 1px solid #a7f3d0;
     padding: 8px 16px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 0.875rem;
+    border-radius: 9999px;
+    margin-top: 16px;
+    position: relative;
+    z-index: 2;
+    align-self: center;
+  }
+  .secure-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #10b981;
+    animation: blink 1.5s infinite;
+  }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+  .secure-text { font-size: 10px; font-weight: 800; color: #047857; letter-spacing: 0.1em; text-transform: uppercase; }
+
+  /* ---- Timer Banner ---- */
+  .timer-banner {
+    background: linear-gradient(135deg, #064e3b, #065f46);
+    color: #ecfdf5;
+    border-radius: 20px;
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .timer-info { display: flex; align-items: center; gap: 12px; }
+  .timer-icon { font-size: 28px; color: #6ee7b7; }
+  .timer-status-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: #6ee7b7; font-weight: 700; }
+  .timer-status-text { font-size: 17px; font-weight: 700; color: #ecfdf5; }
+  .timer-box {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 14px;
+    padding: 12px 24px;
+    text-align: center;
+    min-width: 140px;
+  }
+  .timer-box-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: #6ee7b7; font-weight: 700; margin-bottom: 4px; }
+  .timer-display { font-size: 28px; font-weight: 900; font-family: 'Courier New', monospace; letter-spacing: 2px; color: white; }
+  .timer-display.urgent { color: #fca5a5; animation: urgentPulse 1s infinite; }
+  @keyframes urgentPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+
+  /* ---- Details Card ---- */
+  .details-card {
+    background: white;
+    border-radius: 24px;
+    padding: 28px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    margin-bottom: 20px;
+  }
+  .details-section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 800;
+    color: #064e3b;
+    margin-bottom: 16px;
+  }
+  .details-section-title .material-symbols-outlined { color: #10b981; font-size: 20px; }
+  .details-divider { border: none; border-top: 1px solid #f0fdf4; margin: 20px 0; }
+
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 600px) { .info-grid { grid-template-columns: 1fr; } }
+
+  .info-chip { }
+  .info-chip-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 4px; }
+  .info-chip-value { font-size: 14px; font-weight: 700; color: #0f172a; }
+
+  /* Banking info rows */
+  .bank-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8fafc;
+    border: 1px solid #f1f5f9;
+    border-radius: 14px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
     transition: background 0.2s;
   }
-  .custom-file-input:hover::before { background: #047857; }
+  .bank-row:hover { background: #f0fdf4; }
+  .bank-row:last-child { margin-bottom: 0; }
+  .bank-row-label { font-size: 13px; color: #64748b; font-weight: 500; }
+  .bank-row-value { font-size: 14px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px; }
+  .bank-row.highlight {
+    background: #f0fdf4;
+    border: 2px solid #a7f3d0;
+  }
+  .bank-row.highlight .bank-row-label { color: #059669; font-weight: 700; }
+  .bank-row.highlight .bank-row-value { font-size: 18px; color: #064e3b; }
+
+  .copy-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #10b981;
+    padding: 4px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+  }
+  .copy-btn:hover { background: #d1fae5; color: #047857; transform: scale(1.1); }
+  .copy-btn.copied { color: #059669; }
+  .copy-btn-green {
+    background: #059669;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: all 0.2s;
+  }
+  .copy-btn-green:hover { background: #047857; transform: scale(1.05); }
+
+  .total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 16px;
+    margin-top: 4px;
+  }
+  .total-label { font-size: 16px; font-weight: 700; color: #64748b; }
+  .total-amount { font-size: 32px; font-weight: 900; color: #059669; }
+
+  /* ---- Upload Section ---- */
+  .upload-section {
+    background: white;
+    border-radius: 24px;
+    padding: 24px 28px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    margin-bottom: 20px;
+  }
+  .upload-label { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+  .upload-required { color: #ef4444; }
+
+  .file-drop-zone {
+    border: 2px dashed #d1fae5;
+    border-radius: 16px;
+    background: #f0fdf4;
+    padding: 32px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .file-drop-zone:hover, .file-drop-zone.drag-over {
+    border-color: #10b981;
+    background: #d1fae5;
+    transform: scale(1.01);
+  }
+  .file-drop-zone.has-file {
+    border-color: #059669;
+    background: #ecfdf5;
+    border-style: solid;
+  }
+  .file-drop-zone input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 2;
+  }
+  .drop-icon { font-size: 40px; margin-bottom: 10px; }
+  .drop-text { font-size: 14px; font-weight: 600; color: #059669; margin-bottom: 4px; }
+  .drop-sub { font-size: 12px; color: #6b7280; }
+  .file-preview-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: #047857;
+    margin-top: 8px;
+    display: none;
+  }
+  .file-preview-img {
+    max-width: 100%;
+    max-height: 160px;
+    border-radius: 10px;
+    margin-top: 12px;
+    object-fit: contain;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  /* ---- Action Buttons ---- */
+  .checkout-actions { display: flex; flex-direction: column; gap: 12px; }
+
+  .btn-confirm {
+    width: 100%;
+    background: linear-gradient(135deg, #059669, #047857);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 20px 28px;
+    font-size: 16px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 24px rgba(16,185,129,0.35);
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-confirm::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 60px; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.4s ease;
+  }
+  .btn-confirm:hover { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(16,185,129,0.4); }
+  .btn-confirm:hover::before { left: 150%; }
+  .btn-confirm:active { transform: scale(0.98); }
+  .btn-confirm:disabled { background: #e2e8f0; color: #94a3b8; box-shadow: none; cursor: not-allowed; transform: none; }
+  .btn-confirm.loading { pointer-events: none; }
+
+  .btn-cancel {
+    width: 100%;
+    background: white;
+    color: #059669;
+    border: 2px solid #a7f3d0;
+    border-radius: 20px;
+    padding: 14px 28px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    text-align: center;
+    display: block;
+  }
+  .btn-cancel:hover { background: #f0fdf4; border-color: #6ee7b7; }
+
+  .checkout-note {
+    text-align: center;
+    font-size: 11px;
+    color: #94a3b8;
+    font-style: italic;
+    padding: 0 16px;
+    line-height: 1.6;
+  }
+
+  /* Validation states */
+  .file-drop-zone.invalid { border-color: #fca5a5; background: #fff1f2; }
+  .file-drop-zone.invalid .drop-text { color: #ef4444; }
+
+  /* Spinner */
+  .spinner {
+    width: 20px;
+    height: 20px;
+    border: 2.5px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: none;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
 </style>
 
-<div class="max-w-4xl mx-auto px-6 py-10 animate-fade-in">
-  <div class="text-center mb-8">
-    <h1 class="text-3xl font-extrabold text-on-surface tracking-tight flex items-center justify-center gap-2">
-      <span class="material-symbols-outlined text-primary text-3xl">payments</span>
-      Thanh toán đặt sân
-    </h1>
-    <p class="text-on-surface-variant mt-2">Vui lòng kiểm tra thông tin và tải lên biên lai chuyển khoản để hoàn tất.</p>
+<div class="checkout-wrapper">
+
+  <!-- Progress Stepper -->
+  <div style="margin-bottom: 64px;">
+    <div class="progress-stepper">
+      <div class="stepper-line"></div>
+      <div class="stepper-line-fill"></div>
+
+      <div class="stepper-step">
+        <div class="stepper-circle done">
+          <span class="material-symbols-outlined" style="font-size: 18px;">check</span>
+        </div>
+        <span class="stepper-label">Chọn sân</span>
+      </div>
+      <div class="stepper-step">
+        <div class="stepper-circle done">
+          <span class="material-symbols-outlined" style="font-size: 18px;">check</span>
+        </div>
+        <span class="stepper-label">Khung giờ</span>
+      </div>
+      <div class="stepper-step">
+        <div class="stepper-circle done">
+          <span class="material-symbols-outlined" style="font-size: 18px;">check</span>
+        </div>
+        <span class="stepper-label">Xác nhận</span>
+      </div>
+      <div class="stepper-step">
+        <div class="stepper-circle active">4</div>
+        <span class="stepper-label active">Thanh toán</span>
+      </div>
+    </div>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-[1.5fr_1fr] gap-8">
-    <!-- LEFT: Thông tin Booking -->
+  <div class="checkout-grid">
+
+    <!-- LEFT: QR Code Card -->
     <div>
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 mb-6">
-        <h2 class="text-lg font-bold text-on-surface mb-4 border-b border-slate-100 pb-2">Thông tin sân bóng</h2>
-        <div class="space-y-4">
-          <div>
-            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Tên sân</label>
-            <div class="text-lg font-semibold text-on-surface"><%= field.name %></div>
+      <div class="qr-card">
+        <h2 class="qr-card-title">Quét mã để thanh toán</h2>
+        <p class="qr-card-sub">Mở ứng dụng ngân hàng và quét mã QR<br>để chuyển khoản tự động & chính xác</p>
+
+        <!-- QR Code Image -->
+        <div class="qr-image-wrapper">
+          <img
+            src="/public/images/qr_bank1.jpg"
+            alt="QR Code Thanh Toán"
+            style="width: 100%; height: 100%; object-fit: contain; border-radius: 10px;"
+          />
+        </div>
+
+
+        <div style="display: flex; justify-content: center; margin-top: 16px; position: relative; z-index: 2;">
+          <div class="secure-badge">
+            <div class="secure-dot"></div>
+            <span class="secure-text">Giao dịch bảo mật</span>
           </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Loại sân</label>
-            <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 text-slate-700 rounded-lg text-sm font-medium">
-              <span class="material-symbols-outlined text-sm">groups</span>
-              <%= field.type === '5-a-side' ? 'Sân 5 người' : field.type === '7-a-side' ? 'Sân 7 người' : 'Sân 11 người' %>
-            </div>
+        </div>
+
+        <!-- Field quick info inside QR card -->
+        <div style="margin-top: 20px; padding: 14px 16px; background: #f8fafc; border-radius: 12px; position: relative; z-index: 2;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-size: 12px; color: #6b7280; font-weight: 600;">Sân</span>
+            <span style="font-size: 13px; font-weight: 700; color: #0f172a;"><%= field.name %></span>
           </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Địa chỉ</label>
-            <div class="text-sm text-on-surface-variant"><%= field.address %></div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-size: 12px; color: #6b7280; font-weight: 600;">Ngày</span>
+            <span style="font-size: 13px; font-weight: 700; color: #0f172a;"><%= new Date(bookingDate).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' }) %></span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 12px; color: #6b7280; font-weight: 600;">Giờ đá</span>
+            <span style="font-size: 13px; font-weight: 700; color: #0ea5e9;"><%= startTime %> – <%= endTime %></span>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-        <h2 class="text-lg font-bold text-on-surface mb-4 border-b border-slate-100 pb-2">Thời gian thi đấu</h2>
-        <div class="grid grid-cols-2 gap-4">
+    <!-- RIGHT: Details & Payment Form -->
+    <div>
+
+      <!-- Timer Banner -->
+      <div class="timer-banner">
+        <div class="timer-info">
+          <span class="material-symbols-outlined timer-icon">hourglass_top</span>
           <div>
-            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Ngày đá</label>
-            <div class="text-base font-semibold text-emerald-700 bg-emerald-50 px-4 py-2 rounded-xl inline-block">
+            <div class="timer-status-label">Trạng thái chờ</div>
+            <div class="timer-status-text">Đang chờ xác nhận thanh toán</div>
+          </div>
+        </div>
+        <div class="timer-box">
+          <div class="timer-box-label">Hết hạn sau</div>
+          <div class="timer-display" id="countdown-timer">15:00</div>
+        </div>
+      </div>
+
+      <!-- Booking Details Card -->
+      <div class="details-card">
+        <div class="details-section-title">
+          <span class="material-symbols-outlined">sports_soccer</span>
+          Chi tiết đặt sân
+        </div>
+        <div class="info-grid">
+          <div class="info-chip">
+            <div class="info-chip-label">Sân vận động</div>
+            <div class="info-chip-value"><%= field.name %></div>
+          </div>
+          <div class="info-chip">
+            <div class="info-chip-label">Loại sân</div>
+            <div class="info-chip-value">
+              <span style="background: #d1fae5; color: #065f46; padding: 3px 10px; border-radius: 8px; font-size: 13px;">
+                <%= field.type === '5-a-side' ? '⚽ Sân 5 người' : field.type === '7-a-side' ? '⚽ Sân 7 người' : '⚽ Sân 11 người' %>
+              </span>
+            </div>
+          </div>
+          <div class="info-chip">
+            <div class="info-chip-label">Ngày thi đấu</div>
+            <div class="info-chip-value" style="color: #059669;">
               <%= new Date(bookingDate).toLocaleDateString('vi-VN', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' }) %>
             </div>
           </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Khung giờ</label>
-            <div class="text-base font-semibold text-sky-700 bg-sky-50 px-4 py-2 rounded-xl inline-block">
-              <%= startTime %> - <%= endTime %>
-            </div>
+          <div class="info-chip">
+            <div class="info-chip-label">Khung giờ</div>
+            <div class="info-chip-value" style="color: #0ea5e9;"><%= startTime %> – <%= endTime %></div>
           </div>
+        </div>
+
+        <hr class="details-divider">
+
+        <div class="details-section-title">
+          <span class="material-symbols-outlined">account_balance</span>
+          Thông tin chuyển khoản
+        </div>
+
+        <div class="bank-row">
+          <span class="bank-row-label">Ngân hàng</span>
+          <span class="bank-row-value">Vietcombank</span>
+        </div>
+        <div class="bank-row">
+          <span class="bank-row-label">Chủ tài khoản</span>
+          <span class="bank-row-value">DAT SAN VN</span>
+        </div>
+        <div class="bank-row">
+          <span class="bank-row-label">Số tài khoản</span>
+          <span class="bank-row-value">
+            1935442985
+            <button class="copy-btn" id="copy-account" onclick="copyToClipboard('1935442985', this)" title="Sao chép STK">
+              <span class="material-symbols-outlined" style="font-size: 16px;">content_copy</span>
+            </button>
+          </span>
+        </div>
+        <div class="bank-row highlight">
+          <span class="bank-row-label">Nội dung chuyển khoản</span>
+          <span class="bank-row-value">
+            <strong id="transfer-content">DATSAN <%= currentUser.phone %></strong>
+            <button class="copy-btn-green" id="copy-content" onclick="copyToClipboard('DATSAN <%= currentUser.phone %>', this)" title="Sao chép nội dung">
+              <span class="material-symbols-outlined" style="font-size: 14px;">content_copy</span>
+            </button>
+          </span>
+        </div>
+
+        <div class="total-row">
+          <span class="total-label">Tổng thanh toán</span>
+          <span class="total-amount"><%= totalPrice.toLocaleString('vi-VN') %>đ</span>
         </div>
       </div>
-    </div>
 
-    <!-- RIGHT: Thanh toán & Upload -->
-    <div>
-      <div class="bg-surface-container-lowest rounded-2xl shadow-lg border-2 border-emerald-100 p-6 sticky top-24">
-        <h2 class="text-lg font-bold text-on-surface mb-6 border-b border-slate-100 pb-2 flex items-center gap-2">
-          <span class="material-symbols-outlined text-emerald-600">account_balance_wallet</span>
-          Chi tiết thanh toán
-        </h2>
+      <!-- Upload Section + Form -->
+      <form id="checkout-form" action="/checkout" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="fieldId" value="<%= field._id %>" />
+        <input type="hidden" name="slotId" value="<%= slot._id %>" />
+        <input type="hidden" name="bookingDate" value="<%= bookingDate %>" />
+        <input type="hidden" name="startTime" value="<%= startTime %>" />
+        <input type="hidden" name="endTime" value="<%= endTime %>" />
+        <input type="hidden" name="totalPrice" value="<%= totalPrice %>" />
 
-        <div class="flex justify-between items-center mb-4">
-          <span class="text-slate-500">Giá 1 slot</span>
-          <span class="font-semibold"><%= field.pricePerSlot.toLocaleString('vi-VN') %>đ</span>
-        </div>
-        <div class="flex justify-between items-center mb-6 pt-4 border-t border-slate-100">
-          <span class="text-slate-700 font-bold">Tổng thanh toán</span>
-          <span class="text-2xl font-black text-primary"><%= totalPrice.toLocaleString('vi-VN') %>đ</span>
-        </div>
+        <div class="upload-section">
+          <div class="upload-label">
+            <span class="material-symbols-outlined" style="font-size: 18px; color: #10b981;">receipt_long</span>
+            Tải lên biên lai chuyển khoản <span class="upload-required">*</span>
+          </div>
 
-        <div class="bg-slate-50 rounded-xl p-4 mb-6 border border-slate-200">
-          <p class="text-xs text-slate-500 uppercase font-bold tracking-widest mb-3">Thông tin chuyển khoản</p>
-          <div class="space-y-2 text-sm text-on-surface">
-            <div class="flex justify-between">
-              <span class="text-slate-500">Ngân hàng</span>
-              <span class="font-bold">Vietcombank</span>
+          <div class="file-drop-zone" id="drop-zone">
+            <input type="file" name="paymentImage" id="payment-file" accept="image/*" required />
+            <div id="drop-content">
+              <div class="drop-text">Nhấn hoặc kéo thả ảnh vào đây</div>
+              <div class="drop-sub">Hỗ trợ JPG, PNG, WebP • Tối đa 5MB</div>
             </div>
-            <div class="flex justify-between">
-              <span class="text-slate-500">Chủ tài khoản</span>
-              <span class="font-bold">DAT SAN VN</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-slate-500">Số tài khoản</span>
-              <span class="font-bold text-emerald-700 text-lg">19039281928</span>
-            </div>
-            <div class="mt-3 pt-3 border-t border-slate-200 text-center">
-              <span class="text-xs text-slate-500 mb-1 block">Nội dung chuyển khoản:</span>
-              <strong class="text-sky-700 bg-sky-50 px-3 py-1 rounded">DATSAN <%= currentUser.phone %></strong>
-            </div>
+            <div class="file-preview-name" id="preview-name"></div>
+            <img class="file-preview-img" id="preview-img" alt="Preview" />
+          </div>
+
+          <div id="file-error" style="display: none; color: #ef4444; font-size: 12px; font-weight: 600; margin-top: 8px;">
+            ⚠️ Vui lòng tải lên ảnh biên lai trước khi xác nhận!
           </div>
         </div>
 
-        <form action="/checkout" method="POST" enctype="multipart/form-data">
-          <input type="hidden" name="fieldId" value="<%= field._id %>" />
-          <input type="hidden" name="slotId" value="<%= slot._id %>" />
-          <input type="hidden" name="bookingDate" value="<%= bookingDate %>" />
-          <input type="hidden" name="startTime" value="<%= startTime %>" />
-          <input type="hidden" name="endTime" value="<%= endTime %>" />
-          <input type="hidden" name="totalPrice" value="<%= totalPrice %>" />
-
-          <div class="mb-6">
-            <label class="block text-sm font-bold text-slate-700 mb-2">
-              Tải lên biên lai / ảnh chụp màn hình CK <span class="text-red-500">*</span>
-            </label>
-            <input type="file" name="paymentImage" accept="image/*" required
-                   class="custom-file-input block w-full text-sm text-slate-500 cursor-pointer" />
-          </div>
-
-          <button type="submit" class="w-full bg-primary hover:bg-emerald-700 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all hover:shadow-lg hover:-translate-y-0.5">
-            <span class="material-symbols-outlined">check_circle</span>
-            Xác nhận thanh toán & Đặt sân
+        <div class="checkout-actions">
+          <button type="submit" class="btn-confirm" id="submit-btn">
+            <div class="spinner" id="btn-spinner"></div>
+            <span class="material-symbols-outlined" id="btn-icon">check_circle</span>
+            <span id="btn-text">Xác nhận thanh toán &amp; Đặt sân</span>
           </button>
-        </form>
-      </div>
+
+          <a href="/fields/<%= field._id %>" class="btn-cancel">← Quay lại chọn sân khác</a>
+
+          <p class="checkout-note">
+            "Vui lòng không đóng trình duyệt cho đến khi nhận được<br>thông báo đặt sân thành công."
+          </p>
+        </div>
+      </form>
+
     </div>
   </div>
 </div>
+
+<script>
+  // ── Countdown Timer ──────────────────────────
+  (function() {
+    let totalSeconds = 15 * 60;
+    const timerEl = document.getElementById('countdown-timer');
+    if (!timerEl) return;
+
+    const tick = () => {
+      if (totalSeconds <= 0) {
+        timerEl.textContent = '00:00';
+        timerEl.classList.add('urgent');
+        return;
+      }
+      totalSeconds--;
+      const m = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+      const s = (totalSeconds % 60).toString().padStart(2, '0');
+      timerEl.textContent = `${m}:${s}`;
+      if (totalSeconds <= 60) timerEl.classList.add('urgent');
+    };
+    setInterval(tick, 1000);
+  })();
+
+  // ── Copy to Clipboard ─────────────────────────
+  function copyToClipboard(text, btn) {
+    navigator.clipboard.writeText(text).then(() => {
+      const icon = btn.querySelector('.material-symbols-outlined');
+      if (icon) {
+        const old = icon.textContent;
+        icon.textContent = 'check';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          icon.textContent = old;
+          btn.classList.remove('copied');
+        }, 1800);
+      }
+    }).catch(() => {
+      // Fallback
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    });
+  }
+
+  // ── File Upload Preview ───────────────────────
+  const fileInput = document.getElementById('payment-file');
+  const dropZone = document.getElementById('drop-zone');
+  const previewImg = document.getElementById('preview-img');
+  const previewName = document.getElementById('preview-name');
+  const dropContent = document.getElementById('drop-content');
+
+  function handleFile(file) {
+    if (!file) return;
+    previewName.textContent = '✓ ' + file.name;
+    previewName.style.display = 'block';
+    dropZone.classList.add('has-file');
+    dropZone.classList.remove('invalid');
+
+    if (file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        previewImg.src = e.target.result;
+        previewImg.style.display = 'block';
+        dropContent.style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    }
+    document.getElementById('file-error').style.display = 'none';
+  }
+
+  fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+
+  // Drag & Drop
+  dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.classList.add('drag-over');
+  });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+  dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('drag-over');
+    const dt = e.dataTransfer;
+    if (dt.files.length > 0) {
+      fileInput.files = dt.files;
+      handleFile(dt.files[0]);
+    }
+  });
+
+  // ── Form Submit with Loading State ───────────
+  document.getElementById('checkout-form').addEventListener('submit', function(e) {
+    const file = fileInput.files[0];
+    if (!file) {
+      e.preventDefault();
+      dropZone.classList.add('invalid');
+      document.getElementById('file-error').style.display = 'block';
+      dropZone.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    const btn = document.getElementById('submit-btn');
+    const spinner = document.getElementById('btn-spinner');
+    const icon = document.getElementById('btn-icon');
+    const text = document.getElementById('btn-text');
+
+    btn.classList.add('loading');
+    btn.disabled = true;
+    spinner.style.display = 'block';
+    icon.style.display = 'none';
+    text.textContent = 'Đang xử lý...';
+
+    btn.style.background = 'linear-gradient(135deg, #047857, #065f46)';
+  });
+</script>

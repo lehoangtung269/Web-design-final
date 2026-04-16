@@ -1,73 +1,227 @@
-<% if (!field) { %>
-  <div class="empty-state">
-    <div class="icon">🔍</div>
-    <p>Không tìm thấy sân bóng</p>
-    <a href="/admin/fields" class="btn btn-blue" style="margin-top: 16px;">Quay lại danh sách</a>
-  </div>
-  <% } else { %>
-    <div class="card" style="max-width: 700px;">
-      <form action="/admin/fields/<%= field._id %>" method="POST" enctype="multipart/form-data">
-        <div class="form-group">
-          <label for="name">Tên sân <span style="color: #ef4444;">*</span></label>
-          <input type="text" id="name" name="name" value="<%= field.name %>" required />
+<!-- Top Header -->
+<div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6">
+    <div>
+        <div class="flex items-center gap-2 text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-1">
+            <a href="/admin/fields" class="hover:text-white transition-colors">VENUES</a>
+            <span class="material-symbols-outlined text-[10px]">chevron_right</span>
+            <span>EDIT FIELD</span>
         </div>
-
-        <div class="form-group">
-          <label for="address">Địa chỉ <span style="color: #ef4444;">*</span></label>
-          <input type="text" id="address" name="address" value="<%= field.address %>" required />
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label for="type">Loại sân</label>
-            <select id="type" name="type">
-              <option value="5-a-side" <%=field.type==='5-a-side' ? 'selected' : '' %>>Sân 5 người</option>
-              <option value="7-a-side" <%=field.type==='7-a-side' ? 'selected' : '' %>>Sân 7 người</option>
-              <option value="11-a-side" <%=field.type==='11-a-side' ? 'selected' : '' %>>Sân 11 người</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="pricePerSlot">Giá mỗi slot (VNĐ)</label>
-            <input type="number" id="pricePerSlot" name="pricePerSlot" value="<%= field.pricePerSlot %>" min="0" />
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="status">Trạng thái</label>
-          <select id="status" name="status">
-            <option value="active" <%=field.status==='active' ? 'selected' : '' %>>Hoạt động</option>
-            <option value="maintenance" <%=field.status==='maintenance' ? 'selected' : '' %>>Bảo trì</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="description">Mô tả</label>
-          <textarea id="description" name="description"><%= field.description || '' %></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="images">Thay ảnh sân (bỏ trống nếu không thay)</label>
-          <input type="file" id="images" name="images" accept="image/*" multiple
-            style="padding: 10px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #cbd5e1;" />
-        </div>
-
-        <!-- Ảnh hiện tại -->
-        <% if (field.images && field.images.length> 0) { %>
-          <div style="margin-bottom: 20px;">
-            <label style="color: #cbd5e1; font-size: 14px; display: block; margin-bottom: 8px;">Ảnh hiện tại:</label>
-            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-              <% field.images.forEach(function(img) { %>
-                <img src="/uploads/<%= img %>" alt="Ảnh sân"
-                  style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);" />
-                <% }); %>
-            </div>
-          </div>
-          <% } %>
-
-            <div style="display: flex; gap: 12px; margin-top: 24px;">
-              <button type="submit" class="btn btn-blue">💾 Cập nhật</button>
-              <a href="/admin/fields" class="btn btn-outline">Hủy</a>
-            </div>
-      </form>
+        <h1 class="text-3xl font-extrabold tracking-tight text-on-surface">Venue Specification</h1>
+        <p class="text-sm text-on-surface-variant font-medium mt-1 max-w-lg">Modify the technical details, facility amenities, and operational status for this football pitch.</p>
     </div>
-    <% } %>
+    <div class="flex items-center gap-3">
+        <a href="/admin/fields" class="px-5 py-2.5 text-sm font-semibold rounded-lg bg-surface-container-high text-on-surface hover:text-white hover:bg-surface-container-highest transition-colors">
+            Cancel
+        </a>
+        <button type="button" onclick="document.getElementById('edit-field-form').submit();" class="px-5 py-2.5 text-sm font-semibold rounded-lg bg-primary text-on-primary hover:opacity-90 transition-opacity">
+            Save Changes
+        </button>
+    </div>
+</div>
+
+<form id="edit-field-form" action="/admin/fields/<%= field._id %>" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+
+    <!-- Left Column (Main Specs) -->
+    <div class="xl:col-span-2 space-y-6">
+        
+        <!-- Basic Information -->
+        <div class="bg-surface-container rounded-xl p-6 border border-outline-variant/10 shadow-sm">
+            <h2 class="text-sm font-bold text-on-surface flex items-center gap-2 mb-6">
+                <span class="material-symbols-outlined text-sm text-primary">info</span> Basic Information
+            </h2>
+            
+            <div class="space-y-5">
+                <div>
+                    <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1.5 pl-1">Field Name</label>
+                    <input type="text" name="name" value="<%= field.name %>" required class="w-full bg-surface-container-lowest border-none rounded-lg px-4 py-3 text-sm font-medium text-on-surface focus:ring-1 focus:ring-primary/50 transition-all" placeholder="e.g. Etihad Arena A1">
+                </div>
+                
+                <div>
+                    <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1.5 pl-1">Address</label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">location_on</span>
+                        <input type="text" name="address" value="<%= field.address %>" required class="w-full bg-surface-container-lowest border-none rounded-lg pl-9 pr-4 py-3 text-sm font-medium text-on-surface focus:ring-1 focus:ring-primary/50 transition-all" placeholder="Full street address, district, city">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1.5 pl-1">Pitch Type</label>
+                        <select name="type" required class="w-full bg-surface-container-lowest border-none rounded-lg px-4 py-3 text-sm font-medium text-on-surface focus:ring-1 focus:ring-primary/50 transition-all">
+                            <option value="5-a-side" <%= field.type === '5-a-side' ? 'selected' : '' %>>5-a-side</option>
+                            <option value="7-a-side" <%= field.type === '7-a-side' ? 'selected' : '' %>>7-a-side</option>
+                            <option value="11-a-side" <%= field.type === '11-a-side' ? 'selected' : '' %>>11-a-side</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1.5 pl-1">Price Per Hour (VND)</label>
+                        <div class="relative">
+                            <input type="number" name="pricePerSlot" value="<%= field.pricePerSlot %>" required class="w-full bg-surface-container-lowest border-none rounded-lg pl-4 pr-12 py-3 text-sm font-medium text-on-surface focus:ring-1 focus:ring-primary/50 transition-all text-right">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-bold text-on-surface-variant">VND</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pitch Description -->
+        <div class="bg-surface-container rounded-xl p-6 border border-outline-variant/10 shadow-sm">
+            <h2 class="text-sm font-bold text-on-surface flex items-center gap-2 mb-6">
+                <span class="material-symbols-outlined text-sm text-primary">description</span> Pitch Description
+            </h2>
+            <textarea name="description" rows="4" class="w-full bg-surface-container-lowest border-none rounded-lg px-4 py-3 text-sm font-medium text-on-surface focus:ring-1 focus:ring-primary/50 transition-all" placeholder="Describe the pitch quality, turf type, and specific rules..."><%= field.description %></textarea>
+        </div>
+
+        <!-- Media Gallery -->
+        <div class="bg-surface-container rounded-xl p-6 border border-outline-variant/10 shadow-sm">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-sm font-bold text-on-surface flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm text-primary">gallery_thumbnail</span> Media Gallery
+                </h2>
+            </div>
+            
+            <% if (field.images && field.images.length > 0) { %>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                    <% field.images.forEach(img => { %>
+                        <div class="relative rounded-lg overflow-hidden border border-outline-variant/10 aspect-video group">
+                            <img src="<%= img %>" class="w-full h-full object-cover" />
+                            <div class="absolute inset-0 bg-[#0A0E13]/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <span class="text-[10px] font-bold text-white uppercase tracking-widest">Active</span>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+                <p class="text-xs text-on-surface-variant mb-4">Uploading new images will overwrite existing ones.</p>
+            <% } %>
+
+            <div class="relative w-full rounded-xl border-2 border-dashed border-outline-variant/30 bg-surface-container-lowest p-8 text-center hover:border-primary/50 hover:bg-primary/5 transition-colors cursor-pointer group" onclick="document.getElementById('file-upload').click()">
+                <span class="material-symbols-outlined text-3xl text-outline-variant mb-2 group-hover:text-primary transition-colors">add_photo_alternate</span>
+                <span class="block text-sm font-medium text-on-surface-variant">Upload new images</span>
+                <input id="file-upload" type="file" name="images" multiple accept="image/*" class="hidden" onchange="previewFilesEdit(this)">
+            </div>
+            
+            <div id="file-preview-container" class="flex flex-wrap gap-4 mt-4"></div>
+            
+            <script>
+                function previewFilesEdit(input) {
+                    const container = document.getElementById('file-preview-container');
+                    container.innerHTML = ''; 
+                    if (input.files) {
+                        Array.from(input.files).forEach(file => {
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                const img = document.createElement('img');
+                                img.src = e.target.result;
+                                img.className = 'w-24 h-24 object-cover rounded-lg border border-outline-variant/30 opacity-70 transition-opacity hover:opacity-100';
+                                container.appendChild(img);
+                            }
+                            reader.readAsDataURL(file);
+                        });
+                    }
+                }
+            </script>
+        </div>
+        
+    </div>
+
+    <!-- Right Column (Settings & Facilities) -->
+    <div class="space-y-6">
+        
+        <!-- Status -->
+        <div class="bg-surface-container rounded-xl p-6 border border-outline-variant/10 shadow-sm">
+            <h2 class="text-sm font-bold text-on-surface mb-4">Status</h2>
+            
+            <div class="flex items-center bg-surface-container-lowest rounded-lg p-1 border border-outline-variant/10">
+                <label class="flex-1 text-center cursor-pointer">
+                    <input type="radio" name="status" value="active" <%= field.status === 'active' ? 'checked' : '' %> class="peer hidden">
+                    <div class="py-2 text-xs font-bold rounded-md peer-checked:bg-primary/10 peer-checked:text-primary text-on-surface-variant transition-colors flex items-center justify-center gap-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-primary peer-checked:animate-pulse"></span> Active
+                    </div>
+                </label>
+                <label class="flex-1 text-center cursor-pointer">
+                    <input type="radio" name="status" value="maintenance" <%= field.status === 'maintenance' ? 'checked' : '' %> class="peer hidden">
+                    <div class="py-2 text-xs font-bold rounded-md peer-checked:bg-surface-container-highest peer-checked:text-on-surface text-on-surface-variant transition-colors flex items-center justify-center gap-1.5">
+                        <span class="material-symbols-outlined text-[12px]">build</span> Maintenance
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Facilities -->
+        <div class="bg-surface-container rounded-xl p-6 border border-outline-variant/10 shadow-sm">
+            <h2 class="text-sm font-bold text-on-surface flex items-center gap-2 mb-6">
+                <span class="material-symbols-outlined text-sm text-primary">bolt</span> Facilities
+            </h2>
+            
+            <div class="space-y-4">
+                <label class="flex items-center justify-between group cursor-pointer p-2 -mx-2 rounded-lg hover:bg-surface-container-high transition-colors">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-on-surface-variant group-hover:text-on-surface transition-colors">lightbulb</span>
+                        <span class="text-sm font-medium text-on-surface">Night Lights</span>
+                    </div>
+                    <input type="checkbox" name="facilities" value="night_lights" <%= field.facilities && field.facilities.includes('night_lights') ? 'checked' : '' %> class="w-4 h-4 rounded border-outline-variant/30 text-primary bg-surface-container-lowest focus:ring-primary/50 focus:ring-offset-surface">
+                </label>
+                
+                <label class="flex items-center justify-between group cursor-pointer p-2 -mx-2 rounded-lg hover:bg-surface-container-high transition-colors">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-on-surface-variant group-hover:text-on-surface transition-colors">stadium</span>
+                        <span class="text-sm font-medium text-on-surface">Spectator Stands</span>
+                    </div>
+                    <input type="checkbox" name="facilities" value="spectator_stands" <%= field.facilities && field.facilities.includes('spectator_stands') ? 'checked' : '' %> class="w-4 h-4 rounded border-outline-variant/30 text-primary bg-surface-container-lowest focus:ring-primary/50 focus:ring-offset-surface">
+                </label>
+                
+                <label class="flex items-center justify-between group cursor-pointer p-2 -mx-2 rounded-lg hover:bg-surface-container-high transition-colors">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-on-surface-variant group-hover:text-on-surface transition-colors">wc</span>
+                        <span class="text-sm font-medium text-on-surface">Restrooms</span>
+                    </div>
+                    <input type="checkbox" name="facilities" value="restrooms" <%= field.facilities && field.facilities.includes('restrooms') ? 'checked' : '' %> class="w-4 h-4 rounded border-outline-variant/30 text-primary bg-surface-container-lowest focus:ring-primary/50 focus:ring-offset-surface">
+                </label>
+                
+                <label class="flex items-center justify-between group cursor-pointer p-2 -mx-2 rounded-lg hover:bg-surface-container-high transition-colors">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-on-surface-variant group-hover:text-on-surface transition-colors">shower</span>
+                        <span class="text-sm font-medium text-on-surface">Showers</span>
+                    </div>
+                    <input type="checkbox" name="facilities" value="showers" <%= field.facilities && field.facilities.includes('showers') ? 'checked' : '' %> class="w-4 h-4 rounded border-outline-variant/30 text-primary bg-surface-container-lowest focus:ring-primary/50 focus:ring-offset-surface">
+                </label>
+                
+                <label class="flex items-center justify-between group cursor-pointer p-2 -mx-2 rounded-lg hover:bg-surface-container-high transition-colors">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-on-surface-variant group-hover:text-on-surface transition-colors">ac_unit</span>
+                        <span class="text-sm font-medium text-on-surface">Lounge AC</span>
+                    </div>
+                    <input type="checkbox" name="facilities" value="lounge_ac" <%= field.facilities && field.facilities.includes('lounge_ac') ? 'checked' : '' %> class="w-4 h-4 rounded border-outline-variant/30 text-primary bg-surface-container-lowest focus:ring-primary/50 focus:ring-offset-surface">
+                </label>
+                
+                <label class="flex items-center justify-between group cursor-pointer p-2 -mx-2 rounded-lg hover:bg-surface-container-high transition-colors">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-on-surface-variant group-hover:text-on-surface transition-colors">wifi</span>
+                        <span class="text-sm font-medium text-on-surface">Free Wifi</span>
+                    </div>
+                    <input type="checkbox" name="facilities" value="free_wifi" <%= field.facilities && field.facilities.includes('free_wifi') ? 'checked' : '' %> class="w-4 h-4 rounded border-outline-variant/30 text-primary bg-surface-container-lowest focus:ring-primary/50 focus:ring-offset-surface">
+                </label>
+            </div>
+        </div>
+
+        <!-- Tactical Tip -->
+        <div class="bg-gradient-to-br from-secondary-container/20 to-surface-container-lowest border border-secondary/20 rounded-xl p-5 shadow-sm">
+            <div class="flex items-center gap-2 text-secondary mb-3">
+                <span class="material-symbols-outlined text-sm">tips_and_updates</span>
+                <span class="text-[10px] font-bold uppercase tracking-widest">Tactical Tip</span>
+            </div>
+            <p class="text-xs text-on-surface leading-relaxed">
+                Pitches with <span class="font-bold text-white">"Night Lights"</span> and <span class="font-bold text-white">"Showers"</span> typically see 40% higher booking rates in urban areas.
+            </p>
+        </div>
+
+        <div class="pt-4 border-t border-error/20">
+            <button type="button" class="w-full py-3 px-4 rounded-lg bg-surface-container-highest hover:bg-[#3A141A] text-error flex items-center justify-center gap-2 text-sm font-bold transition-colors" onclick="if(confirm('Are you absolutely sure you want to delete this field permanently?')) { document.getElementById('delete-field-form').submit(); }">
+                <span class="material-symbols-outlined text-[16px]">delete_forever</span> Delete Pitch
+            </button>
+        </div>
+    </div>
+</form>
+
+<!-- Separate form for deleting the field -->
+<form id="delete-field-form" action="/admin/fields/<%= field._id %>/delete" method="POST" class="hidden"></form>

@@ -1,48 +1,207 @@
-<div class="card" style="max-width: 700px;">
-  <form action="/admin/fields" method="POST" enctype="multipart/form-data">
-    <div class="form-group">
-      <label for="name">Tên sân <span style="color: #ef4444;">*</span></label>
-      <input type="text" id="name" name="name" placeholder="VD: Sân Mini Thủ Đức" required />
+<!-- Top Header -->
+<div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6">
+    <div>
+        <div class="flex items-center gap-2 text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-1">
+            <a href="/admin/fields" class="hover:text-white transition-colors">VENUES</a>
+            <span class="material-symbols-outlined text-[10px]">chevron_right</span>
+            <span>ADD NEW FIELD</span>
+        </div>
+        <h1 class="text-3xl font-extrabold tracking-tight text-on-surface">Venue Specification</h1>
+        <p class="text-sm text-on-surface-variant font-medium mt-1 max-w-lg">Enter the technical details, facility amenities, and operational status for the new football pitch.</p>
     </div>
-
-    <div class="form-group">
-      <label for="address">Địa chỉ <span style="color: #ef4444;">*</span></label>
-      <input type="text" id="address" name="address" placeholder="VD: 123 Đường ABC, Quận XYZ" required />
+    <div class="flex items-center gap-3">
+        <a href="/admin/fields" class="px-5 py-2.5 text-sm font-semibold rounded-lg bg-surface-container-high text-on-surface hover:text-white hover:bg-surface-container-highest transition-colors">
+            Cancel
+        </a>
+        <button type="button" onclick="document.getElementById('add-field-form').submit();" class="px-5 py-2.5 text-sm font-semibold rounded-lg bg-primary text-on-primary hover:opacity-90 transition-opacity">
+            Save Venue
+        </button>
     </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label for="type">Loại sân <span style="color: #ef4444;">*</span></label>
-        <select id="type" name="type" required>
-          <option value="">-- Chọn loại sân --</option>
-          <option value="5-a-side">Sân 5 người</option>
-          <option value="7-a-side">Sân 7 người</option>
-          <option value="11-a-side">Sân 11 người</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="pricePerSlot">Giá mỗi slot (VNĐ) <span style="color: #ef4444;">*</span></label>
-        <input type="number" id="pricePerSlot" name="pricePerSlot" placeholder="VD: 300000" min="0" required />
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="description">Mô tả</label>
-      <textarea id="description" name="description"
-        placeholder="Mô tả thêm về sân (sân cỏ nhân tạo, có đèn chiếu sáng...)"></textarea>
-    </div>
-
-    <div class="form-group">
-      <label for="images">Hình ảnh sân</label>
-      <input type="file" id="images" name="images" accept="image/*" multiple
-        style="padding: 10px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #cbd5e1;" />
-      <p style="color: #64748b; font-size: 12px; margin-top: 4px;">Có thể chọn nhiều ảnh. Hỗ trợ: JPG, PNG, WebP (tối đa
-        5MB/ảnh)</p>
-    </div>
-
-    <div style="display: flex; gap: 12px; margin-top: 24px;">
-      <button type="submit" class="btn btn-green">💾 Lưu sân mới</button>
-      <a href="/admin/fields" class="btn btn-outline">Hủy</a>
-    </div>
-  </form>
 </div>
+
+<form id="add-field-form" action="/admin/fields" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+
+    <!-- Left Column (Main Specs) -->
+    <div class="xl:col-span-2 space-y-6">
+        
+        <!-- Basic Information -->
+        <div class="bg-surface-container rounded-xl p-6 border border-outline-variant/10 shadow-sm">
+            <h2 class="text-sm font-bold text-on-surface flex items-center gap-2 mb-6">
+                <span class="material-symbols-outlined text-sm text-primary">info</span> Basic Information
+            </h2>
+            
+            <div class="space-y-5">
+                <div>
+                    <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1.5 pl-1">Field Name</label>
+                    <input type="text" name="name" required class="w-full bg-surface-container-lowest border-none rounded-lg px-4 py-3 text-sm font-medium text-on-surface focus:ring-1 focus:ring-primary/50 placeholder-on-surface-variant/50 transition-all" placeholder="e.g. Etihad Arena A1">
+                </div>
+                
+                <div>
+                    <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1.5 pl-1">Address</label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">location_on</span>
+                        <input type="text" name="address" required class="w-full bg-surface-container-lowest border-none rounded-lg pl-9 pr-4 py-3 text-sm font-medium text-on-surface focus:ring-1 focus:ring-primary/50 placeholder-on-surface-variant/50 transition-all" placeholder="Full street address, district, city">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1.5 pl-1">Pitch Type</label>
+                        <select name="type" required class="w-full bg-surface-container-lowest border-none rounded-lg px-4 py-3 text-sm font-medium text-on-surface focus:ring-1 focus:ring-primary/50 transition-all">
+                            <option value="5-a-side">5-a-side</option>
+                            <option value="7-a-side">7-a-side</option>
+                            <option value="11-a-side">11-a-side</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1.5 pl-1">Price Per Hour (VND)</label>
+                        <div class="relative">
+                            <input type="number" name="pricePerSlot" required class="w-full bg-surface-container-lowest border-none rounded-lg pl-4 pr-12 py-3 text-sm font-medium text-on-surface focus:ring-1 focus:ring-primary/50 placeholder-on-surface-variant/50 transition-all text-right" placeholder="500,000">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-bold text-on-surface-variant">VND</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pitch Description -->
+        <div class="bg-surface-container rounded-xl p-6 border border-outline-variant/10 shadow-sm">
+            <h2 class="text-sm font-bold text-on-surface flex items-center gap-2 mb-6">
+                <span class="material-symbols-outlined text-sm text-primary">description</span> Pitch Description
+            </h2>
+            <textarea name="description" rows="4" class="w-full bg-surface-container-lowest border-none rounded-lg px-4 py-3 text-sm font-medium text-on-surface focus:ring-1 focus:ring-primary/50 placeholder-on-surface-variant/50 transition-all" placeholder="Describe the pitch quality, turf type, and specific rules..."></textarea>
+        </div>
+
+        <!-- Media Gallery -->
+        <div class="bg-surface-container rounded-xl p-6 border border-outline-variant/10 shadow-sm">
+            <h2 class="text-sm font-bold text-on-surface flex items-center gap-2 mb-6">
+                <span class="material-symbols-outlined text-sm text-primary">gallery_thumbnail</span> Media Gallery
+            </h2>
+            
+            <div class="relative block w-full rounded-xl border-2 border-dashed border-outline-variant/30 bg-surface-container-lowest p-12 text-center hover:border-primary/50 hover:bg-primary/5 transition-colors group cursor-pointer" onclick="document.getElementById('file-upload').click()">
+                <span class="material-symbols-outlined text-4xl text-outline-variant mb-2 group-hover:text-primary transition-colors">add_photo_alternate</span>
+                <span class="block text-sm font-medium text-on-surface-variant">Click to browse or drop images here</span>
+                <span class="block text-xs text-on-surface-variant/70 mt-1">PNG, JPG up to 5MB</span>
+                <input id="file-upload" type="file" name="images" multiple accept="image/*" class="hidden" onchange="previewFiles(this)">
+            </div>
+            <!-- Image Previews Container -->
+            <div id="file-preview-container" class="flex flex-wrap gap-4 mt-4"></div>
+            
+            <script>
+                function previewFiles(input) {
+                    const container = document.getElementById('file-preview-container');
+                    container.innerHTML = ''; // Clear existing
+                    if (input.files) {
+                        Array.from(input.files).forEach(file => {
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                const img = document.createElement('img');
+                                img.src = e.target.result;
+                                img.className = 'w-24 h-24 object-cover rounded-lg border border-outline-variant/30 shadow-sm transition-transform hover:scale-105';
+                                container.appendChild(img);
+                            }
+                            reader.readAsDataURL(file);
+                        });
+                    }
+                }
+            </script>
+        </div>
+        
+    </div>
+
+    <!-- Right Column (Settings & Facilities) -->
+    <div class="space-y-6">
+        
+        <!-- Status -->
+        <div class="bg-surface-container rounded-xl p-6 border border-outline-variant/10 shadow-sm">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-sm font-bold text-on-surface">Status</h2>
+                <div class="px-2 py-0.5 rounded text-[9px] font-bold tracking-widest uppercase bg-primary/20 text-primary">Live</div>
+            </div>
+            
+            <div class="flex items-center bg-surface-container-lowest rounded-lg p-1 border border-outline-variant/10">
+                <label class="flex-1 text-center cursor-pointer">
+                    <input type="radio" name="status" value="active" checked class="peer hidden">
+                    <div class="py-2 text-xs font-bold rounded-md peer-checked:bg-primary/10 peer-checked:text-primary text-on-surface-variant transition-colors flex items-center justify-center gap-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-primary peer-checked:animate-pulse"></span> Active
+                    </div>
+                </label>
+                <label class="flex-1 text-center cursor-pointer">
+                    <input type="radio" name="status" value="maintenance" class="peer hidden">
+                    <div class="py-2 text-xs font-bold rounded-md peer-checked:bg-surface-container-highest peer-checked:text-on-surface text-on-surface-variant transition-colors flex items-center justify-center gap-1.5">
+                        <span class="material-symbols-outlined text-[12px]">build</span> Inactive
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Facilities -->
+        <div class="bg-surface-container rounded-xl p-6 border border-outline-variant/10 shadow-sm">
+            <h2 class="text-sm font-bold text-on-surface flex items-center gap-2 mb-6">
+                <span class="material-symbols-outlined text-sm text-primary">bolt</span> Facilities
+            </h2>
+            
+            <div class="space-y-4">
+                <label class="flex items-center justify-between group cursor-pointer p-2 -mx-2 rounded-lg hover:bg-surface-container-high transition-colors">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-on-surface-variant group-hover:text-on-surface transition-colors">lightbulb</span>
+                        <span class="text-sm font-medium text-on-surface">Night Lights</span>
+                    </div>
+                    <input type="checkbox" name="facilities" value="night_lights" class="w-4 h-4 rounded border-outline-variant/30 text-primary bg-surface-container-lowest focus:ring-primary/50 focus:ring-offset-surface">
+                </label>
+                
+                <label class="flex items-center justify-between group cursor-pointer p-2 -mx-2 rounded-lg hover:bg-surface-container-high transition-colors">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-on-surface-variant group-hover:text-on-surface transition-colors">stadium</span>
+                        <span class="text-sm font-medium text-on-surface">Spectator Stands</span>
+                    </div>
+                    <input type="checkbox" name="facilities" value="spectator_stands" class="w-4 h-4 rounded border-outline-variant/30 text-primary bg-surface-container-lowest focus:ring-primary/50 focus:ring-offset-surface">
+                </label>
+                
+                <label class="flex items-center justify-between group cursor-pointer p-2 -mx-2 rounded-lg hover:bg-surface-container-high transition-colors">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-on-surface-variant group-hover:text-on-surface transition-colors">wc</span>
+                        <span class="text-sm font-medium text-on-surface">Restrooms</span>
+                    </div>
+                    <input type="checkbox" name="facilities" value="restrooms" class="w-4 h-4 rounded border-outline-variant/30 text-primary bg-surface-container-lowest focus:ring-primary/50 focus:ring-offset-surface">
+                </label>
+                
+                <label class="flex items-center justify-between group cursor-pointer p-2 -mx-2 rounded-lg hover:bg-surface-container-high transition-colors">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-on-surface-variant group-hover:text-on-surface transition-colors">shower</span>
+                        <span class="text-sm font-medium text-on-surface">Showers</span>
+                    </div>
+                    <input type="checkbox" name="facilities" value="showers" class="w-4 h-4 rounded border-outline-variant/30 text-primary bg-surface-container-lowest focus:ring-primary/50 focus:ring-offset-surface">
+                </label>
+                
+                <label class="flex items-center justify-between group cursor-pointer p-2 -mx-2 rounded-lg hover:bg-surface-container-high transition-colors">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-on-surface-variant group-hover:text-on-surface transition-colors">ac_unit</span>
+                        <span class="text-sm font-medium text-on-surface">Lounge AC</span>
+                    </div>
+                    <input type="checkbox" name="facilities" value="lounge_ac" class="w-4 h-4 rounded border-outline-variant/30 text-primary bg-surface-container-lowest focus:ring-primary/50 focus:ring-offset-surface">
+                </label>
+                
+                <label class="flex items-center justify-between group cursor-pointer p-2 -mx-2 rounded-lg hover:bg-surface-container-high transition-colors">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-on-surface-variant group-hover:text-on-surface transition-colors">wifi</span>
+                        <span class="text-sm font-medium text-on-surface">Free Wifi</span>
+                    </div>
+                    <input type="checkbox" name="facilities" value="free_wifi" class="w-4 h-4 rounded border-outline-variant/30 text-primary bg-surface-container-lowest focus:ring-primary/50 focus:ring-offset-surface">
+                </label>
+            </div>
+        </div>
+
+        <!-- Tactical Tip -->
+        <div class="bg-gradient-to-br from-secondary-container/20 to-surface-container-lowest border border-secondary/20 rounded-xl p-5 shadow-sm">
+            <div class="flex items-center gap-2 text-secondary mb-3">
+                <span class="material-symbols-outlined text-sm">tips_and_updates</span>
+                <span class="text-[10px] font-bold uppercase tracking-widest">Tactical Tip</span>
+            </div>
+            <p class="text-xs text-on-surface leading-relaxed">
+                Pitches with <span class="font-bold text-white">"Night Lights"</span> and <span class="font-bold text-white">"Showers"</span> typically see 40% higher booking rates in urban areas.
+            </p>
+        </div>
+
+    </div>
+</form>

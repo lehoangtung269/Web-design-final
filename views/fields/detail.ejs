@@ -1,20 +1,276 @@
 <style>
   @keyframes pop {
-    0% {
-      transform: scale(1);
-    }
-
-    50% {
-      transform: scale(1.08);
-    }
-
-    100% {
-      transform: scale(1);
-    }
+    0% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+  }
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes selectedPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0.4); }
+    50% { box-shadow: 0 0 0 6px rgba(16,185,129,0); }
   }
 
-  .slot-pop {
-    animation: pop 0.25s ease-out;
+  .slot-pop { animation: pop 0.25s ease-out; }
+
+  /* ── Custom Calendar ── */
+  .calendar-wrapper {
+    position: relative;
+  }
+  .calendar-input-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    user-select: none;
+    color: #0f172a;
+    font-weight: 600;
+    font-size: 15px;
+  }
+  .calendar-input-btn:hover {
+    border-color: #10b981;
+    background: #f0fdf4;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(16,185,129,0.15);
+  }
+  .calendar-input-btn .cal-icon {
+    color: #10b981;
+    font-size: 22px;
+  }
+  .calendar-input-btn .cal-arrow {
+    margin-left: auto;
+    color: #94a3b8;
+    font-size: 18px;
+    transition: transform 0.2s;
+  }
+  .calendar-input-btn.open .cal-arrow { transform: rotate(180deg); }
+
+  /* Calendar Popup */
+  .calendar-popup {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.14), 0 4px 16px rgba(16,185,129,0.1);
+    border: 1px solid #e2e8f0;
+    z-index: 100;
+    overflow: hidden;
+    animation: fadeSlideUp 0.25s ease;
+    display: none;
+  }
+  .calendar-popup.open { display: block; }
+
+  .cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px 12px;
+    background: linear-gradient(135deg, #064e3b, #065f46);
+    color: white;
+  }
+  .cal-nav-btn {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: white;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-size: 16px;
+  }
+  .cal-nav-btn:hover { background: rgba(255,255,255,0.25); transform: scale(1.1); }
+
+  .cal-month-year {
+    font-size: 15px;
+    font-weight: 800;
+    color: white;
+    text-transform: capitalize;
+  }
+
+  .cal-grid {
+    padding: 12px 16px 16px;
+  }
+  .cal-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom: 6px;
+  }
+  .cal-weekday {
+    text-align: center;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #94a3b8;
+    padding: 4px 0;
+  }
+  .cal-weekday:first-child { color: #ef4444; }
+
+  .cal-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+  }
+  .cal-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #374151;
+    border: 2px solid transparent;
+    position: relative;
+  }
+  .cal-day:hover:not(.disabled):not(.empty) {
+    background: #d1fae5;
+    color: #065f46;
+    transform: scale(1.1);
+  }
+  .cal-day.today {
+    border-color: #10b981;
+    color: #059669;
+    font-weight: 800;
+  }
+  .cal-day.selected {
+    background: #10b981;
+    color: white !important;
+    font-weight: 800;
+    border-color: #059669;
+    box-shadow: 0 3px 12px rgba(16,185,129,0.4);
+    animation: selectedPulse 2s infinite;
+  }
+  .cal-day.disabled {
+    color: #d1d5db;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  .cal-day.sunday { color: #ef4444; }
+  .cal-day.empty { pointer-events: none; }
+
+  /* ── Slot Grid Enhanced ── */
+  .slot-item {
+    position: relative;
+    border-radius: 14px;
+    text-align: center;
+    padding: 10px 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+    select-none: none;
+    overflow: hidden;
+  }
+  .slot-item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .slot-item:hover::before { opacity: 1; }
+
+  .slot-item.available {
+    background: #f0fdf4;
+    border-color: transparent;
+    color: #065f46;
+  }
+  .slot-item.available:hover {
+    border-color: #10b981;
+    box-shadow: 0 4px 16px rgba(16,185,129,0.2);
+    transform: translateY(-2px) scale(1.02);
+    background: #d1fae5;
+  }
+  .slot-item.selected-slot {
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+    border-color: #047857 !important;
+    color: white !important;
+    box-shadow: 0 6px 20px rgba(16,185,129,0.45) !important;
+    transform: scale(1.05) !important;
+    animation: selectedPulse 2s infinite;
+  }
+  .slot-item.pending {
+    background: #fffbeb;
+    border-color: transparent;
+    color: #92400e;
+    opacity: 0.75;
+    cursor: not-allowed;
+  }
+  .slot-item.booked {
+    background: #f8fafc;
+    border-color: transparent;
+    color: #94a3b8;
+    text-decoration: line-through;
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  .slot-status-badge {
+    display: block;
+    font-size: 9px;
+    margin-top: 3px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    opacity: 0.8;
+  }
+
+  /* Skeleton loader for slots */
+  .slot-skeleton {
+    border-radius: 14px;
+    height: 60px;
+    background: linear-gradient(90deg, #f0fdf4 25%, #d1fae5 50%, #f0fdf4 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.2s infinite;
+  }
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* Slots grid loading overlay */
+  #slots-grid.loading { opacity: 0.5; pointer-events: none; }
+
+  /* Loading spinner for slots */
+  .slots-loading {
+    display: none;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+  }
+  .slots-loading.visible { display: flex; }
+  .slots-spin {
+    width: 28px; height: 28px;
+    border: 3px solid #d1fae5;
+    border-top-color: #10b981;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Booking summary animation */
+  #booking-summary.visible {
+    display: block !important;
+    animation: fadeSlideUp 0.35s ease;
   }
 </style>
 
@@ -27,9 +283,7 @@
     <span class="material-symbols-outlined text-xs text-slate-300">chevron_right</span>
     <a href="/fields" class="hover:text-emerald-600 transition-colors">Sân bóng</a>
     <span class="material-symbols-outlined text-xs text-slate-300">chevron_right</span>
-    <span class="text-on-surface font-semibold">
-      <%= field.name %>
-    </span>
+    <span class="text-on-surface font-semibold"><%= field.name %></span>
   </div>
 </div>
 
@@ -41,32 +295,28 @@
     <!-- Gallery -->
     <div class="bg-white rounded-2xl overflow-hidden shadow-sm mb-6">
       <div class="relative h-[400px] overflow-hidden" id="field-gallery">
-        <% if (field.images && field.images.length> 0) { %>
+        <% if (field.images && field.images.length > 0) { %>
           <img id="gallery-img" class="w-full h-full object-cover transition-all duration-500"
             src="<%= field.images[0] %>" alt="<%= field.name %>" />
-          <% if (field.images.length> 1) { %>
-            <div
-              class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 bg-white/70 backdrop-blur-md px-3 py-2 rounded-full">
-              <% field.images.forEach((img, idx)=> { %>
+          <% if (field.images.length > 1) { %>
+            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 bg-white/70 backdrop-blur-md px-3 py-2 rounded-full">
+              <% field.images.forEach((img, idx) => { %>
                 <button onclick="changeGallery(this, '<%= img %>')"
                   class="gallery-dot w-3 h-3 rounded-full transition-all duration-200 <%= idx === 0 ? 'bg-emerald-500 scale-125' : 'bg-slate-300 hover:bg-slate-400' %>"></button>
-                <% }); %>
+              <% }); %>
             </div>
-            <% } %>
-              <% } else { %>
-                <div
-                  class="w-full h-full bg-gradient-to-br from-emerald-100 to-cyan-100 flex items-center justify-center">
-                  <span class="material-symbols-outlined text-8xl text-emerald-300">sports_soccer</span>
-                </div>
-                <% } %>
+          <% } %>
+        <% } else { %>
+          <div class="w-full h-full bg-gradient-to-br from-emerald-100 to-cyan-100 flex items-center justify-center">
+            <span class="material-symbols-outlined text-8xl text-emerald-300">sports_soccer</span>
+          </div>
+        <% } %>
       </div>
     </div>
 
     <!-- Field Details -->
     <div class="bg-white rounded-2xl p-8 shadow-sm">
-      <h1 class="text-3xl font-extrabold text-on-surface mb-3">
-        <%= field.name %>
-      </h1>
+      <h1 class="text-3xl font-extrabold text-on-surface mb-3"><%= field.name %></h1>
       <p class="text-on-surface-variant text-sm mb-5 flex items-center gap-2">
         <span class="material-symbols-outlined text-orange-400 text-sm">location_on</span>
         <%= field.address %>
@@ -74,31 +324,60 @@
 
       <!-- Meta chips -->
       <div class="flex gap-3 mb-6 flex-wrap">
-        <div
-          class="flex items-center gap-2 px-4 py-2.5 rounded-2xl text-sm font-semibold transition-all hover:-translate-y-0.5
+        <div class="flex items-center gap-2 px-4 py-2.5 rounded-2xl text-sm font-semibold transition-all hover:-translate-y-0.5
                     <%= field.type === '5-a-side' ? 'bg-emerald-50 text-emerald-700' : field.type === '7-a-side' ? 'bg-sky-50 text-sky-700' : 'bg-orange-50 text-orange-700' %>">
           <span class="material-symbols-outlined text-sm">groups</span>
-          <%= field.type==='5-a-side' ? 'Sân 5 người' : field.type==='7-a-side' ? 'Sân 7 người' : 'Sân 11 người' %>
+          <%= field.type === '5-a-side' ? 'Sân 5 người' : field.type === '7-a-side' ? 'Sân 7 người' : 'Sân 11 người' %>
         </div>
-        <div
-          class="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-amber-50 text-amber-700 text-sm font-semibold hover:-translate-y-0.5 transition-all">
+        <div class="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-amber-50 text-amber-700 text-sm font-semibold hover:-translate-y-0.5 transition-all">
           <span class="material-symbols-outlined text-sm">payments</span>
           <%= field.pricePerSlot.toLocaleString('vi-VN') %>đ / slot
         </div>
         <div class="flex items-center gap-2 px-4 py-2.5 rounded-2xl text-sm font-semibold hover:-translate-y-0.5 transition-all
                     <%= field.status === 'active' ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700' %>">
           <span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">circle</span>
-          <%= field.status==='active' ? 'Đang hoạt động' : 'Bảo trì' %>
+          <%= field.status === 'active' ? 'Đang hoạt động' : 'Bảo trì' %>
         </div>
       </div>
 
       <% if (field.description) { %>
         <div class="pt-5 border-t border-slate-100">
-          <p class="text-on-surface-variant leading-relaxed">
-            <%= field.description %>
-          </p>
+          <p class="text-on-surface-variant leading-relaxed"><%= field.description %></p>
         </div>
-        <% } %>
+      <% } %>
+
+      <% if (field.facilities && field.facilities.length > 0) { 
+            const facilityMap = {
+                'night_lights': { label: 'Dàn đèn chiếu sáng', icon: 'lightbulb', color: 'text-amber-500', bg: 'bg-amber-50' },
+                'spectator_stands': { label: 'Khán đài', icon: 'stadium', color: 'text-indigo-500', bg: 'bg-indigo-50' },
+                'restrooms': { label: 'Nhà vệ sinh', icon: 'wc', color: 'text-stone-500', bg: 'bg-stone-50' },
+                'showers': { label: 'Phòng tắm & Thay đồ', icon: 'shower', color: 'text-cyan-500', bg: 'bg-cyan-50' },
+                'lounge_ac': { label: 'Phòng chờ máy lạnh', icon: 'ac_unit', color: 'text-blue-500', bg: 'bg-blue-50' },
+                'free_wifi': { label: 'Wifi miễn phí', icon: 'wifi', color: 'text-rose-500', bg: 'bg-rose-50' }
+            };
+      %>
+        <div class="mt-8 pt-5 border-t border-slate-100">
+            <h3 class="text-lg font-bold text-on-surface mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">all_inclusive</span>
+                Tiện ích đi kèm
+            </h3>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <% field.facilities.forEach(fac => { 
+                    const mapData = facilityMap[fac];
+                    if (mapData) {
+                %>
+                    <div class="flex items-center gap-3 p-3 rounded-xl border border-slate-100 hover:border-emerald-100 transition-colors bg-slate-50/50 hover:bg-white shadow-sm">
+                        <div class="w-10 h-10 rounded-full <%= mapData.bg %> <%= mapData.color %> flex items-center justify-center shrink-0">
+                            <span class="material-symbols-outlined text-[20px]"><%= mapData.icon %></span>
+                        </div>
+                        <span class="text-sm font-semibold text-slate-700 leading-tight"><%= mapData.label %></span>
+                    </div>
+                <% 
+                    } 
+                }) %>
+            </div>
+        </div>
+      <% } %>
     </div>
   </div>
 
@@ -110,66 +389,89 @@
         Chọn khung giờ
       </h2>
 
-      <!-- Date Picker -->
+      <!-- Custom Calendar Date Picker -->
       <div class="mb-5">
-        <label class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-1"
-          for="slot-date">
+        <label class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-1">
           <span class="material-symbols-outlined text-xs text-primary">calendar_today</span> Chọn ngày
         </label>
+
+        <div class="calendar-wrapper" id="cal-wrapper">
+          <div class="calendar-input-btn" id="cal-trigger" onclick="toggleCalendar()">
+            <span class="material-symbols-outlined cal-icon">event</span>
+            <span id="cal-display-text">Chọn ngày...</span>
+            <span class="material-symbols-outlined cal-arrow">expand_more</span>
+          </div>
+
+          <div class="calendar-popup" id="cal-popup">
+            <div class="cal-header">
+              <button class="cal-nav-btn" onclick="changeMonth(-1)">‹</button>
+              <span class="cal-month-year" id="cal-month-year"></span>
+              <button class="cal-nav-btn" onclick="changeMonth(1)">›</button>
+            </div>
+            <div class="cal-grid">
+              <div class="cal-weekdays">
+                <div class="cal-weekday">CN</div>
+                <div class="cal-weekday">T2</div>
+                <div class="cal-weekday">T3</div>
+                <div class="cal-weekday">T4</div>
+                <div class="cal-weekday">T5</div>
+                <div class="cal-weekday">T6</div>
+                <div class="cal-weekday">T7</div>
+              </div>
+              <div class="cal-days" id="cal-days"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hidden native input for form fallback -->
         <input type="date" id="slot-date" value="<%= selectedDate %>"
           min="<%= new Date().toISOString().split('T')[0] %>"
-          class="w-full px-4 py-3 bg-slate-50 border-2 border-transparent rounded-xl text-on-surface font-medium focus:border-emerald-500 focus:ring-0 focus:bg-white transition-all cursor-pointer" />
+          style="display:none;" />
       </div>
 
       <!-- Legend -->
       <div class="flex gap-4 mb-4 flex-wrap">
         <div class="flex items-center gap-2 text-xs font-medium text-slate-500">
-          <span class="w-3.5 h-3.5 rounded bg-emerald-500"></span> Trống
+          <span class="w-3.5 h-3.5 rounded-md bg-emerald-500"></span> Trống
         </div>
         <div class="flex items-center gap-2 text-xs font-medium text-slate-500">
-          <span class="w-3.5 h-3.5 rounded bg-amber-400"></span> Đang giữ
+          <span class="w-3.5 h-3.5 rounded-md bg-amber-400"></span> Đang giữ
         </div>
         <div class="flex items-center gap-2 text-xs font-medium text-slate-500">
-          <span class="w-3.5 h-3.5 rounded bg-slate-200"></span> Đã đặt
+          <span class="w-3.5 h-3.5 rounded-md bg-slate-200"></span> Đã đặt
         </div>
       </div>
 
       <!-- Slots Grid -->
-      <div class="grid grid-cols-2 gap-2 mb-5 min-h-[200px]" id="slots-grid">
-        <% slots.forEach(slot=> { %>
-          <div
-            class="slot-item rounded-xl text-center py-3 px-2 text-sm font-semibold cursor-pointer transition-all duration-200 border-2 select-none
-                      <%= slot.status === 'available'
-                          ? 'bg-emerald-50 border-transparent text-emerald-700 hover:border-emerald-400 hover:shadow-md hover:scale-[1.03]'
-                          : slot.status === 'pending'
-                          ? 'bg-amber-50 border-transparent text-amber-600 opacity-70 cursor-not-allowed'
-                          : 'bg-slate-50 border-transparent text-slate-300 line-through opacity-50 cursor-not-allowed' %>"
-            data-slot-id="<%= slot._id %>" data-start="<%= slot.startTime %>" data-end="<%= slot.endTime %>"
-            data-status="<%= slot.status %>">
-            <span class="block text-xs font-bold">
-              <%= slot.startTime %> - <%= slot.endTime %>
-            </span>
-            <span class="block text-[10px] mt-0.5 font-medium opacity-70">
-              <%= slot.status==='available' ? 'Trống' : slot.status==='pending' ? 'Đang giữ' : 'Đã đặt' %>
-            </span>
-          </div>
+      <div style="position: relative; min-height: 200px;">
+        <div class="slots-loading" id="slots-loading">
+          <div class="slots-spin"></div>
+        </div>
+        <div class="grid grid-cols-2 gap-2 mb-5" id="slots-grid">
+          <% slots.forEach(slot => { %>
+            <div class="slot-item <%= slot.status === 'available' ? 'available' : slot.status === 'pending' ? 'pending' : 'booked' %>"
+              data-slot-id="<%= slot._id %>"
+              data-start="<%= slot.startTime %>"
+              data-end="<%= slot.endTime %>"
+              data-status="<%= slot.status %>">
+              <span class="block text-xs font-bold"><%= slot.startTime %> - <%= slot.endTime %></span>
+              <span class="slot-status-badge">
+                <%= slot.status === 'available' ? '✓ Trống' : slot.status === 'pending' ? '⏳ Đang giữ' : '✗ Đã đặt' %>
+              </span>
+            </div>
           <% }); %>
+        </div>
       </div>
 
       <!-- Booking Summary -->
-      <div id="booking-summary"
-        class="hidden bg-emerald-50 border-2 border-emerald-200 rounded-xl p-4 mb-4 animate-fade-in">
+      <div id="booking-summary" class="hidden bg-emerald-50 border-2 border-emerald-200 rounded-xl p-4 mb-4">
         <div class="flex justify-between text-sm mb-1.5">
           <span class="text-emerald-600/70">Sân</span>
-          <span class="text-on-surface font-semibold">
-            <%= field.name %>
-          </span>
+          <span class="text-on-surface font-semibold"><%= field.name %></span>
         </div>
         <div class="flex justify-between text-sm mb-1.5">
           <span class="text-emerald-600/70">Ngày</span>
-          <span class="text-on-surface font-semibold" id="summary-date">
-            <%= selectedDate %>
-          </span>
+          <span class="text-on-surface font-semibold" id="summary-date"><%= selectedDate %></span>
         </div>
         <div class="flex justify-between text-sm mb-1.5">
           <span class="text-emerald-600/70">Khung giờ</span>
@@ -184,10 +486,11 @@
       </div>
 
       <!-- Book Button -->
-      <button type="button" id="btn-book" disabled class="w-full py-4 rounded-xl font-bold text-white text-base flex items-center justify-center gap-2
-                     bg-primary hover:bg-emerald-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed
-                     transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 active:scale-95
-                     shadow-md shadow-emerald-200 disabled:shadow-none">
+      <button type="button" id="btn-book" disabled
+        class="w-full py-4 rounded-xl font-bold text-white text-base flex items-center justify-center gap-2
+               bg-primary hover:bg-emerald-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed
+               transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 active:scale-95
+               shadow-md shadow-emerald-200 disabled:shadow-none">
         <span class="material-symbols-outlined">bolt</span>
         Tiếp tục đặt sân
       </button>
@@ -200,9 +503,11 @@
   const FIELD_ID = '<%= field._id %>';
   const FIELD_PRICE = <%= field.pricePerSlot %>;
   const FIELD_NAME = '<%= field.name %>';
+  const INITIAL_DATE = '<%= selectedDate %>';
 </script>
 <script src="/public/js/timeslot.js"></script>
 <script>
+  // ── Gallery ───────────────────────────────────
   function changeGallery(dotEl, src) {
     const img = document.getElementById('gallery-img');
     if (img) {
@@ -221,4 +526,110 @@
     dotEl.classList.remove('bg-slate-300');
     dotEl.classList.add('bg-emerald-500', 'scale-125');
   }
+
+  // ── Custom Calendar ───────────────────────────
+  let calCurrentDate = new Date();
+  let calSelectedDate = INITIAL_DATE ? new Date(INITIAL_DATE + 'T00:00:00') : new Date();
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  // Sync hidden input with initial
+  document.getElementById('slot-date').value = INITIAL_DATE;
+  updateCalDisplay(calSelectedDate);
+
+  function toggleCalendar() {
+    const popup = document.getElementById('cal-popup');
+    const btn = document.getElementById('cal-trigger');
+    const isOpen = popup.classList.contains('open');
+    popup.classList.toggle('open', !isOpen);
+    btn.classList.toggle('open', !isOpen);
+    if (!isOpen) {
+      calCurrentDate = new Date(calSelectedDate.getFullYear(), calSelectedDate.getMonth(), 1);
+      renderCalendar();
+    }
+  }
+
+  function closeCalendar() {
+    document.getElementById('cal-popup').classList.remove('open');
+    document.getElementById('cal-trigger').classList.remove('open');
+  }
+
+  // Close on outside click
+  document.addEventListener('click', (e) => {
+    const wrapper = document.getElementById('cal-wrapper');
+    if (wrapper && !wrapper.contains(e.target)) closeCalendar();
+  });
+
+  function changeMonth(dir) {
+    calCurrentDate = new Date(calCurrentDate.getFullYear(), calCurrentDate.getMonth() + dir, 1);
+    renderCalendar();
+  }
+
+  function renderCalendar() {
+    const year = calCurrentDate.getFullYear();
+    const month = calCurrentDate.getMonth();
+
+    const monthNames = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6',
+                        'Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
+    document.getElementById('cal-month-year').textContent = `${monthNames[month]} ${year}`;
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    const container = document.getElementById('cal-days');
+    container.innerHTML = '';
+
+    // Empty cells before first day
+    for (let i = 0; i < firstDay; i++) {
+      const empty = document.createElement('div');
+      empty.className = 'cal-day empty';
+      container.appendChild(empty);
+    }
+
+    for (let d = 1; d <= daysInMonth; d++) {
+      const cellDate = new Date(year, month, d);
+      cellDate.setHours(0, 0, 0, 0);
+      const isPast = cellDate < today;
+      const isToday = cellDate.getTime() === today.getTime();
+      const isSelected = calSelectedDate && cellDate.getTime() === new Date(calSelectedDate.getFullYear(), calSelectedDate.getMonth(), calSelectedDate.getDate()).getTime();
+      const isSunday = cellDate.getDay() === 0;
+
+      const cell = document.createElement('div');
+      let cls = 'cal-day';
+      if (isPast) cls += ' disabled';
+      if (isToday) cls += ' today';
+      if (isSelected) cls += ' selected';
+      if (isSunday && !isPast) cls += ' sunday';
+      cell.className = cls;
+      cell.textContent = d;
+
+      if (!isPast) {
+        cell.addEventListener('click', () => selectCalDate(cellDate));
+      }
+      container.appendChild(cell);
+    }
+  }
+
+  function selectCalDate(dateObj) {
+    calSelectedDate = dateObj;
+    const iso = dateObj.toISOString().split('T')[0];
+    document.getElementById('slot-date').value = iso;
+    updateCalDisplay(dateObj);
+    renderCalendar();
+    closeCalendar();
+
+    // Trigger slot reload (from timeslot.js listener)
+    document.getElementById('slot-date').dispatchEvent(new Event('change'));
+  }
+
+  function updateCalDisplay(dateObj) {
+    const el = document.getElementById('cal-display-text');
+    if (!el || !dateObj) return;
+    const opts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    el.textContent = dateObj.toLocaleDateString('vi-VN', opts);
+  }
+
+  // Init calendar
+  calCurrentDate = new Date(calSelectedDate.getFullYear(), calSelectedDate.getMonth(), 1);
+  renderCalendar();
 </script>

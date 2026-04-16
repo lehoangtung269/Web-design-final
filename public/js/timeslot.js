@@ -29,11 +29,11 @@
   // Tailwind class presets
   // ===============================
   const SLOT_CLASSES = {
-    base: 'slot-item rounded-xl text-center py-3 px-2 text-sm font-semibold cursor-pointer transition-all duration-200 border-2 select-none',
-    available: 'bg-emerald-50 border-transparent text-emerald-700 hover:border-emerald-400 hover:shadow-md hover:scale-[1.03]',
-    selected: 'bg-emerald-600 border-emerald-700 text-white shadow-lg shadow-emerald-200 scale-[1.03] slot-pop',
-    pending: 'bg-amber-50 border-transparent text-amber-600 opacity-70 cursor-not-allowed',
-    booked: 'bg-slate-50 border-transparent text-slate-300 line-through opacity-50 cursor-not-allowed',
+    base: 'slot-item',
+    available: 'available',
+    selected: 'selected-slot slot-pop',
+    pending: 'pending',
+    booked: 'booked',
   };
 
   // ===============================
@@ -113,14 +113,14 @@
 
       const statusText =
         slot.status === 'available'
-          ? 'Trống'
+          ? '✓ Trống'
           : slot.status === 'pending'
-          ? 'Đang giữ'
-          : 'Đã đặt';
+          ? '⏳ Đang giữ'
+          : '✗ Đã đặt';
 
       div.innerHTML = `
         <span class="block text-xs font-bold">${slot.startTime} - ${slot.endTime}</span>
-        <span class="block text-[10px] mt-0.5 font-medium opacity-70">${statusText}</span>
+        <span class="slot-status-badge">${statusText}</span>
       `;
 
       // Chỉ cho phép click vào slot available
@@ -139,12 +139,12 @@
     // Bỏ chọn tất cả — reset về available state
     document.querySelectorAll('.slot-item').forEach((el) => {
       if (el.dataset.status === 'available') {
-        el.className = `${SLOT_CLASSES.base} ${SLOT_CLASSES.available}`;
+        el.className = 'slot-item available';
       }
     });
 
     // Chọn slot mới
-    element.className = `${SLOT_CLASSES.base} ${SLOT_CLASSES.selected}`;
+    element.className = 'slot-item selected-slot slot-pop';
     selectedSlot = slot;
     updateSummary();
   }
@@ -155,12 +155,16 @@
   function updateSummary() {
     if (selectedSlot) {
       bookingSummary.classList.remove('hidden');
+      bookingSummary.classList.add('visible');
       summaryDate.textContent = dateInput.value;
       summaryTime.textContent = `${selectedSlot.startTime} - ${selectedSlot.endTime}`;
       summaryPrice.textContent = FIELD_PRICE.toLocaleString('vi-VN') + 'đ';
       btnBook.disabled = false;
+      // Scroll to summary
+      bookingSummary.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } else {
       bookingSummary.classList.add('hidden');
+      bookingSummary.classList.remove('visible');
       summaryTime.textContent = '—';
       btnBook.disabled = true;
     }

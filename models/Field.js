@@ -41,6 +41,10 @@ const fieldSchema = new mongoose.Schema(
       enum: ['active', 'maintenance'],
       default: 'active',
     },
+    facilities: {
+      type: [String],
+      default: [],
+    },
   },
   {
     timestamps: true,

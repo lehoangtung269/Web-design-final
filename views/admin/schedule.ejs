@@ -1,0 +1,136 @@
+<!-- Schedule Header -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+    <div>
+        <h1 class="text-2xl font-bold tracking-tight text-on-surface">Pitch Schedule</h1>
+        <div class="flex items-center gap-1.5 mt-1 text-sm text-primary font-medium">
+            <span class="material-symbols-outlined text-sm">location_on</span>
+            All Fields (Central Hub)
+        </div>
+    </div>
+    
+    <div class="flex flex-wrap items-center gap-3">
+        <!-- Week Navigation -->
+        <div class="flex items-center bg-surface-container-high rounded-lg p-1 border border-outline-variant/10">
+            <a href="/admin/schedule?date=<%= prevWeekStr %>" class="p-1 rounded-md text-on-surface-variant hover:text-white hover:bg-surface-container-highest transition-colors flex items-center justify-center">
+                <span class="material-symbols-outlined text-sm">chevron_left</span>
+            </a>
+            <span class="px-4 text-sm font-bold tracking-tight text-on-surface"><%= weekTitle %></span>
+            <a href="/admin/schedule?date=<%= nextWeekStr %>" class="p-1 rounded-md text-on-surface-variant hover:text-white hover:bg-surface-container-highest transition-colors flex items-center justify-center">
+                <span class="material-symbols-outlined text-sm">chevron_right</span>
+            </a>
+        </div>
+        
+        <!-- Today Button -->
+        <a href="/admin/schedule?date=<%= todayStr %>" class="px-4 py-1.5 text-sm font-semibold rounded-lg bg-surface-container-highest text-on-surface hover:text-white border border-outline-variant/10 transition-colors">
+            Today
+        </a>
+    </div>
+</div>
+
+<!-- Legend -->
+<div class="flex items-center gap-6 mb-4 px-2">
+    <div class="flex items-center gap-2 text-xs font-bold text-on-surface-variant tracking-wider uppercase">
+        <span class="w-2.5 h-2.5 rounded-full bg-primary/20 ring-2 ring-primary"></span>
+        Confirmed
+    </div>
+    <div class="flex items-center gap-2 text-xs font-bold text-on-surface-variant tracking-wider uppercase">
+        <span class="w-2.5 h-2.5 rounded-full bg-secondary/20 ring-2 ring-secondary"></span>
+        Pending
+    </div>
+    <div class="flex items-center gap-2 text-xs font-bold text-on-surface-variant tracking-wider uppercase">
+        <span class="w-2.5 h-2.5 rounded-full bg-outline-variant/20 ring-2 ring-outline-variant"></span>
+        Maintenance
+    </div>
+</div>
+
+<!-- Calendar Grid Canvas -->
+<div class="bg-surface-container rounded-xl border border-outline-variant/10 overflow-x-auto">
+    <div class="min-w-[800px]">
+        <!-- Days Header Row -->
+        <div class="flex border-b border-outline-variant/10">
+            <!-- Time Column Spacer -->
+            <div class="w-16 shrink-0 py-4 px-2 border-r border-outline-variant/10 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest flex items-center justify-center flex-col">
+                Time
+            </div>
+            
+            <!-- 7 Days -->
+            <% weekDays.forEach(day => { %>
+                <div class="flex-1 py-4 flex flex-col items-center justify-center border-r border-outline-variant/10 last:border-0 relative">
+                    <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest"><%= day.name %></span>
+                    <span class="text-xl font-bold mt-1 tracking-tight <%= day.isToday ? 'text-primary' : 'text-on-surface' %>">
+                        <%= day.dateNum %>
+                    </span>
+                    <% if (day.isToday) { %>
+                        <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-1 bg-primary rounded-t-lg"></div>
+                    <% } %>
+                </div>
+            <% }) %>
+        </div>
+
+        <!-- Time Grid Body -->
+        <div class="flex relative bg-surface-container-lowest" style="height: <%= 17 * 80 %>px;">
+            <!-- Left Time Labels -->
+            <div class="w-16 shrink-0 border-r border-outline-variant/10 bg-surface-container relative z-10">
+                <% for(let h = 7; h <= 23; h++) { %>
+                    <div class="h-[80px] w-full flex items-start justify-center pt-2 relative border-b border-outline-variant/5 text-[10px] font-bold text-on-surface-variant">
+                        <%= h.toString().padStart(2, '0') %>:00
+                    </div>
+                <% } %>
+            </div>
+            
+            <!-- Day Columns -->
+            <% weekDays.forEach(day => { %>
+                <div class="flex-1 relative border-r border-outline-variant/5 last:border-0">
+                    <!-- Horizontal Hour Lines inside day -->
+                    <% for(let h = 7; h <= 23; h++) { %>
+                        <div class="absolute left-0 right-0 border-t border-outline-variant/5" style="top: <%= (h - 7) * 80 %>px; height: 80px;"></div>
+                    <% } %>
+                    
+                    <!-- Render Bookings for this Day -->
+                    <% day.bookings.forEach(booking => { 
+                        if (booking.status === 'rejected') return; // Skip rejected bookings
+                        
+                        // Parse "HH:MM"
+                        const parseTime = (timeStr) => {
+                            const [h, m] = timeStr.split(':').map(Number);
+                            return h + (m / 60);
+                        };
+                        
+                        const startH = parseTime(booking.startTime);
+                        const endH = parseTime(booking.endTime);
+                        
+                        if(startH < 7 || startH > 23) return; // out of scope
+                        
+                        const topPx = (startH - 7) * 80;
+                        const heightPx = (endH - startH) * 80;
+                        
+                        // Pick color logic based on status
+                        let blockClass = 'bg-primary/20 border border-primary text-primary'; // default/confirmed structure
+                        if (booking.status === 'confirmed') {
+                            blockClass = 'bg-primary border border-primary text-on-primary';
+                        } else if (booking.status === 'pending') {
+                            blockClass = 'bg-secondary border border-secondary text-on-secondary';
+                        }
+                    %>
+                        <!-- Booking Block -->
+                        <div class="absolute left-1 right-1 rounded-md p-2 overflow-hidden shadow-sm transition-transform hover:scale-[1.02] cursor-pointer group <%= blockClass %>" 
+                             style="top: <%= topPx %>px; height: <%= heightPx %>px;"
+                             onclick="window.location='/admin/bookings/<%= booking._id %>'">
+                             
+                             <div class="text-[10px] font-bold tracking-widest uppercase opacity-80 mb-0.5 whitespace-nowrap overflow-hidden text-ellipsis">
+                                 <%= booking.startTime %> - <%= booking.endTime %>
+                             </div>
+                             <div class="text-xs font-bold leading-tight whitespace-nowrap overflow-hidden text-ellipsis">
+                                 <%= booking.user ? booking.user.name : 'Unknown User' %>
+                             </div>
+                             
+                             <div class="absolute bottom-1 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="material-symbols-outlined text-[14px]">open_in_new</span>
+                             </div>
+                        </div>
+                    <% }) %>
+                </div>
+            <% }) %>
+        </div>
+    </div>
+</div>

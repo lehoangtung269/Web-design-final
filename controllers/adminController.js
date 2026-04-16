@@ -16,6 +16,51 @@ const getDashboard = async (req, res) => {
     const pendingBookings = await Booking.countDocuments({ status: 'pending' });
     const totalFields = await Field.countDocuments();
 
+    // Fetch recent bookings for dashboard table
+    const recentBookings = await Booking.find()
+      .populate('user', 'name')
+      .populate('field', 'name')
+      .sort({ createdAt: -1 })
+      .limit(5);
+
+    // Handle ?range= parameter for dashboard chart (default 7 days)
+    const range = parseInt(req.query.range) === 30 ? 30 : 7;
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - range + 1); // +1 so if range=7, it's today + 6 previous days = 7 days total.
+    startDate.setHours(0, 0, 0, 0);
+
+    const bookingTrendsObj = await Booking.aggregate([
+      { $match: { createdAt: { $gte: startDate } } },
+      { $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+          count: { $sum: 1 }
+      } },
+      { $sort: { _id: 1 } }
+    ]);
+
+    const chartData = [];
+    let maxBookings = 0;
+    
+    // Generate dates including empty days
+    for (let i = range - 1; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      
+      const dateStr = d.toISOString().split('T')[0];
+      const match = bookingTrendsObj.find(b => b._id === dateStr);
+      const count = match ? match.count : 0;
+      
+      if (count > maxBookings) maxBookings = count;
+      
+      chartData.push({
+        date: dateStr,
+        label: d.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' }),
+        count: count
+      });
+    }
+
+    if (maxBookings === 0) maxBookings = 1; // Prevent division by zero
+
     res.render('admin/dashboard', {
       ...adminLayout,
       title: 'Admin Dashboard',
@@ -28,11 +73,100 @@ const getDashboard = async (req, res) => {
         pendingBookings,
         totalFields,
       },
+      recentBookings,
+      chartData,
+      maxBookings,
+      currentRange: range
     });
   } catch (error) {
     console.error('Dashboard Error:', error);
     req.flash('error', 'Lỗi khi tải dashboard!');
     res.redirect('/');
+  }
+};
+
+// ================================
+// QUẢN LÝ LỊCH ĐẶT SÂN (SCHEDULE)
+// ================================
+const getSchedule = async (req, res) => {
+  try {
+    // Determine the base date from query, or default to today
+    const queryDateStr = req.query.date;
+    const baseDate = queryDateStr ? new Date(queryDateStr) : new Date();
+    
+    // Set to 00:00:00 to avoid timezone shift issues
+    baseDate.setHours(0, 0, 0, 0);
+
+    // Calculate Monday (1) to Sunday (0 -> 7 in logic) of the current base date's week
+    const dayOfWeek = baseDate.getDay();
+    const diffToMonday = baseDate.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+    
+    const startOfWeek = new Date(baseDate.setDate(diffToMonday));
+    startOfWeek.setHours(0, 0, 0, 0);
+    
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
+    endOfWeek.setHours(23, 59, 59, 999);
+
+    // Prepare navigation dates (prev week, next week, today)
+    const prevWeek = new Date(startOfWeek);
+    prevWeek.setDate(startOfWeek.getDate() - 7);
+    
+    const nextWeek = new Date(startOfWeek);
+    nextWeek.setDate(startOfWeek.getDate() + 7);
+
+    // Format week title (e.g., "October 21 — 27")
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    let weekTitle = `${monthNames[startOfWeek.getMonth()]} ${startOfWeek.getDate()}`;
+    if (startOfWeek.getMonth() === endOfWeek.getMonth()) {
+        weekTitle += ` — ${endOfWeek.getDate()}`;
+    } else {
+        weekTitle += ` — ${monthNames[endOfWeek.getMonth()]} ${endOfWeek.getDate()}`;
+    }
+
+    // Fetch all bookings within this week
+    const bookings = await Booking.find({
+      date: { $gte: startOfWeek, $lte: endOfWeek }
+    }).populate('field', 'name').populate('user', 'name');
+
+    // Create a 7-day array structure
+    const daysName = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+    const weekDays = [];
+    
+    for (let i = 0; i < 7; i++) {
+        const currentDate = new Date(startOfWeek);
+        currentDate.setDate(startOfWeek.getDate() + i);
+        
+        // Find bookings exactly falling on this day
+        const dayBookings = bookings.filter(b => {
+             const bDate = new Date(b.date);
+             return bDate.getDate() === currentDate.getDate() && bDate.getMonth() === currentDate.getMonth() && bDate.getFullYear() === currentDate.getFullYear();
+        });
+
+        weekDays.push({
+            name: daysName[i],
+            dateNum: currentDate.getDate(),
+            fullDateStr: currentDate.toISOString(),
+            isToday: (currentDate.toDateString() === new Date().toDateString()),
+            bookings: dayBookings
+        });
+    }
+
+    res.render('admin/schedule', {
+      ...adminLayout,
+      title: 'Pitch Schedule',
+      activeNav: 'schedule',
+      pageTitle: 'Pitch Schedule',
+      weekTitle,
+      weekDays,
+      prevWeekStr: prevWeek.toISOString().split('T')[0],
+      nextWeekStr: nextWeek.toISOString().split('T')[0],
+      todayStr: new Date().toISOString().split('T')[0]
+    });
+  } catch (error) {
+    console.error('Schedule Error:', error);
+    req.flash('error', 'Lỗi khi tải lịch sân!');
+    res.redirect('/admin/dashboard');
   }
 };
 
@@ -58,6 +192,20 @@ const getBookings = async (req, res) => {
 
     const total = await Booking.countDocuments(filter);
 
+    // KPI Calculations
+    const totalVolume = await Booking.countDocuments();
+    const pendingConf = await Booking.countDocuments({ status: 'pending' });
+    const confirmedConf = await Booking.countDocuments({ status: 'confirmed' });
+    
+    const revenueAgg = await Booking.aggregate([
+      { $match: { status: 'confirmed' } },
+      { $group: { _id: null, total: { $sum: '$totalPrice' } } }
+    ]);
+    const totalRevenue = revenueAgg.length > 0 ? revenueAgg[0].total : 0;
+    
+    // Utilization logic (Confirmed vs Total possible, or just Confirmed vs All Bookings)
+    const utilization = totalVolume > 0 ? Math.round((confirmedConf / totalVolume) * 100) : 0;
+
     res.render('admin/bookings/index', {
       ...adminLayout,
       title: 'Quản lý đơn đặt sân',
@@ -68,6 +216,12 @@ const getBookings = async (req, res) => {
       currentStatus: status || 'all',
       currentPage: parseInt(page),
       totalPages: Math.ceil(total / limit) || 1,
+      stats: {
+        totalVolume,
+        pendingConf,
+        totalRevenue,
+        utilization
+      }
     });
   } catch (error) {
     console.error('Get Bookings Error:', error);
@@ -180,14 +334,24 @@ const getFields = async (req, res) => {
   try {
     const fields = await Field.find().sort({ createdAt: -1 });
 
+    // KPI Calculations
+    const totalFields = fields.length;
+    const activeFields = fields.filter(f => f.status === 'active').length;
+    const maintenanceFields = fields.filter(f => f.status === 'maintenance').length;
+
     res.render('admin/fields/index', {
       ...adminLayout,
       title: 'Quản lý sân bóng',
       activeNav: 'fields',
       pageIcon: '🏟️',
       pageTitle: 'Quản lý sân bóng',
-      topbarRight: '<a href="/admin/fields/create" class="btn btn-sm btn-green">➕ Thêm sân mới</a>',
+      topbarRight: '', // Overwritten by the template design header
       fields,
+      stats: {
+        totalFields,
+        activeFields,
+        maintenanceFields
+      }
     });
   } catch (error) {
     console.error('Get Fields Error:', error);
@@ -211,7 +375,21 @@ const showCreateField = (req, res) => {
 // POST /admin/fields — Tạo sân mới
 const createField = async (req, res) => {
   try {
-    const { name, address, type, pricePerSlot, description } = req.body;
+    const { name, address, type, pricePerSlot, description, facilities } = req.body || {};
+
+    if (!name || !address || !type || !pricePerSlot) {
+      req.flash('error', 'Vui lòng điền đầy đủ thông tin bắt buộc!');
+      return res.redirect('/admin/fields/create');
+    }
+
+    const facilitiesArr = [];
+    if (facilities) {
+      if (Array.isArray(facilities)) {
+        facilitiesArr.push(...facilities);
+      } else {
+        facilitiesArr.push(facilities);
+      }
+    }
 
     await Field.create({
       name,
@@ -219,6 +397,7 @@ const createField = async (req, res) => {
       type,
       pricePerSlot,
       description,
+      facilities: facilitiesArr,
       images: req.cloudinaryUrls || [],
     });
 
@@ -262,11 +441,31 @@ const showEditField = async (req, res) => {
 const updateField = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, address, type, pricePerSlot, description, status } = req.body;
+    const { name, address, type, pricePerSlot, description, status, facilities } = req.body || {};
 
-    await Field.findByIdAndUpdate(id, {
-      name, address, type, pricePerSlot, description, status,
-    }, { new: true, runValidators: true });
+    if (!name || !address) {
+      req.flash('error', 'Vui lòng điền đầy đủ thông tin!');
+      return res.redirect(`/admin/fields/${id}/edit`);
+    }
+
+    const facilitiesArr = [];
+    if (facilities) {
+      if (Array.isArray(facilities)) {
+        facilitiesArr.push(...facilities);
+      } else {
+        facilitiesArr.push(facilities);
+      }
+    }
+
+    // Xây dựng object update
+    const updateData = { name, address, type, pricePerSlot, description, status, facilities: facilitiesArr };
+
+    // Nếu có ảnh mới được upload lên Cloudinary → thay thế ảnh cũ
+    if (req.cloudinaryUrls && req.cloudinaryUrls.length > 0) {
+      updateData.images = req.cloudinaryUrls;
+    }
+
+    await Field.findByIdAndUpdate(id, updateData, { new: true, runValidators: true });
 
     req.flash('success', 'Cập nhật sân thành công!');
     res.redirect('/admin/fields');
@@ -353,6 +552,7 @@ const toggleUserStatus = async (req, res) => {
 
 module.exports = {
   getDashboard,
+  getSchedule,
   getBookings,
   getBookingDetail,
   approveBooking,

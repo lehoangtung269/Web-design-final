@@ -1,85 +1,191 @@
-<!-- Filter Tabs -->
-<div style="display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap;">
-  <a href="/admin/bookings" class="btn btn-sm <%= currentStatus === 'all' ? 'btn-blue' : 'btn-outline' %>">Tất cả</a>
-  <a href="/admin/bookings?status=pending"
-    class="btn btn-sm <%= currentStatus === 'pending' ? 'btn-blue' : 'btn-outline' %>">⏳ Chờ duyệt</a>
-  <a href="/admin/bookings?status=confirmed"
-    class="btn btn-sm <%= currentStatus === 'confirmed' ? 'btn-blue' : 'btn-outline' %>">✅ Đã duyệt</a>
-  <a href="/admin/bookings?status=rejected"
-    class="btn btn-sm <%= currentStatus === 'rejected' ? 'btn-blue' : 'btn-outline' %>">❌ Đã từ chối</a>
-</div>
-
-<!-- Bảng danh sách -->
-<div class="card" style="padding: 0; overflow: hidden;">
-  <% if (bookings.length===0) { %>
-    <div class="empty-state">
-      <div class="icon">📭</div>
-      <p>Chưa có đơn đặt sân nào</p>
-      <p style="font-size: 13px;">Đơn đặt sân sẽ xuất hiện ở đây khi khách hàng đặt sân.</p>
+<div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div>
+        <h1 class="text-2xl font-bold tracking-tight text-on-surface">Booking Ledger</h1>
+        <p class="text-sm text-on-surface-variant font-medium mt-1">Manage and review all pitch reservations.</p>
     </div>
-    <% } else { %>
-      <table>
-        <thead>
-          <tr>
-            <th>Khách hàng</th>
-            <th>Sân</th>
-            <th>Ngày</th>
-            <th>Khung giờ</th>
-            <th>Giá</th>
-            <th>Trạng thái</th>
-            <th>Thao tác</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% bookings.forEach(function(booking) { %>
-            <tr>
-              <td>
-                <strong>
-                  <%= booking.user ? booking.user.name : 'N/A' %>
-                </strong><br />
-                <span style="color: #64748b; font-size: 12px;">
-                  <%= booking.user ? booking.user.phone : '' %>
-                </span>
-              </td>
-              <td>
-                <%= booking.field ? booking.field.name : 'N/A' %>
-              </td>
-              <td>
-                <%= booking.date ? new Date(booking.date).toLocaleDateString('vi-VN') : 'N/A' %>
-              </td>
-              <td>
-                <%= booking.startTime %> — <%= booking.endTime %>
-              </td>
-              <td>
-                <%= booking.totalPrice ? booking.totalPrice.toLocaleString('vi-VN') + 'đ' : 'N/A' %>
-              </td>
-              <td>
-                <% if (booking.status==='pending' ) { %>
-                  <span class="badge badge-pending">Chờ duyệt</span>
-                  <% } else if (booking.status==='confirmed' ) { %>
-                    <span class="badge badge-confirmed">Đã duyệt</span>
-                    <% } else { %>
-                      <span class="badge badge-rejected">Từ chối</span>
-                      <% } %>
-              </td>
-              <td>
-                <a href="/admin/bookings/<%= booking._id %>" class="btn btn-sm btn-outline">Chi tiết</a>
-              </td>
-            </tr>
-            <% }); %>
-        </tbody>
-      </table>
-      <% } %>
+    <div class="flex items-center gap-3">
+        <button class="flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-colors">
+            <span class="material-symbols-outlined text-sm">calendar_month</span> THIS WEEK
+        </button>
+        <button class="flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg bg-surface-container-highest text-on-surface hover:text-white border border-outline-variant/10 transition-colors">
+            <span class="material-symbols-outlined text-sm">filter_list</span> FILTER
+        </button>
+        <button class="flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg bg-surface-container-highest text-on-surface hover:text-white border border-outline-variant/10 transition-colors">
+            <span class="material-symbols-outlined text-sm">download</span> EXPORT
+        </button>
+    </div>
 </div>
 
-<!-- Pagination -->
-<% if (totalPages> 1) { %>
-  <div style="display: flex; justify-content: center; gap: 8px; margin-top: 24px;">
-    <% for (let i=1; i <=totalPages; i++) { %>
-      <a href="/admin/bookings?status=<%= currentStatus %>&page=<%= i %>"
-        class="btn btn-sm <%= currentPage === i ? 'btn-blue' : 'btn-outline' %>">
-        <%= i %>
-      </a>
-      <% } %>
-  </div>
-  <% } %>
+<!-- KPI Grid -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+    <div class="bg-surface-container p-5 rounded-xl border border-outline-variant/10">
+        <p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2">Total Volume</p>
+        <h3 class="text-3xl font-bold text-on-surface tracking-tight mb-2"><%= stats.totalVolume.toLocaleString('vi-VN') %></h3>
+        <p class="text-xs font-medium text-primary flex items-center gap-1">
+            <span class="material-symbols-outlined text-[14px]">trending_up</span> +12% vs last week
+        </p>
+    </div>
+    
+    <div class="bg-surface-container p-5 rounded-xl border border-outline-variant/10">
+        <p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2">Revenue</p>
+        <h3 class="text-3xl font-bold text-on-surface tracking-tight mb-2"><%= stats.totalRevenue.toLocaleString('vi-VN') %>đ</h3>
+        <p class="text-xs font-medium text-primary flex items-center gap-1">
+            <span class="material-symbols-outlined text-[14px]">trending_up</span> +8% vs last week
+        </p>
+    </div>
+    
+    <div class="bg-surface-container p-5 rounded-xl border border-outline-variant/10 flex flex-col justify-between relative">
+        <div>
+            <p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2">Pending Conf</p>
+            <h3 class="text-3xl font-bold text-on-surface tracking-tight"><%= stats.pendingConf %></h3>
+        </div>
+        <% if (stats.pendingConf > 0) { %>
+            <p class="text-xs font-bold text-error flex items-center gap-1 mt-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-error"></span> Requires attention
+            </p>
+        <% } else { %>
+            <p class="text-xs font-bold text-on-surface-variant flex items-center gap-1 mt-2">
+                All caught up
+            </p>
+        <% } %>
+    </div>
+    
+    <div class="bg-surface-container p-5 rounded-xl border border-outline-variant/10 relative overflow-hidden flex items-center justify-between">
+        <div>
+            <p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2">Pitch Utilization</p>
+            <h3 class="text-3xl font-bold text-on-surface tracking-tight"><%= stats.utilization %>%</h3>
+        </div>
+        <div class="w-12 h-12 rounded-xl border-2 border-primary/20 flex flex-col items-center justify-center relative">
+             <div class="absolute inset-0 bg-primary/10 rounded-xl"></div>
+             <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">stadium</span>
+        </div>
+    </div>
+</div>
+
+<!-- Table Container -->
+<div class="bg-surface-container rounded-xl border border-outline-variant/10 overflow-hidden">
+    <!-- Table Toolbar -->
+    <div class="p-4 border-b border-[#1C2025] flex items-center justify-between">
+        <div class="flex items-center gap-2">
+            <a href="/admin/bookings" class="px-3 py-1.5 text-xs font-bold rounded-md transition-colors <%= currentStatus === 'all' ? 'bg-surface-container-highest text-on-surface' : 'text-on-surface-variant hover:text-white' %>">All Statuses</a>
+            <div class="w-px h-4 bg-outline-variant/30 mx-1"></div>
+            <a href="/admin/bookings?status=pending" class="px-3 py-1.5 text-xs font-bold rounded-md transition-colors flex items-center gap-1.5 <%= currentStatus === 'pending' ? 'bg-surface-container-highest text-on-surface' : 'text-on-surface-variant hover:text-white' %>">
+                <span class="w-2 h-2 rounded-full bg-secondary"></span> Pending
+            </a>
+            <a href="/admin/bookings?status=confirmed" class="px-3 py-1.5 text-xs font-bold rounded-md transition-colors flex items-center gap-1.5 <%= currentStatus === 'confirmed' ? 'bg-surface-container-highest text-on-surface' : 'text-on-surface-variant hover:text-white' %>">
+                <span class="w-2 h-2 rounded-full bg-primary flex-shrink-0"></span> Confirmed
+            </a>
+            <a href="/admin/bookings?status=rejected" class="px-3 py-1.5 text-xs font-bold rounded-md transition-colors flex items-center gap-1.5 <%= currentStatus === 'rejected' ? 'bg-surface-container-highest text-on-surface' : 'text-on-surface-variant hover:text-white' %>">
+                <span class="w-2 h-2 rounded-full bg-error flex-shrink-0"></span> Rejected
+            </a>
+        </div>
+        <div class="text-xs font-medium text-on-surface-variant hidden md:block">
+            <% if (bookings.length > 0) { %>
+                Showing Page <%= currentPage %> of <%= totalPages %> (Total <%= stats.totalVolume %>)
+            <% } %>
+        </div>
+    </div>
+
+    <!-- The actual table -->
+    <% if (bookings.length === 0) { %>
+        <div class="p-12 text-center">
+            <span class="material-symbols-outlined text-4xl text-outline-variant/50 mb-3">receipt_long</span>
+            <p class="text-sm font-medium text-on-surface-variant">No bookings matched this filter.</p>
+        </div>
+    <% } else { %>
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-surface-container-low/50 border-b border-[#1C2025]">
+                    <th class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest hidden sm:table-cell w-20">ID</th>
+                    <th class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Customer</th>
+                    <th class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Field</th>
+                    <th class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Date & Time</th>
+                    <th class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Amount</th>
+                    <th class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Status</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-[#1C2025]">
+                <% bookings.forEach(function(booking) { 
+                    const initial = booking.user && booking.user.name ? booking.user.name.substring(0,2).toUpperCase() : 'NA';
+                    let statusClass, statusText;
+                    if (booking.status === 'confirmed') {
+                        statusClass = 'border-primary/30 text-primary';
+                        statusText = 'CONFIRMED';
+                    } else if (booking.status === 'pending') {
+                        statusClass = 'border-secondary/30 text-secondary';
+                        statusText = 'PENDING';
+                    } else {
+                        statusClass = 'border-error/30 text-error';
+                        statusText = 'REJECTED';
+                    }
+                %>
+                <tr class="hover:bg-surface-container-high transition-colors group cursor-pointer" onclick="window.location='/admin/bookings/<%= booking._id %>'">
+                    <td class="px-6 py-4 text-xs font-mono text-on-surface-variant hidden sm:table-cell">
+                        #<%= booking._id.toString().substring(18).toUpperCase() %>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-secondary-container/20 text-secondary flex items-center justify-center font-bold text-xs ring-1 ring-secondary/30">
+                                <%= initial %>
+                            </div>
+                            <div>
+                                <div class="text-sm font-medium text-on-surface"><%= booking.user ? booking.user.name : 'Unknown User' %></div>
+                                <div class="text-xs text-on-surface-variant truncate w-32 md:w-auto"><%= booking.user ? booking.user.email : '' %></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 text-sm font-semibold text-on-surface">
+                        <%= booking.field ? booking.field.name : 'N/A' %>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="text-sm font-medium text-on-surface">
+                            <%= booking.date ? new Date(booking.date).toLocaleDateString('en-GB', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A' %>
+                        </div>
+                        <div class="text-xs text-on-surface-variant font-mono">
+                            <%= booking.startTime %> - <%= booking.endTime %>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 font-mono text-sm font-medium text-on-surface">
+                        <%= booking.totalPrice ? booking.totalPrice.toLocaleString('vi-VN') + 'đ' : 'N/A' %>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="px-2 py-1 rounded text-[9px] font-bold tracking-widest border <%= statusClass %> bg-transparent">
+                            <%= statusText %>
+                        </span>
+                    </td>
+                </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    <% } %>
+
+    <!-- Pagination Footer -->
+    <% if (totalPages > 1) { %>
+    <div class="p-4 border-t border-[#1C2025] flex justify-between items-center">
+        <a href="/admin/bookings?status=<%= currentStatus %>&page=<%= currentPage > 1 ? currentPage - 1 : 1 %>" 
+           class="text-xs font-bold text-on-surface-variant hover:text-white flex items-center gap-1 uppercase tracking-widest">
+            <span class="material-symbols-outlined text-sm">chevron_left</span> PREV
+        </a>
+        <div class="flex items-center gap-2 relative">
+            <!-- Center pagination logic inside -->
+            <div class="flex gap-1 absolute left-1/2 -translate-x-1/2">
+                <% for (let i = 1; i <= totalPages; i++) { 
+                    if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                %>
+                    <a href="/admin/bookings?status=<%= currentStatus %>&page=<%= i %>" 
+                       class="w-6 h-6 flex items-center justify-center rounded text-xs font-bold <%= i === currentPage ? 'bg-primary text-on-primary' : 'text-on-surface-variant hover:bg-surface-container-highest' %>">
+                        <%= i %>
+                    </a>
+                <%  } else if (i === currentPage - 2 || i === currentPage + 2) { %>
+                    <span class="text-on-surface-variant text-xs">...</span>
+                <%  }
+                 } %>
+            </div>
+        </div>
+        <a href="/admin/bookings?status=<%= currentStatus %>&page=<%= currentPage < totalPages ? currentPage + 1 : totalPages %>" 
+           class="text-xs font-bold text-on-surface-variant hover:text-white flex items-center gap-1 uppercase tracking-widest">
+            NEXT <span class="material-symbols-outlined text-sm">chevron_right</span>
+        </a>
+    </div>
+    <% } %>
+</div>
