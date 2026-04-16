@@ -1,289 +1,224 @@
-<!DOCTYPE html>
-<html class="light" lang="vi">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><%= title %> | ĐặtSân.vn</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            "primary": "#006c49",
-            "primary-container": "#10b981",
-            "primary-fixed": "#6ffbbe",
-            "on-primary": "#ffffff",
-            "on-primary-container": "#00422b",
-            "tertiary": "#855300",
-            "tertiary-container": "#e29100",
-            "surface": "#f7f9fb",
-            "surface-container-lowest": "#ffffff",
-            "surface-container-low": "#f2f4f6",
-            "surface-container": "#eceef0",
-            "surface-container-high": "#e6e8ea",
-            "on-surface": "#191c1e",
-            "on-surface-variant": "#3c4a42",
-            "outline": "#6c7a71",
-          },
-          fontFamily: { headline: ["Inter"], body: ["Inter"] },
-        },
-      },
+<style>
+  @keyframes pop {
+    0% {
+      transform: scale(1);
     }
-  </script>
-  <style>
-    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-    body { font-family: 'Inter', sans-serif; }
-    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes pop { 0%{ transform: scale(1); } 50%{ transform: scale(1.08); } 100%{ transform: scale(1); } }
-    .animate-fade-in { animation: fadeInUp 0.5s ease-out both; }
-    .slot-pop { animation: pop 0.25s ease-out; }
-  </style>
-</head>
-<body class="bg-surface text-on-surface min-h-screen flex flex-col">
 
-  <!-- NAVBAR -->
-  <header class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md shadow-sm">
-    <nav class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto w-full">
-      <a href="/" class="text-2xl font-black text-emerald-700 italic tracking-tight hover:scale-105 transition-transform">⚽ ĐặtSân.vn</a>
-      <div class="hidden md:flex items-center space-x-8">
-        <a class="text-slate-600 hover:text-emerald-600 font-bold tracking-tight transition-all" href="/">Home</a>
-        <a class="text-emerald-700 border-b-2 border-emerald-600 pb-1 font-bold tracking-tight" href="/fields">Sân bóng</a>
-        <a class="text-slate-600 hover:text-emerald-600 font-bold tracking-tight transition-all" href="#">Giới thiệu</a>
-      </div>
-      <div class="flex items-center gap-3">
-        <% if (typeof currentUser !== 'undefined' && currentUser) { %>
-          <span class="text-slate-500 text-sm hidden md:inline">Xin chào, <strong class="text-slate-800"><%= currentUser.name %></strong></span>
-          <a href="/history" class="text-slate-600 hover:text-emerald-600 font-bold px-3 py-2 text-sm transition-all">Lịch sử</a>
-          <a href="/auth/logout" class="text-slate-600 hover:text-emerald-600 font-bold px-4 py-2 transition-all">Đăng xuất</a>
-        <% } else { %>
-          <a href="/auth/login" class="text-slate-600 hover:text-emerald-600 font-bold px-4 py-2 transition-all">Đăng nhập</a>
-          <a href="/auth/register" class="bg-emerald-600 text-white px-6 py-2.5 rounded-xl font-bold shadow-md hover:bg-emerald-700 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200">Đăng ký</a>
-        <% } %>
-      </div>
-    </nav>
-  </header>
+    50% {
+      transform: scale(1.08);
+    }
 
-  <main class="pt-[72px] flex-1">
-    <!-- FLASH -->
-    <% if (typeof success !== 'undefined' && success && success.length > 0) { %>
-      <div class="max-w-7xl mx-auto px-6 pt-4">
-        <% success.forEach(msg => { %>
-          <div class="bg-emerald-50 border-l-4 border-emerald-500 text-emerald-800 px-5 py-3 rounded-xl mb-2 flex items-center gap-3 animate-fade-in">
-            <span class="material-symbols-outlined text-emerald-600">check_circle</span> <%= msg %>
-          </div>
-        <% }); %>
-      </div>
-    <% } %>
-    <% if (typeof error !== 'undefined' && error && error.length > 0) { %>
-      <div class="max-w-7xl mx-auto px-6 pt-4">
-        <% error.forEach(msg => { %>
-          <div class="bg-red-50 border-l-4 border-red-500 text-red-800 px-5 py-3 rounded-xl mb-2 flex items-center gap-3 animate-fade-in">
-            <span class="material-symbols-outlined text-red-600">error</span> <%= msg %>
-          </div>
-        <% }); %>
-      </div>
-    <% } %>
+    100% {
+      transform: scale(1);
+    }
+  }
 
-    <!-- BREADCRUMB -->
-    <div class="max-w-7xl mx-auto px-6 pt-6 animate-fade-in">
-      <div class="flex items-center gap-2 text-sm text-slate-500">
-        <a href="/" class="hover:text-emerald-600 transition-colors flex items-center gap-1">
-          <span class="material-symbols-outlined text-sm">home</span> Trang chủ
-        </a>
-        <span class="material-symbols-outlined text-xs text-slate-300">chevron_right</span>
-        <a href="/fields" class="hover:text-emerald-600 transition-colors">Sân bóng</a>
-        <span class="material-symbols-outlined text-xs text-slate-300">chevron_right</span>
-        <span class="text-on-surface font-semibold"><%= field.name %></span>
-      </div>
-    </div>
+  .slot-pop {
+    animation: pop 0.25s ease-out;
+  }
+</style>
 
-    <!-- MAIN LAYOUT -->
-    <div class="max-w-7xl mx-auto px-6 py-6 grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-8">
+<!-- BREADCRUMB -->
+<div class="max-w-7xl mx-auto px-6 pt-6 animate-fade-in">
+  <div class="flex items-center gap-2 text-sm text-slate-500">
+    <a href="/" class="hover:text-emerald-600 transition-colors flex items-center gap-1">
+      <span class="material-symbols-outlined text-sm">home</span> Trang chủ
+    </a>
+    <span class="material-symbols-outlined text-xs text-slate-300">chevron_right</span>
+    <a href="/fields" class="hover:text-emerald-600 transition-colors">Sân bóng</a>
+    <span class="material-symbols-outlined text-xs text-slate-300">chevron_right</span>
+    <span class="text-on-surface font-semibold">
+      <%= field.name %>
+    </span>
+  </div>
+</div>
 
-      <!-- LEFT: Field Info -->
-      <div class="animate-fade-in">
-        <!-- Gallery -->
-        <div class="bg-white rounded-2xl overflow-hidden shadow-sm mb-6">
-          <div class="relative h-[400px] overflow-hidden" id="field-gallery">
-            <% if (field.images && field.images.length > 0) { %>
-              <img id="gallery-img" class="w-full h-full object-cover transition-all duration-500" src="<%= field.images[0] %>" alt="<%= field.name %>" />
-              <% if (field.images.length > 1) { %>
-                <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 bg-white/70 backdrop-blur-md px-3 py-2 rounded-full">
-                  <% field.images.forEach((img, idx) => { %>
-                    <button onclick="changeGallery(this, '<%= img %>')"
-                            class="gallery-dot w-3 h-3 rounded-full transition-all duration-200 <%= idx === 0 ? 'bg-emerald-500 scale-125' : 'bg-slate-300 hover:bg-slate-400' %>"></button>
-                  <% }); %>
-                </div>
-              <% } %>
-            <% } else { %>
-              <div class="w-full h-full bg-gradient-to-br from-emerald-100 to-cyan-100 flex items-center justify-center">
-                <span class="material-symbols-outlined text-8xl text-emerald-300">sports_soccer</span>
-              </div>
+<!-- MAIN LAYOUT -->
+<div class="max-w-7xl mx-auto px-6 py-6 grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-8">
+
+  <!-- LEFT: Field Info -->
+  <div class="animate-fade-in">
+    <!-- Gallery -->
+    <div class="bg-white rounded-2xl overflow-hidden shadow-sm mb-6">
+      <div class="relative h-[400px] overflow-hidden" id="field-gallery">
+        <% if (field.images && field.images.length> 0) { %>
+          <img id="gallery-img" class="w-full h-full object-cover transition-all duration-500"
+            src="<%= field.images[0] %>" alt="<%= field.name %>" />
+          <% if (field.images.length> 1) { %>
+            <div
+              class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 bg-white/70 backdrop-blur-md px-3 py-2 rounded-full">
+              <% field.images.forEach((img, idx)=> { %>
+                <button onclick="changeGallery(this, '<%= img %>')"
+                  class="gallery-dot w-3 h-3 rounded-full transition-all duration-200 <%= idx === 0 ? 'bg-emerald-500 scale-125' : 'bg-slate-300 hover:bg-slate-400' %>"></button>
+                <% }); %>
+            </div>
             <% } %>
-          </div>
-        </div>
+              <% } else { %>
+                <div
+                  class="w-full h-full bg-gradient-to-br from-emerald-100 to-cyan-100 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-8xl text-emerald-300">sports_soccer</span>
+                </div>
+                <% } %>
+      </div>
+    </div>
 
-        <!-- Field Details -->
-        <div class="bg-white rounded-2xl p-8 shadow-sm">
-          <h1 class="text-3xl font-extrabold text-on-surface mb-3"><%= field.name %></h1>
-          <p class="text-on-surface-variant text-sm mb-5 flex items-center gap-2">
-            <span class="material-symbols-outlined text-orange-400 text-sm">location_on</span>
-            <%= field.address %>
+    <!-- Field Details -->
+    <div class="bg-white rounded-2xl p-8 shadow-sm">
+      <h1 class="text-3xl font-extrabold text-on-surface mb-3">
+        <%= field.name %>
+      </h1>
+      <p class="text-on-surface-variant text-sm mb-5 flex items-center gap-2">
+        <span class="material-symbols-outlined text-orange-400 text-sm">location_on</span>
+        <%= field.address %>
+      </p>
+
+      <!-- Meta chips -->
+      <div class="flex gap-3 mb-6 flex-wrap">
+        <div
+          class="flex items-center gap-2 px-4 py-2.5 rounded-2xl text-sm font-semibold transition-all hover:-translate-y-0.5
+                    <%= field.type === '5-a-side' ? 'bg-emerald-50 text-emerald-700' : field.type === '7-a-side' ? 'bg-sky-50 text-sky-700' : 'bg-orange-50 text-orange-700' %>">
+          <span class="material-symbols-outlined text-sm">groups</span>
+          <%= field.type==='5-a-side' ? 'Sân 5 người' : field.type==='7-a-side' ? 'Sân 7 người' : 'Sân 11 người' %>
+        </div>
+        <div
+          class="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-amber-50 text-amber-700 text-sm font-semibold hover:-translate-y-0.5 transition-all">
+          <span class="material-symbols-outlined text-sm">payments</span>
+          <%= field.pricePerSlot.toLocaleString('vi-VN') %>đ / slot
+        </div>
+        <div class="flex items-center gap-2 px-4 py-2.5 rounded-2xl text-sm font-semibold hover:-translate-y-0.5 transition-all
+                    <%= field.status === 'active' ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700' %>">
+          <span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">circle</span>
+          <%= field.status==='active' ? 'Đang hoạt động' : 'Bảo trì' %>
+        </div>
+      </div>
+
+      <% if (field.description) { %>
+        <div class="pt-5 border-t border-slate-100">
+          <p class="text-on-surface-variant leading-relaxed">
+            <%= field.description %>
           </p>
+        </div>
+        <% } %>
+    </div>
+  </div>
 
-          <!-- Meta chips -->
-          <div class="flex gap-3 mb-6 flex-wrap">
-            <div class="flex items-center gap-2 px-4 py-2.5 rounded-2xl text-sm font-semibold transition-all hover:-translate-y-0.5
-                        <%= field.type === '5-a-side' ? 'bg-emerald-50 text-emerald-700' : field.type === '7-a-side' ? 'bg-sky-50 text-sky-700' : 'bg-orange-50 text-orange-700' %>">
-              <span class="material-symbols-outlined text-sm">groups</span>
-              <%= field.type === '5-a-side' ? 'Sân 5 người' : field.type === '7-a-side' ? 'Sân 7 người' : 'Sân 11 người' %>
-            </div>
-            <div class="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-amber-50 text-amber-700 text-sm font-semibold hover:-translate-y-0.5 transition-all">
-              <span class="material-symbols-outlined text-sm">payments</span>
-              <%= field.pricePerSlot.toLocaleString('vi-VN') %>đ / slot
-            </div>
-            <div class="flex items-center gap-2 px-4 py-2.5 rounded-2xl text-sm font-semibold hover:-translate-y-0.5 transition-all
-                        <%= field.status === 'active' ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700' %>">
-              <span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">circle</span>
-              <%= field.status === 'active' ? 'Đang hoạt động' : 'Bảo trì' %>
-            </div>
-          </div>
+  <!-- RIGHT: Timeslot Panel -->
+  <div class="animate-fade-in" style="animation-delay: 0.15s;">
+    <div class="bg-white rounded-2xl p-6 shadow-lg border-2 border-emerald-100 sticky top-[90px]">
+      <h2 class="text-lg font-bold text-on-surface mb-5 flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary">calendar_month</span>
+        Chọn khung giờ
+      </h2>
 
-          <% if (field.description) { %>
-            <div class="pt-5 border-t border-slate-100">
-              <p class="text-on-surface-variant leading-relaxed"><%= field.description %></p>
-            </div>
-          <% } %>
+      <!-- Date Picker -->
+      <div class="mb-5">
+        <label class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-1"
+          for="slot-date">
+          <span class="material-symbols-outlined text-xs text-primary">calendar_today</span> Chọn ngày
+        </label>
+        <input type="date" id="slot-date" value="<%= selectedDate %>"
+          min="<%= new Date().toISOString().split('T')[0] %>"
+          class="w-full px-4 py-3 bg-slate-50 border-2 border-transparent rounded-xl text-on-surface font-medium focus:border-emerald-500 focus:ring-0 focus:bg-white transition-all cursor-pointer" />
+      </div>
+
+      <!-- Legend -->
+      <div class="flex gap-4 mb-4 flex-wrap">
+        <div class="flex items-center gap-2 text-xs font-medium text-slate-500">
+          <span class="w-3.5 h-3.5 rounded bg-emerald-500"></span> Trống
+        </div>
+        <div class="flex items-center gap-2 text-xs font-medium text-slate-500">
+          <span class="w-3.5 h-3.5 rounded bg-amber-400"></span> Đang giữ
+        </div>
+        <div class="flex items-center gap-2 text-xs font-medium text-slate-500">
+          <span class="w-3.5 h-3.5 rounded bg-slate-200"></span> Đã đặt
         </div>
       </div>
 
-      <!-- RIGHT: Timeslot Panel -->
-      <div class="animate-fade-in" style="animation-delay: 0.15s;">
-        <div class="bg-white rounded-2xl p-6 shadow-lg border-2 border-emerald-100 sticky top-[90px]">
-          <h2 class="text-lg font-bold text-on-surface mb-5 flex items-center gap-2">
-            <span class="material-symbols-outlined text-primary">calendar_month</span>
-            Chọn khung giờ
-          </h2>
-
-          <!-- Date Picker -->
-          <div class="mb-5">
-            <label class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-1" for="slot-date">
-              <span class="material-symbols-outlined text-xs text-primary">calendar_today</span> Chọn ngày
-            </label>
-            <input type="date" id="slot-date"
-                   value="<%= selectedDate %>"
-                   min="<%= new Date().toISOString().split('T')[0] %>"
-                   class="w-full px-4 py-3 bg-slate-50 border-2 border-transparent rounded-xl text-on-surface font-medium focus:border-emerald-500 focus:ring-0 focus:bg-white transition-all cursor-pointer" />
+      <!-- Slots Grid -->
+      <div class="grid grid-cols-2 gap-2 mb-5 min-h-[200px]" id="slots-grid">
+        <% slots.forEach(slot=> { %>
+          <div
+            class="slot-item rounded-xl text-center py-3 px-2 text-sm font-semibold cursor-pointer transition-all duration-200 border-2 select-none
+                      <%= slot.status === 'available'
+                          ? 'bg-emerald-50 border-transparent text-emerald-700 hover:border-emerald-400 hover:shadow-md hover:scale-[1.03]'
+                          : slot.status === 'pending'
+                          ? 'bg-amber-50 border-transparent text-amber-600 opacity-70 cursor-not-allowed'
+                          : 'bg-slate-50 border-transparent text-slate-300 line-through opacity-50 cursor-not-allowed' %>"
+            data-slot-id="<%= slot._id %>" data-start="<%= slot.startTime %>" data-end="<%= slot.endTime %>"
+            data-status="<%= slot.status %>">
+            <span class="block text-xs font-bold">
+              <%= slot.startTime %> - <%= slot.endTime %>
+            </span>
+            <span class="block text-[10px] mt-0.5 font-medium opacity-70">
+              <%= slot.status==='available' ? 'Trống' : slot.status==='pending' ? 'Đang giữ' : 'Đã đặt' %>
+            </span>
           </div>
+          <% }); %>
+      </div>
 
-          <!-- Legend -->
-          <div class="flex gap-4 mb-4 flex-wrap">
-            <div class="flex items-center gap-2 text-xs font-medium text-slate-500">
-              <span class="w-3.5 h-3.5 rounded bg-emerald-500"></span> Trống
-            </div>
-            <div class="flex items-center gap-2 text-xs font-medium text-slate-500">
-              <span class="w-3.5 h-3.5 rounded bg-amber-400"></span> Đang giữ
-            </div>
-            <div class="flex items-center gap-2 text-xs font-medium text-slate-500">
-              <span class="w-3.5 h-3.5 rounded bg-slate-200"></span> Đã đặt
-            </div>
-          </div>
-
-          <!-- Slots Grid -->
-          <div class="grid grid-cols-2 gap-2 mb-5 min-h-[200px]" id="slots-grid">
-            <% slots.forEach(slot => { %>
-              <div class="slot-item rounded-xl text-center py-3 px-2 text-sm font-semibold cursor-pointer transition-all duration-200 border-2 select-none
-                          <%= slot.status === 'available'
-                              ? 'bg-emerald-50 border-transparent text-emerald-700 hover:border-emerald-400 hover:shadow-md hover:scale-[1.03]'
-                              : slot.status === 'pending'
-                              ? 'bg-amber-50 border-transparent text-amber-600 opacity-70 cursor-not-allowed'
-                              : 'bg-slate-50 border-transparent text-slate-300 line-through opacity-50 cursor-not-allowed' %>"
-                   data-slot-id="<%= slot._id %>"
-                   data-start="<%= slot.startTime %>"
-                   data-end="<%= slot.endTime %>"
-                   data-status="<%= slot.status %>">
-                <span class="block text-xs font-bold"><%= slot.startTime %> - <%= slot.endTime %></span>
-                <span class="block text-[10px] mt-0.5 font-medium opacity-70">
-                  <%= slot.status === 'available' ? 'Trống' : slot.status === 'pending' ? 'Đang giữ' : 'Đã đặt' %>
-                </span>
-              </div>
-            <% }); %>
-          </div>
-
-          <!-- Booking Summary -->
-          <div id="booking-summary" class="hidden bg-emerald-50 border-2 border-emerald-200 rounded-xl p-4 mb-4 animate-fade-in">
-            <div class="flex justify-between text-sm mb-1.5">
-              <span class="text-emerald-600/70">Sân</span>
-              <span class="text-on-surface font-semibold"><%= field.name %></span>
-            </div>
-            <div class="flex justify-between text-sm mb-1.5">
-              <span class="text-emerald-600/70">Ngày</span>
-              <span class="text-on-surface font-semibold" id="summary-date"><%= selectedDate %></span>
-            </div>
-            <div class="flex justify-between text-sm mb-1.5">
-              <span class="text-emerald-600/70">Khung giờ</span>
-              <span class="text-on-surface font-semibold" id="summary-time">—</span>
-            </div>
-            <div class="flex justify-between text-sm pt-2 mt-2 border-t border-emerald-200">
-              <span class="text-emerald-600/70">Tổng tiền</span>
-              <span class="text-lg font-black text-primary" id="summary-price"><%= field.pricePerSlot.toLocaleString('vi-VN') %>đ</span>
-            </div>
-          </div>
-
-          <!-- Book Button -->
-          <button type="button" id="btn-book" disabled
-                  class="w-full py-4 rounded-xl font-bold text-white text-base flex items-center justify-center gap-2
-                         bg-primary hover:bg-emerald-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed
-                         transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 active:scale-95
-                         shadow-md shadow-emerald-200 disabled:shadow-none">
-            <span class="material-symbols-outlined">bolt</span>
-            Tiếp tục đặt sân
-          </button>
+      <!-- Booking Summary -->
+      <div id="booking-summary"
+        class="hidden bg-emerald-50 border-2 border-emerald-200 rounded-xl p-4 mb-4 animate-fade-in">
+        <div class="flex justify-between text-sm mb-1.5">
+          <span class="text-emerald-600/70">Sân</span>
+          <span class="text-on-surface font-semibold">
+            <%= field.name %>
+          </span>
+        </div>
+        <div class="flex justify-between text-sm mb-1.5">
+          <span class="text-emerald-600/70">Ngày</span>
+          <span class="text-on-surface font-semibold" id="summary-date">
+            <%= selectedDate %>
+          </span>
+        </div>
+        <div class="flex justify-between text-sm mb-1.5">
+          <span class="text-emerald-600/70">Khung giờ</span>
+          <span class="text-on-surface font-semibold" id="summary-time">—</span>
+        </div>
+        <div class="flex justify-between text-sm pt-2 mt-2 border-t border-emerald-200">
+          <span class="text-emerald-600/70">Tổng tiền</span>
+          <span class="text-lg font-black text-primary" id="summary-price">
+            <%= field.pricePerSlot.toLocaleString('vi-VN') %>đ
+          </span>
         </div>
       </div>
-    </div>
-  </main>
 
-  <!-- FOOTER -->
-  <footer class="w-full py-8 border-t border-slate-200 bg-slate-50 mt-8">
-    <div class="flex flex-col md:flex-row justify-between items-center px-8 max-w-7xl mx-auto gap-4">
-      <p class="text-slate-500 text-xs uppercase tracking-widest">© 2026 ĐặtSân.vn — Nền tảng đặt sân bóng hàng đầu Việt Nam</p>
-      <div class="flex gap-6">
-        <a class="text-slate-400 text-xs uppercase tracking-widest hover:text-emerald-500 transition-all" href="#">Điều khoản</a>
-        <a class="text-slate-400 text-xs uppercase tracking-widest hover:text-emerald-500 transition-all" href="#">Liên hệ</a>
-      </div>
+      <!-- Book Button -->
+      <button type="button" id="btn-book" disabled class="w-full py-4 rounded-xl font-bold text-white text-base flex items-center justify-center gap-2
+                     bg-primary hover:bg-emerald-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed
+                     transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 active:scale-95
+                     shadow-md shadow-emerald-200 disabled:shadow-none">
+        <span class="material-symbols-outlined">bolt</span>
+        Tiếp tục đặt sân
+      </button>
     </div>
-  </footer>
+  </div>
+</div>
 
-  <!-- SCRIPTS -->
-  <script>
-    const FIELD_ID = '<%= field._id %>';
-    const FIELD_PRICE = <%= field.pricePerSlot %>;
-    const FIELD_NAME = '<%= field.name %>';
-  </script>
-  <script src="/public/js/timeslot.js"></script>
-  <script>
-    function changeGallery(dotEl, src) {
-      const img = document.getElementById('gallery-img');
-      if (img) {
-        img.style.opacity = '0';
-        img.style.transform = 'scale(1.05)';
-        setTimeout(() => {
-          img.src = src;
-          img.style.opacity = '1';
-          img.style.transform = 'scale(1)';
-        }, 250);
-      }
-      document.querySelectorAll('.gallery-dot').forEach(d => {
-        d.classList.remove('bg-emerald-500', 'scale-125');
-        d.classList.add('bg-slate-300');
-      });
-      dotEl.classList.remove('bg-slate-300');
-      dotEl.classList.add('bg-emerald-500', 'scale-125');
+<!-- SCRIPTS -->
+<script>
+  const FIELD_ID = '<%= field._id %>';
+  const FIELD_PRICE = <%= field.pricePerSlot %>;
+  const FIELD_NAME = '<%= field.name %>';
+</script>
+<script src="/public/js/timeslot.js"></script>
+<script>
+  function changeGallery(dotEl, src) {
+    const img = document.getElementById('gallery-img');
+    if (img) {
+      img.style.opacity = '0';
+      img.style.transform = 'scale(1.05)';
+      setTimeout(() => {
+        img.src = src;
+        img.style.opacity = '1';
+        img.style.transform = 'scale(1)';
+      }, 250);
     }
-  </script>
-</body>
-</html>
+    document.querySelectorAll('.gallery-dot').forEach(d => {
+      d.classList.remove('bg-emerald-500', 'scale-125');
+      d.classList.add('bg-slate-300');
+    });
+    dotEl.classList.remove('bg-slate-300');
+    dotEl.classList.add('bg-emerald-500', 'scale-125');
+  }
+</script>

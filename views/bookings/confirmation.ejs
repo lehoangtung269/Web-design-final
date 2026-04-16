@@ -1,327 +1,254 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><%= title %> | ĐặtSân.vn</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #0a0f1c;
-      color: #e0e6ed;
-      min-height: 100vh;
+<style>
+  /* ===== CONFIRMATION PAGE ===== */
+  .confirmation-container {
+    max-width: 650px;
+    margin: 3rem auto;
+    padding: 0 2rem;
+    text-align: center;
+  }
+
+  .success-icon {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(52, 211, 153, 0.2), rgba(5, 150, 105, 0.2));
+    border: 3px solid #34d399;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    animation: scaleIn 0.5s ease-out;
+  }
+
+  .success-icon i {
+    font-size: 2.5rem;
+    color: #34d399;
+    animation: checkmark 0.3s ease-out 0.3s both;
+  }
+
+  @keyframes scaleIn {
+    0% {
+      transform: scale(0);
+      opacity: 0;
     }
 
-    /* ===== NAVBAR ===== */
-    .navbar {
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      padding: 0 2rem;
-      height: 70px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
+    100% {
+      transform: scale(1);
+      opacity: 1;
     }
-    .navbar-brand {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: #34d399;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .navbar-links { display: flex; align-items: center; gap: 1.5rem; }
-    .navbar-links a {
-      color: #94a3b8;
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 500;
-      transition: color 0.2s;
-    }
-    .navbar-links a:hover { color: #34d399; }
-    .btn-nav {
-      padding: 0.5rem 1.2rem;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 0.85rem;
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-    .btn-login { color: #34d399; border: 1px solid #34d399; }
+  }
 
-    /* ===== CONFIRMATION PAGE ===== */
-    .confirmation-container {
-      max-width: 650px;
-      margin: 3rem auto;
-      padding: 0 2rem;
-      text-align: center;
+  @keyframes checkmark {
+    0% {
+      transform: scale(0);
+      opacity: 0;
     }
 
-    /* ===== SUCCESS ANIMATION ===== */
-    .success-icon {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, rgba(52, 211, 153, 0.2), rgba(5, 150, 105, 0.2));
-      border: 3px solid #34d399;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 1.5rem;
-      animation: scaleIn 0.5s ease-out;
+    100% {
+      transform: scale(1);
+      opacity: 1;
     }
-    .success-icon i {
-      font-size: 2.5rem;
-      color: #34d399;
-      animation: checkmark 0.3s ease-out 0.3s both;
-    }
-    @keyframes scaleIn {
-      0% { transform: scale(0); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-    @keyframes checkmark {
-      0% { transform: scale(0); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
+  }
+
+  .success-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #f1f5f9;
+    margin-bottom: 0.5rem;
+  }
+
+  .success-subtitle {
+    font-size: 0.95rem;
+    color: #94a3b8;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 1rem;
+    background: rgba(251, 191, 36, 0.15);
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    border-radius: 20px;
+    color: #fbbf24;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+  }
+
+  .status-badge .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #fbbf24;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+
+    0%,
+    100% {
+      opacity: 1;
     }
 
-    .success-title {
-      font-size: 1.6rem;
-      font-weight: 800;
-      color: #f1f5f9;
-      margin-bottom: 0.5rem;
+    50% {
+      opacity: 0.3;
     }
-    .success-subtitle {
-      font-size: 0.95rem;
-      color: #94a3b8;
-      margin-bottom: 2rem;
-      line-height: 1.6;
-    }
+  }
 
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.4rem 1rem;
-      background: rgba(251, 191, 36, 0.15);
-      border: 1px solid rgba(251, 191, 36, 0.3);
-      border-radius: 20px;
-      color: #fbbf24;
-      font-size: 0.85rem;
-      font-weight: 600;
-      margin-bottom: 2rem;
-    }
-    .status-badge .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #fbbf24;
-      animation: pulse 1.5s ease-in-out infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
+  .booking-card {
+    background: rgba(30, 41, 59, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: left;
+    margin-bottom: 1.5rem;
+  }
 
-    /* ===== BOOKING DETAIL CARD ===== */
-    .booking-card {
-      background: rgba(30, 41, 59, 0.6);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 16px;
-      padding: 1.5rem;
-      text-align: left;
-      margin-bottom: 1.5rem;
-    }
-    .booking-card-title {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: #f1f5f9;
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .booking-card-title i { color: #34d399; }
+  .booking-card-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
 
-    .booking-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.5rem 0;
-      font-size: 0.9rem;
-    }
-    .booking-row:not(:last-child) {
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-    .booking-label { color: #94a3b8; }
-    .booking-value { color: #f1f5f9; font-weight: 600; }
-    .booking-id {
-      font-family: monospace;
-      font-size: 0.8rem;
-      color: #64748b;
-      background: rgba(15, 23, 42, 0.6);
-      padding: 0.2rem 0.5rem;
-      border-radius: 4px;
-    }
+  .booking-card-title i {
+    color: #34d399;
+  }
 
-    .price-highlight {
-      color: #34d399 !important;
-      font-size: 1.2rem !important;
-      font-weight: 800 !important;
-    }
+  .booking-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    font-size: 0.9rem;
+  }
 
-    /* ===== BUTTONS ===== */
-    .btn-group {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .btn {
-      padding: 0.8rem 1.5rem;
-      border-radius: 10px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 0.9rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      transition: all 0.2s;
-    }
-    .btn-primary {
-      background: linear-gradient(135deg, #34d399, #059669);
-      color: #fff;
-    }
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(52, 211, 153, 0.3);
-    }
-    .btn-secondary {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      color: #94a3b8;
-    }
-    .btn-secondary:hover {
-      background: rgba(255,255,255,0.1);
-      color: #f1f5f9;
-    }
+  .booking-row:not(:last-child) {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
 
-    .footer {
-      text-align: center;
-      padding: 2rem;
-      color: #475569;
-      font-size: 0.85rem;
-      border-top: 1px solid rgba(255,255,255,0.05);
-      margin-top: 3rem;
-    }
-  </style>
-</head>
-<body>
+  .booking-label {
+    color: #94a3b8;
+  }
 
-  <!-- NAVBAR -->
-  <nav class="navbar">
-    <a href="/" class="navbar-brand"><i class="fas fa-futbol"></i> ĐặtSân.vn</a>
-    <div class="navbar-links">
-      <a href="/fields">Danh sách sân</a>
-      <a href="/history">Lịch sử đặt</a>
-      <% if (typeof currentUser !== 'undefined' && currentUser) { %>
-        <span style="color:#64748b; font-size:0.85rem;">Xin chào, <strong style="color:#f1f5f9;"><%= currentUser.name %></strong></span>
-        <a href="/auth/logout" class="btn-nav btn-login">Đăng xuất</a>
-      <% } %>
+  .booking-value {
+    color: #f1f5f9;
+    font-weight: 600;
+  }
+
+  .booking-id {
+    font-family: monospace;
+    font-size: 0.8rem;
+    color: #64748b;
+    background: rgba(15, 23, 42, 0.6);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+  }
+
+  .price-highlight {
+    color: #34d399 !important;
+    font-size: 1.2rem !important;
+    font-weight: 800 !important;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 0.8rem 1.5rem;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #34d399, #059669);
+    color: #fff;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(52, 211, 153, 0.3);
+  }
+
+  .btn-secondary {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #94a3b8;
+  }
+
+  .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #f1f5f9;
+  }
+</style>
+
+<div class="confirmation-container">
+  <div class="success-icon"><i class="fas fa-check"></i></div>
+  <h1 class="success-title">Đặt sân thành công!</h1>
+  <p class="success-subtitle">
+    Yêu cầu đặt sân của bạn đã được ghi nhận.<br />
+    Đơn đang chờ Admin kiểm tra bill chuyển khoản và duyệt.
+  </p>
+  <div class="status-badge"><span class="dot"></span> Đang chờ duyệt</div>
+
+  <div class="booking-card">
+    <div class="booking-card-title"><i class="fas fa-receipt"></i> Chi tiết đơn đặt sân</div>
+    <div class="booking-row"><span class="booking-label">Mã đơn</span><span class="booking-id">
+        <%= booking._id %>
+      </span></div>
+    <div class="booking-row"><span class="booking-label">Sân bóng</span><span class="booking-value">
+        <%= booking.field ? booking.field.name : 'N/A' %>
+      </span></div>
+    <div class="booking-row">
+      <span class="booking-label">Loại sân</span>
+      <span class="booking-value">
+        <% if (booking.field) { %>
+          <%= booking.field.type==='5-a-side' ? 'Sân 5 người' : booking.field.type==='7-a-side' ? 'Sân 7 người'
+            : 'Sân 11 người' %>
+            <% } else { %> N/A <% } %>
+      </span>
     </div>
-  </nav>
-
-  <!-- CONFIRMATION CONTENT -->
-  <div class="confirmation-container">
-
-    <!-- Success Icon -->
-    <div class="success-icon">
-      <i class="fas fa-check"></i>
+    <div class="booking-row"><span class="booking-label">Ngày đá</span><span class="booking-value">
+        <%= new Date(booking.date).toLocaleDateString('vi-VN', { weekday: 'long' , day: '2-digit' , month: '2-digit' ,
+          year: 'numeric' }) %>
+      </span></div>
+    <div class="booking-row"><span class="booking-label">Khung giờ</span><span class="booking-value">
+        <%= booking.startTime %> — <%= booking.endTime %>
+      </span></div>
+    <div class="booking-row"><span class="booking-label">Tổng tiền</span><span class="booking-value price-highlight">
+        <%= booking.totalPrice.toLocaleString('vi-VN') %>đ
+      </span></div>
+    <div class="booking-row">
+      <span class="booking-label">Ảnh bill</span>
+      <span class="booking-value" style="font-size: 0.85rem;">
+        <% if (booking.paymentImage) { %><i class="fas fa-check-circle" style="color: #34d399;"></i> Đã upload
+          <% } else { %><i class="fas fa-times-circle" style="color: #ef4444;"></i> Chưa upload<% } %>
+      </span>
     </div>
-
-    <h1 class="success-title">Đặt sân thành công!</h1>
-    <p class="success-subtitle">
-      Yêu cầu đặt sân của bạn đã được ghi nhận.<br/>
-      Đơn đang chờ Admin kiểm tra bill chuyển khoản và duyệt.
-    </p>
-
-    <!-- Status Badge -->
-    <div class="status-badge">
-      <span class="dot"></span>
-      Đang chờ duyệt
-    </div>
-
-    <!-- Booking Detail -->
-    <div class="booking-card">
-      <div class="booking-card-title"><i class="fas fa-receipt"></i> Chi tiết đơn đặt sân</div>
-
-      <div class="booking-row">
-        <span class="booking-label">Mã đơn</span>
-        <span class="booking-id"><%= booking._id %></span>
-      </div>
-      <div class="booking-row">
-        <span class="booking-label">Sân bóng</span>
-        <span class="booking-value"><%= booking.field ? booking.field.name : 'N/A' %></span>
-      </div>
-      <div class="booking-row">
-        <span class="booking-label">Loại sân</span>
-        <span class="booking-value">
-          <% if (booking.field) { %>
-            <%= booking.field.type === '5-a-side' ? 'Sân 5 người' : booking.field.type === '7-a-side' ? 'Sân 7 người' : 'Sân 11 người' %>
-          <% } else { %>
-            N/A
-          <% } %>
-        </span>
-      </div>
-      <div class="booking-row">
-        <span class="booking-label">Ngày đá</span>
-        <span class="booking-value"><%= new Date(booking.date).toLocaleDateString('vi-VN', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' }) %></span>
-      </div>
-      <div class="booking-row">
-        <span class="booking-label">Khung giờ</span>
-        <span class="booking-value"><%= booking.startTime %> — <%= booking.endTime %></span>
-      </div>
-      <div class="booking-row">
-        <span class="booking-label">Tổng tiền</span>
-        <span class="booking-value price-highlight"><%= booking.totalPrice.toLocaleString('vi-VN') %>đ</span>
-      </div>
-      <div class="booking-row">
-        <span class="booking-label">Ảnh bill</span>
-        <span class="booking-value" style="font-size: 0.85rem;">
-          <% if (booking.paymentImage) { %>
-            <i class="fas fa-check-circle" style="color: #34d399;"></i> Đã upload
-          <% } else { %>
-            <i class="fas fa-times-circle" style="color: #ef4444;"></i> Chưa upload
-          <% } %>
-        </span>
-      </div>
-      <div class="booking-row">
-        <span class="booking-label">Thời gian đặt</span>
-        <span class="booking-value" style="font-size: 0.85rem;"><%= new Date(booking.createdAt).toLocaleString('vi-VN') %></span>
-      </div>
-    </div>
-
-    <!-- Action Buttons -->
-    <div class="btn-group">
-      <a href="/history" class="btn btn-primary">
-        <i class="fas fa-history"></i> Xem lịch sử đặt sân
-      </a>
-      <a href="/" class="btn btn-secondary">
-        <i class="fas fa-home"></i> Về trang chủ
-      </a>
-    </div>
+    <div class="booking-row"><span class="booking-label">Thời gian đặt</span><span class="booking-value"
+        style="font-size: 0.85rem;">
+        <%= new Date(booking.createdAt).toLocaleString('vi-VN') %>
+      </span></div>
   </div>
 
-  <footer class="footer">
-    <p>© 2026 ĐặtSân.vn — Hệ thống đặt sân bóng đá online</p>
-  </footer>
-
-</body>
-</html>
+  <div class="btn-group">
+    <a href="/history" class="btn btn-primary"><i class="fas fa-history"></i> Xem lịch sử đặt sân</a>
+    <a href="/" class="btn btn-secondary"><i class="fas fa-home"></i> Về trang chủ</a>
+  </div>
+</div>

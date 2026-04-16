@@ -12,7 +12,7 @@ const getHomePage = async (req, res) => {
 
     res.render('home/index', {
       title: 'Trang chủ - Đặt Sân Bóng Đá',
-      layout: false,
+      activeNav: 'home',
       featuredFields,
     });
   } catch (error) {
@@ -20,7 +20,7 @@ const getHomePage = async (req, res) => {
     req.flash('error', 'Lỗi khi tải trang chủ!');
     res.render('home/index', {
       title: 'Trang chủ - Đặt Sân Bóng Đá',
-      layout: false,
+      activeNav: 'home',
       featuredFields: [],
     });
   }

@@ -1,179 +1,105 @@
-<!DOCTYPE html>
-<html class="light" lang="vi">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><%= title %> | ĐặtSân.vn</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            "primary": "#006c49",
-            "primary-container": "#10b981",
-            "primary-fixed": "#6ffbbe",
-            "on-primary": "#ffffff",
-            "on-primary-container": "#00422b",
-            "tertiary": "#855300",
-            "tertiary-container": "#e29100",
-            "surface": "#f7f9fb",
-            "surface-container-lowest": "#ffffff",
-            "surface-container-low": "#f2f4f6",
-            "surface-container": "#eceef0",
-            "surface-container-high": "#e6e8ea",
-            "on-surface": "#191c1e",
-            "on-surface-variant": "#3c4a42",
-            "outline": "#6c7a71",
-          },
-          fontFamily: { headline: ["Inter"], body: ["Inter"] },
-        },
-      },
-    }
-  </script>
-  <style>
-    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-    body { font-family: 'Inter', sans-serif; }
-    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    .animate-fade-in { animation: fadeInUp 0.5s ease-out both; }
-  </style>
-</head>
-<body class="bg-surface text-on-surface min-h-screen flex flex-col">
-
-  <!-- NAVBAR -->
-  <header class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md shadow-sm">
-    <nav class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto w-full">
-      <a href="/" class="text-2xl font-black text-emerald-700 italic tracking-tight hover:scale-105 transition-transform">⚽ ĐặtSân.vn</a>
-      <div class="hidden md:flex items-center space-x-8">
-        <a class="text-slate-600 hover:text-emerald-600 font-bold tracking-tight transition-all" href="/">Home</a>
-        <a class="text-emerald-700 border-b-2 border-emerald-600 pb-1 font-bold tracking-tight" href="/fields">Sân bóng</a>
-        <a class="text-slate-600 hover:text-emerald-600 font-bold tracking-tight transition-all" href="#">Giới thiệu</a>
+<!-- PAGE HEADER -->
+<div class="bg-gradient-to-br from-emerald-50 via-white to-sky-50 py-10 px-6">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+      <div>
+        <h1 class="text-4xl font-extrabold text-on-surface tracking-tight mb-2 flex items-center gap-3">
+          <span class="material-symbols-outlined text-primary text-3xl">sports_soccer</span>
+          <%= title %>
+        </h1>
+        <p class="text-on-surface-variant">Tìm sân phù hợp, đặt lịch ngay hôm nay</p>
       </div>
-      <div class="flex items-center gap-3">
-        <% if (typeof currentUser !== 'undefined' && currentUser) { %>
-          <span class="text-slate-500 text-sm hidden md:inline">Xin chào, <strong class="text-slate-800"><%= currentUser.name %></strong></span>
-          <a href="/history" class="text-slate-600 hover:text-emerald-600 font-bold px-3 py-2 text-sm transition-all">Lịch sử</a>
-          <a href="/auth/logout" class="text-slate-600 hover:text-emerald-600 font-bold px-4 py-2 transition-all">Đăng xuất</a>
-        <% } else { %>
-          <a href="/auth/login" class="text-slate-600 hover:text-emerald-600 font-bold px-4 py-2 transition-all">Đăng nhập</a>
-          <a href="/auth/register" class="bg-emerald-600 text-white px-6 py-2.5 rounded-xl font-bold shadow-md hover:bg-emerald-700 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200">Đăng ký</a>
-        <% } %>
-      </div>
-    </nav>
-  </header>
 
-  <main class="pt-[72px] flex-1">
-    <!-- FLASH -->
-    <% if (typeof success !== 'undefined' && success && success.length > 0) { %>
-      <div class="max-w-7xl mx-auto px-6 pt-4">
-        <% success.forEach(msg => { %>
-          <div class="bg-emerald-50 border-l-4 border-emerald-500 text-emerald-800 px-5 py-3 rounded-xl mb-2 flex items-center gap-3 animate-fade-in">
-            <span class="material-symbols-outlined text-emerald-600">check_circle</span> <%= msg %>
-          </div>
-        <% }); %>
-      </div>
-    <% } %>
-    <% if (typeof error !== 'undefined' && error && error.length > 0) { %>
-      <div class="max-w-7xl mx-auto px-6 pt-4">
-        <% error.forEach(msg => { %>
-          <div class="bg-red-50 border-l-4 border-red-500 text-red-800 px-5 py-3 rounded-xl mb-2 flex items-center gap-3 animate-fade-in">
-            <span class="material-symbols-outlined text-red-600">error</span> <%= msg %>
-          </div>
-        <% }); %>
-      </div>
-    <% } %>
-
-    <!-- PAGE HEADER -->
-    <div class="bg-gradient-to-br from-emerald-50 via-white to-sky-50 py-10 px-6">
-      <div class="max-w-7xl mx-auto">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-          <div>
-            <h1 class="text-4xl font-extrabold text-on-surface tracking-tight mb-2 flex items-center gap-3">
-              <span class="material-symbols-outlined text-primary text-3xl">sports_soccer</span>
-              <%= title %>
-            </h1>
-            <p class="text-on-surface-variant">Tìm sân phù hợp, đặt lịch ngay hôm nay</p>
-          </div>
-
-          <!-- Filter Tabs -->
-          <div class="flex gap-2 flex-wrap">
-            <a href="/fields"
-               class="px-5 py-2.5 rounded-full font-bold text-sm transition-all duration-200 <%= (!searchParams || !searchParams.type || searchParams.type === 'all') ? 'bg-primary text-white shadow-lg shadow-emerald-200' : 'bg-white text-slate-600 border border-slate-200 hover:border-emerald-300 hover:text-emerald-600' %>">
-              Tất cả
-            </a>
-            <a href="/fields?type=5-a-side"
-               class="px-5 py-2.5 rounded-full font-bold text-sm transition-all duration-200 <%= searchParams && searchParams.type === '5-a-side' ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-200' : 'bg-white text-slate-600 border border-slate-200 hover:border-emerald-300 hover:text-emerald-600' %>">
-              ⚽ Sân 5
-            </a>
-            <a href="/fields?type=7-a-side"
-               class="px-5 py-2.5 rounded-full font-bold text-sm transition-all duration-200 <%= searchParams && searchParams.type === '7-a-side' ? 'bg-sky-500 text-white shadow-lg shadow-sky-200' : 'bg-white text-slate-600 border border-slate-200 hover:border-sky-300 hover:text-sky-600' %>">
-              ⚽ Sân 7
-            </a>
-            <a href="/fields?type=11-a-side"
-               class="px-5 py-2.5 rounded-full font-bold text-sm transition-all duration-200 <%= searchParams && searchParams.type === '11-a-side' ? 'bg-orange-500 text-white shadow-lg shadow-orange-200' : 'bg-white text-slate-600 border border-slate-200 hover:border-orange-300 hover:text-orange-600' %>">
-              ⚽ Sân 11
-            </a>
-          </div>
-        </div>
+      <!-- Filter Tabs -->
+      <div class="flex gap-2 flex-wrap">
+        <a href="/fields"
+          class="px-5 py-2.5 rounded-full font-bold text-sm transition-all duration-200 <%= (!searchParams || !searchParams.type || searchParams.type === 'all') ? 'bg-primary text-white shadow-lg shadow-emerald-200' : 'bg-white text-slate-600 border border-slate-200 hover:border-emerald-300 hover:text-emerald-600' %>">
+          Tất cả
+        </a>
+        <a href="/fields?type=5-a-side"
+          class="px-5 py-2.5 rounded-full font-bold text-sm transition-all duration-200 <%= searchParams && searchParams.type === '5-a-side' ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-200' : 'bg-white text-slate-600 border border-slate-200 hover:border-emerald-300 hover:text-emerald-600' %>">
+          ⚽ Sân 5
+        </a>
+        <a href="/fields?type=7-a-side"
+          class="px-5 py-2.5 rounded-full font-bold text-sm transition-all duration-200 <%= searchParams && searchParams.type === '7-a-side' ? 'bg-sky-500 text-white shadow-lg shadow-sky-200' : 'bg-white text-slate-600 border border-slate-200 hover:border-sky-300 hover:text-sky-600' %>">
+          ⚽ Sân 7
+        </a>
+        <a href="/fields?type=11-a-side"
+          class="px-5 py-2.5 rounded-full font-bold text-sm transition-all duration-200 <%= searchParams && searchParams.type === '11-a-side' ? 'bg-orange-500 text-white shadow-lg shadow-orange-200' : 'bg-white text-slate-600 border border-slate-200 hover:border-orange-300 hover:text-orange-600' %>">
+          ⚽ Sân 11
+        </a>
       </div>
     </div>
+  </div>
+</div>
 
-    <div class="max-w-7xl mx-auto px-6 py-8">
-      <!-- Active filters -->
-      <% if (searchParams && (searchParams.date || searchParams.keyword || searchParams.time)) { %>
-        <div class="bg-white border border-slate-100 rounded-2xl p-4 mb-6 flex items-center gap-3 flex-wrap shadow-sm animate-fade-in">
-          <span class="text-slate-500 text-sm flex items-center gap-1">
-            <span class="material-symbols-outlined text-sm">filter_alt</span> Bộ lọc:
-          </span>
-          <% if (searchParams.keyword) { %>
-            <span class="bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full text-sm font-semibold flex items-center gap-1">
-              <span class="material-symbols-outlined text-xs">search</span> "<%= searchParams.keyword %>"
-            </span>
-          <% } %>
+<div class="max-w-7xl mx-auto px-6 py-8">
+  <!-- Active filters -->
+  <% if (searchParams && (searchParams.date || searchParams.keyword || searchParams.time)) { %>
+    <div
+      class="bg-white border border-slate-100 rounded-2xl p-4 mb-6 flex items-center gap-3 flex-wrap shadow-sm animate-fade-in">
+      <span class="text-slate-500 text-sm flex items-center gap-1">
+        <span class="material-symbols-outlined text-sm">filter_alt</span> Bộ lọc:
+      </span>
+      <% if (searchParams.keyword) { %>
+        <span
+          class="bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full text-sm font-semibold flex items-center gap-1">
+          <span class="material-symbols-outlined text-xs">search</span> "<%= searchParams.keyword %>"
+        </span>
+        <% } %>
           <% if (searchParams.date) { %>
             <span class="bg-sky-50 text-sky-700 px-3 py-1.5 rounded-full text-sm font-semibold flex items-center gap-1">
-              <span class="material-symbols-outlined text-xs">calendar_today</span> <%= searchParams.date %>
+              <span class="material-symbols-outlined text-xs">calendar_today</span>
+              <%= searchParams.date %>
             </span>
-          <% } %>
-          <% if (searchParams.time) { %>
-            <span class="bg-orange-50 text-orange-700 px-3 py-1.5 rounded-full text-sm font-semibold flex items-center gap-1">
-              <span class="material-symbols-outlined text-xs">schedule</span> <%= searchParams.time %>
-            </span>
-          <% } %>
-          <a href="/fields" class="ml-auto text-slate-400 hover:text-red-500 text-sm font-medium flex items-center gap-1 transition-colors">
-            <span class="material-symbols-outlined text-sm">close</span> Xóa lọc
-          </a>
-        </div>
-      <% } %>
+            <% } %>
+              <% if (searchParams.time) { %>
+                <span
+                  class="bg-orange-50 text-orange-700 px-3 py-1.5 rounded-full text-sm font-semibold flex items-center gap-1">
+                  <span class="material-symbols-outlined text-xs">schedule</span>
+                  <%= searchParams.time %>
+                </span>
+                <% } %>
+                  <a href="/fields"
+                    class="ml-auto text-slate-400 hover:text-red-500 text-sm font-medium flex items-center gap-1 transition-colors">
+                    <span class="material-symbols-outlined text-sm">close</span> Xóa lọc
+                  </a>
+    </div>
+    <% } %>
 
       <!-- Result count -->
       <p class="text-slate-500 text-sm mb-6">
-        Tìm thấy <strong class="text-on-surface"><%= fields.length %></strong> sân
+        Tìm thấy <strong class="text-on-surface">
+          <%= fields.length %>
+        </strong> sân
       </p>
 
       <!-- Fields grid -->
-      <% if (fields && fields.length > 0) { %>
+      <% if (fields && fields.length> 0) { %>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <% fields.forEach((field, idx) => { %>
+          <% fields.forEach((field, idx)=> { %>
             <a href="/fields/<%= field._id %><%= searchParams && searchParams.date ? '?date=' + searchParams.date : '' %>"
-               class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 block group animate-fade-in"
-               style="animation-delay: <%= Math.min(idx * 0.08, 0.5) %>s;">
+              class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 block group animate-fade-in"
+              style="animation-delay: <%= Math.min(idx * 0.08, 0.5) %>s;">
               <div class="relative h-56 overflow-hidden">
-                <% if (field.images && field.images.length > 0) { %>
-                  <img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="<%= field.images[0] %>" alt="<%= field.name %>" />
-                <% } else { %>
-                  <div class="w-full h-full bg-gradient-to-br from-emerald-100 to-cyan-100 flex items-center justify-center">
-                    <span class="material-symbols-outlined text-7xl text-emerald-300">sports_soccer</span>
-                  </div>
-                <% } %>
-                <div class="absolute top-4 right-4 <%= field.type === '5-a-side' ? 'bg-emerald-500' : field.type === '7-a-side' ? 'bg-sky-500' : 'bg-orange-500' %> text-white px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest">
-                  <%= field.type === '5-a-side' ? 'Sân 5' : field.type === '7-a-side' ? 'Sân 7' : 'Sân 11' %>
-                </div>
+                <% if (field.images && field.images.length> 0) { %>
+                  <img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    src="<%= field.images[0] %>" alt="<%= field.name %>" />
+                  <% } else { %>
+                    <div
+                      class="w-full h-full bg-gradient-to-br from-emerald-100 to-cyan-100 flex items-center justify-center">
+                      <span class="material-symbols-outlined text-7xl text-emerald-300">sports_soccer</span>
+                    </div>
+                    <% } %>
+                      <div
+                        class="absolute top-4 right-4 <%= field.type === '5-a-side' ? 'bg-emerald-500' : field.type === '7-a-side' ? 'bg-sky-500' : 'bg-orange-500' %> text-white px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest">
+                        <%= field.type==='5-a-side' ? 'Sân 5' : field.type==='7-a-side' ? 'Sân 7' : 'Sân 11' %>
+                      </div>
               </div>
               <div class="p-6">
-                <h4 class="text-lg font-bold text-on-surface mb-2 group-hover:text-primary transition-colors"><%= field.name %></h4>
+                <h4 class="text-lg font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">
+                  <%= field.name %>
+                </h4>
                 <div class="flex items-center gap-2 text-on-surface-variant text-sm mb-5">
                   <span class="material-symbols-outlined text-sm text-orange-400">location_on</span>
                   <%= field.address %>
@@ -181,41 +107,31 @@
                 <div class="flex items-center justify-between pt-4 border-t border-slate-100">
                   <div>
                     <span class="text-xs text-on-surface-variant font-bold uppercase">Giá từ</span>
-                    <div class="text-lg font-black text-primary"><%= field.pricePerSlot.toLocaleString('vi-VN') %>đ<span class="text-sm font-medium text-on-surface-variant">/slot</span></div>
+                    <div class="text-lg font-black text-primary">
+                      <%= field.pricePerSlot.toLocaleString('vi-VN') %>đ<span
+                          class="text-sm font-medium text-on-surface-variant">/slot</span>
+                    </div>
                   </div>
-                  <span class="bg-slate-100 group-hover:bg-primary group-hover:text-white text-slate-600 px-4 py-2 rounded-xl font-bold transition-all duration-200 text-sm flex items-center gap-1">
+                  <span
+                    class="bg-slate-100 group-hover:bg-primary group-hover:text-white text-slate-600 px-4 py-2 rounded-xl font-bold transition-all duration-200 text-sm flex items-center gap-1">
                     Đặt ngay <span class="material-symbols-outlined text-sm">arrow_forward</span>
                   </span>
                 </div>
               </div>
             </a>
-          <% }); %>
+            <% }); %>
         </div>
-      <% } else { %>
-        <div class="text-center py-20 animate-fade-in">
-          <div class="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <span class="material-symbols-outlined text-5xl text-slate-300">search_off</span>
+        <% } else { %>
+          <div class="text-center py-20 animate-fade-in">
+            <div class="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <span class="material-symbols-outlined text-5xl text-slate-300">search_off</span>
+            </div>
+            <p class="text-lg text-slate-500 mb-2">Không tìm thấy sân nào phù hợp.</p>
+            <a href="/fields"
+              class="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 px-6 py-3 rounded-full font-bold text-sm hover:bg-emerald-100 transition-all mt-4">
+              <span class="material-symbols-outlined text-sm">arrow_back</span>
+              Xem tất cả sân
+            </a>
           </div>
-          <p class="text-lg text-slate-500 mb-2">Không tìm thấy sân nào phù hợp.</p>
-          <a href="/fields" class="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 px-6 py-3 rounded-full font-bold text-sm hover:bg-emerald-100 transition-all mt-4">
-            <span class="material-symbols-outlined text-sm">arrow_back</span>
-            Xem tất cả sân
-          </a>
-        </div>
-      <% } %>
-    </div>
-  </main>
-
-  <!-- FOOTER -->
-  <footer class="w-full py-8 border-t border-slate-200 bg-slate-50">
-    <div class="flex flex-col md:flex-row justify-between items-center px-8 max-w-7xl mx-auto gap-4">
-      <p class="text-slate-500 text-xs uppercase tracking-widest">© 2026 ĐặtSân.vn — Nền tảng đặt sân bóng hàng đầu Việt Nam</p>
-      <div class="flex gap-6">
-        <a class="text-slate-400 text-xs uppercase tracking-widest hover:text-emerald-500 transition-all" href="#">Điều khoản</a>
-        <a class="text-slate-400 text-xs uppercase tracking-widest hover:text-emerald-500 transition-all" href="#">Liên hệ</a>
-      </div>
-    </div>
-  </footer>
-
-</body>
-</html>
+          <% } %>
+</div>

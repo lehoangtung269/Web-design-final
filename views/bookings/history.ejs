@@ -1,306 +1,236 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><%= title %> | ĐặtSân.vn</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #0a0f1c;
-      color: #e0e6ed;
-      min-height: 100vh;
-    }
+<style>
+  /* ===== PAGE ===== */
+  .page-container {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 0 2rem 3rem;
+  }
 
-    /* ===== NAVBAR ===== */
-    .navbar {
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      padding: 0 2rem;
-      height: 70px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-    .navbar-brand {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: #34d399;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .navbar-links { display: flex; align-items: center; gap: 1.5rem; }
-    .navbar-links a {
-      color: #94a3b8;
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 500;
-      transition: color 0.2s;
-    }
-    .navbar-links a:hover { color: #34d399; }
-    .btn-nav {
-      padding: 0.5rem 1.2rem;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 0.85rem;
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-    .btn-login { color: #34d399; border: 1px solid #34d399; }
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
 
-    /* ===== FLASH ===== */
-    .flash-container { padding: 0 2rem; max-width: 1000px; margin: 1rem auto 0; }
-    .flash-msg { padding: 0.8rem 1.2rem; border-radius: 8px; margin-bottom: 0.5rem; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; }
-    .flash-success { background: rgba(52, 211, 153, 0.15); border: 1px solid rgba(52, 211, 153, 0.3); color: #34d399; }
-    .flash-error { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; }
+  .page-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #f1f5f9;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
 
-    /* ===== PAGE ===== */
-    .page-container {
-      max-width: 1000px;
-      margin: 2rem auto;
-      padding: 0 2rem 3rem;
-    }
-    .page-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    .page-title {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: #f1f5f9;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .page-title i { color: #34d399; }
-    .booking-count {
-      font-size: 0.85rem;
-      color: #64748b;
-      font-weight: 400;
-      margin-left: 0.5rem;
-    }
+  .page-title i {
+    color: #34d399;
+  }
 
-    /* ===== TABLE ===== */
+  .booking-count {
+    font-size: 0.85rem;
+    color: #64748b;
+    font-weight: 400;
+    margin-left: 0.5rem;
+  }
+
+  /* ===== TABLE ===== */
+  .history-table {
+    background: rgba(30, 41, 59, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead {
+    background: rgba(15, 23, 42, 0.6);
+  }
+
+  th {
+    padding: 0.8rem 1rem;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  td {
+    padding: 0.9rem 1rem;
+    font-size: 0.88rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+  }
+
+  tbody tr {
+    transition: background 0.15s;
+  }
+
+  tbody tr:hover {
+    background: rgba(52, 211, 153, 0.03);
+  }
+
+  .field-name {
+    font-weight: 600;
+    color: #f1f5f9;
+  }
+
+  .field-address {
+    font-size: 0.78rem;
+    color: #64748b;
+    margin-top: 0.15rem;
+  }
+
+  .time-slot {
+    font-weight: 600;
+    color: #e0e6ed;
+  }
+
+  .price {
+    font-weight: 700;
+    color: #34d399;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .badge-pending {
+    background: rgba(251, 191, 36, 0.15);
+    color: #fbbf24;
+    border: 1px solid rgba(251, 191, 36, 0.3);
+  }
+
+  .badge-confirmed {
+    background: rgba(52, 211, 153, 0.15);
+    color: #34d399;
+    border: 1px solid rgba(52, 211, 153, 0.3);
+  }
+
+  .badge-rejected {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+
+  .badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+
+  .badge-pending .badge-dot {
+    background: #fbbf24;
+  }
+
+  .badge-confirmed .badge-dot {
+    background: #34d399;
+  }
+
+  .badge-rejected .badge-dot {
+    background: #ef4444;
+  }
+
+  .btn-detail {
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: #34d399;
+    background: rgba(52, 211, 153, 0.1);
+    border: 1px solid rgba(52, 211, 153, 0.2);
+    transition: all 0.2s;
+  }
+
+  .btn-detail:hover {
+    background: rgba(52, 211, 153, 0.2);
+    border-color: #34d399;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+  }
+
+  .empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+  }
+
+  .empty-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin-bottom: 0.5rem;
+  }
+
+  .empty-subtitle {
+    font-size: 0.9rem;
+    color: #64748b;
+    margin-bottom: 1.5rem;
+  }
+
+  .btn-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.5rem;
+    background: linear-gradient(135deg, #34d399, #059669);
+    color: #fff;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+  }
+
+  .btn-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(52, 211, 153, 0.3);
+  }
+
+  @media (max-width: 768px) {
     .history-table {
-      background: rgba(30, 41, 59, 0.6);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 16px;
-      overflow: hidden;
+      overflow-x: auto;
     }
+
     table {
-      width: 100%;
-      border-collapse: collapse;
+      min-width: 700px;
     }
-    thead {
-      background: rgba(15, 23, 42, 0.6);
-    }
-    th {
-      padding: 0.8rem 1rem;
-      text-align: left;
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: #64748b;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    td {
-      padding: 0.9rem 1rem;
-      font-size: 0.88rem;
-      border-top: 1px solid rgba(255,255,255,0.04);
-    }
-    tbody tr {
-      transition: background 0.15s;
-    }
-    tbody tr:hover {
-      background: rgba(52, 211, 153, 0.03);
-    }
-    .field-name {
-      font-weight: 600;
-      color: #f1f5f9;
-    }
-    .field-address {
-      font-size: 0.78rem;
-      color: #64748b;
-      margin-top: 0.15rem;
-    }
-    .time-slot {
-      font-weight: 600;
-      color: #e0e6ed;
-    }
-    .price {
-      font-weight: 700;
-      color: #34d399;
-    }
+  }
+</style>
 
-    /* Status Badges */
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      padding: 0.3rem 0.7rem;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-    .badge-pending {
-      background: rgba(251, 191, 36, 0.15);
-      color: #fbbf24;
-      border: 1px solid rgba(251, 191, 36, 0.3);
-    }
-    .badge-confirmed {
-      background: rgba(52, 211, 153, 0.15);
-      color: #34d399;
-      border: 1px solid rgba(52, 211, 153, 0.3);
-    }
-    .badge-rejected {
-      background: rgba(239, 68, 68, 0.15);
-      color: #ef4444;
-      border: 1px solid rgba(239, 68, 68, 0.3);
-    }
-    .badge-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-    }
-    .badge-pending .badge-dot { background: #fbbf24; }
-    .badge-confirmed .badge-dot { background: #34d399; }
-    .badge-rejected .badge-dot { background: #ef4444; }
+<div class="page-container">
+  <div class="page-header">
+    <h1 class="page-title">
+      <i class="fas fa-history"></i> Lịch sử đặt sân
+      <span class="booking-count">(<%= bookings.length %> đơn)</span>
+    </h1>
+  </div>
 
-    .btn-detail {
-      padding: 0.4rem 0.8rem;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      text-decoration: none;
-      color: #34d399;
-      background: rgba(52, 211, 153, 0.1);
-      border: 1px solid rgba(52, 211, 153, 0.2);
-      transition: all 0.2s;
-    }
-    .btn-detail:hover {
-      background: rgba(52, 211, 153, 0.2);
-      border-color: #34d399;
-    }
-
-    /* ===== EMPTY STATE ===== */
-    .empty-state {
-      text-align: center;
-      padding: 4rem 2rem;
-    }
-    .empty-icon {
-      font-size: 4rem;
-      margin-bottom: 1rem;
-    }
-    .empty-title {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: #f1f5f9;
-      margin-bottom: 0.5rem;
-    }
-    .empty-subtitle {
-      font-size: 0.9rem;
-      color: #64748b;
-      margin-bottom: 1.5rem;
-    }
-    .btn-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.8rem 1.5rem;
-      background: linear-gradient(135deg, #34d399, #059669);
-      color: #fff;
-      border-radius: 10px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 0.9rem;
-      transition: all 0.2s;
-    }
-    .btn-cta:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(52, 211, 153, 0.3);
-    }
-
-    .footer {
-      text-align: center;
-      padding: 2rem;
-      color: #475569;
-      font-size: 0.85rem;
-      border-top: 1px solid rgba(255,255,255,0.05);
-      margin-top: 2rem;
-    }
-
-    @media (max-width: 768px) {
-      .history-table { overflow-x: auto; }
-      table { min-width: 700px; }
-    }
-  </style>
-</head>
-<body>
-
-  <!-- NAVBAR -->
-  <nav class="navbar">
-    <a href="/" class="navbar-brand"><i class="fas fa-futbol"></i> ĐặtSân.vn</a>
-    <div class="navbar-links">
-      <a href="/fields">Danh sách sân</a>
-      <a href="/history" style="color: #34d399;">Lịch sử đặt</a>
-      <% if (typeof currentUser !== 'undefined' && currentUser) { %>
-        <span style="color:#64748b; font-size:0.85rem;">Xin chào, <strong style="color:#f1f5f9;"><%= currentUser.name %></strong></span>
-        <a href="/auth/logout" class="btn-nav btn-login">Đăng xuất</a>
-      <% } %>
-    </div>
-  </nav>
-
-  <!-- FLASH MESSAGES -->
-  <% if (typeof success !== 'undefined' && success && success.length > 0) { %>
-    <div class="flash-container">
-      <% success.forEach(msg => { %>
-        <div class="flash-msg flash-success"><i class="fas fa-check-circle"></i> <%= msg %></div>
-      <% }); %>
-    </div>
-  <% } %>
-  <% if (typeof error !== 'undefined' && error && error.length > 0) { %>
-    <div class="flash-container">
-      <% error.forEach(msg => { %>
-        <div class="flash-msg flash-error"><i class="fas fa-exclamation-circle"></i> <%= msg %></div>
-      <% }); %>
-    </div>
-  <% } %>
-
-  <div class="page-container">
-    <div class="page-header">
-      <h1 class="page-title">
-        <i class="fas fa-history"></i> Lịch sử đặt sân
-        <span class="booking-count">(<%= bookings.length %> đơn)</span>
-      </h1>
-    </div>
-
-    <% if (bookings.length === 0) { %>
-      <!-- Empty State -->
-      <div class="history-table">
-        <div class="empty-state">
-          <div class="empty-icon">⚽</div>
-          <div class="empty-title">Chưa có đơn đặt sân nào</div>
-          <div class="empty-subtitle">Hãy đặt sân ngay để bắt đầu trận đấu!</div>
-          <a href="/fields" class="btn-cta">
-            <i class="fas fa-search"></i> Tìm sân bóng
-          </a>
-        </div>
+  <% if (bookings.length===0) { %>
+    <div class="history-table">
+      <div class="empty-state">
+        <div class="empty-icon">⚽</div>
+        <div class="empty-title">Chưa có đơn đặt sân nào</div>
+        <div class="empty-subtitle">Hãy đặt sân ngay để bắt đầu trận đấu!</div>
+        <a href="/fields" class="btn-cta"><i class="fas fa-search"></i> Tìm sân bóng</a>
       </div>
+    </div>
     <% } else { %>
-      <!-- Booking Table -->
       <div class="history-table">
         <table>
           <thead>
@@ -318,38 +248,41 @@
             <% bookings.forEach(function(booking) { %>
               <tr>
                 <td>
-                  <div class="field-name"><%= booking.field ? booking.field.name : 'N/A' %></div>
-                  <div class="field-address"><%= booking.field ? booking.field.address : '' %></div>
+                  <div class="field-name">
+                    <%= booking.field ? booking.field.name : 'N/A' %>
+                  </div>
+                  <div class="field-address">
+                    <%= booking.field ? booking.field.address : '' %>
+                  </div>
                 </td>
-                <td><%= new Date(booking.date).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' }) %></td>
-                <td><span class="time-slot"><%= booking.startTime %> — <%= booking.endTime %></span></td>
-                <td><span class="price"><%= booking.totalPrice.toLocaleString('vi-VN') %>đ</span></td>
                 <td>
-                  <% if (booking.status === 'pending') { %>
+                  <%= new Date(booking.date).toLocaleDateString('vi-VN', { day: '2-digit' , month: '2-digit' ,
+                    year: 'numeric' }) %>
+                </td>
+                <td><span class="time-slot">
+                    <%= booking.startTime %> — <%= booking.endTime %>
+                  </span></td>
+                <td><span class="price">
+                    <%= booking.totalPrice.toLocaleString('vi-VN') %>đ
+                  </span></td>
+                <td>
+                  <% if (booking.status==='pending' ) { %>
                     <span class="badge badge-pending"><span class="badge-dot"></span> Chờ duyệt</span>
-                  <% } else if (booking.status === 'confirmed') { %>
-                    <span class="badge badge-confirmed"><span class="badge-dot"></span> Đã duyệt</span>
-                  <% } else { %>
-                    <span class="badge badge-rejected"><span class="badge-dot"></span> Từ chối</span>
-                  <% } %>
+                    <% } else if (booking.status==='confirmed' ) { %>
+                      <span class="badge badge-confirmed"><span class="badge-dot"></span> Đã duyệt</span>
+                      <% } else { %>
+                        <span class="badge badge-rejected"><span class="badge-dot"></span> Từ chối</span>
+                        <% } %>
                 </td>
-                <td style="font-size: 0.82rem; color: #64748b;"><%= new Date(booking.createdAt).toLocaleDateString('vi-VN') %></td>
-                <td>
-                  <a href="/checkout/confirmation/<%= booking._id %>" class="btn-detail">
-                    <i class="fas fa-eye"></i> Xem
-                  </a>
+                <td style="font-size: 0.82rem; color: #64748b;">
+                  <%= new Date(booking.createdAt).toLocaleDateString('vi-VN') %>
                 </td>
+                <td><a href="/checkout/confirmation/<%= booking._id %>" class="btn-detail"><i class="fas fa-eye"></i>
+                    Xem</a></td>
               </tr>
-            <% }); %>
+              <% }); %>
           </tbody>
         </table>
       </div>
-    <% } %>
-  </div>
-
-  <footer class="footer">
-    <p>© 2026 ĐặtSân.vn — Hệ thống đặt sân bóng đá online</p>
-  </footer>
-
-</body>
-</html>
+      <% } %>
+</div>

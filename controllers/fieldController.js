@@ -17,7 +17,7 @@ const getFieldList = async (req, res) => {
 
     res.render('fields/list', {
       title: 'Danh sách sân bóng',
-      layout: false,
+      activeNav: 'fields',
       fields,
       searchParams: { type: type || 'all' },
     });
@@ -26,7 +26,7 @@ const getFieldList = async (req, res) => {
     req.flash('error', 'Lỗi khi tải danh sách sân!');
     res.render('fields/list', {
       title: 'Danh sách sân bóng',
-      layout: false,
+      activeNav: 'fields',
       fields: [],
       searchParams: {},
     });
@@ -59,7 +59,7 @@ const getFieldDetail = async (req, res) => {
 
     res.render('fields/detail', {
       title: field.name,
-      layout: false,
+      activeNav: 'fields',
       field,
       slots: sortedSlots,
       selectedDate: selectedDate.toISOString().split('T')[0],
