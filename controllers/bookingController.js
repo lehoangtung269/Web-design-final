@@ -17,6 +17,16 @@ const getCheckout = async (req, res) => {
       return res.redirect('/fields');
     }
 
+    // Chặn đặt sân trong quá khứ
+    const selectedDate = new Date(date);
+    selectedDate.setHours(0, 0, 0, 0);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (selectedDate < today) {
+      req.flash('error', 'Lỗi: Không thể đặt sân trong quá khứ!');
+      return res.redirect(`/fields/${fieldId}`);
+    }
+
     // Lấy thông tin sân
     const field = await Field.findById(fieldId);
     if (!field) {
@@ -39,7 +49,7 @@ const getCheckout = async (req, res) => {
 
     res.render('bookings/checkout', {
       title: 'Thanh toán đặt sân',
-      layout: 'layouts/dark',
+      activeNav: 'fields',
       field,
       slot,
       bookingDate: date,
@@ -145,7 +155,7 @@ const getConfirmation = async (req, res) => {
 
     res.render('bookings/confirmation', {
       title: 'Xác nhận đặt sân',
-      layout: 'layouts/dark',
+      activeNav: 'history',
       booking,
     });
   } catch (error) {
@@ -166,7 +176,7 @@ const getHistory = async (req, res) => {
 
     res.render('bookings/history', {
       title: 'Lịch sử đặt sân',
-      layout: 'layouts/dark',
+      activeNav: 'history',
       bookings,
     });
   } catch (error) {

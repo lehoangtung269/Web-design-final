@@ -1,433 +1,134 @@
+<!-- Custom styles for checkout file input -->
 <style>
-  /* ===== BREADCRUMB ===== */
-  .breadcrumb {
-    max-width: 900px;
-    margin: 1.5rem auto 0;
-    padding: 0 2rem;
-    font-size: 0.85rem;
-    color: #64748b;
-  }
-
-  .breadcrumb a {
-    color: #34d399;
-    text-decoration: none;
-  }
-
-  .breadcrumb a:hover {
-    text-decoration: underline;
-  }
-
-  /* ===== CHECKOUT CONTAINER ===== */
-  .checkout-container {
-    max-width: 900px;
-    margin: 1.5rem auto 0;
-    padding: 0 2rem 3rem;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-  }
-
-  /* ===== CARDS ===== */
-  .card {
-    background: rgba(30, 41, 59, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 16px;
-    padding: 1.5rem;
-  }
-
-  .card-title {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #f1f5f9;
-    margin-bottom: 1.2rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .card-title i {
-    color: #34d399;
-  }
-
-  /* ===== ORDER SUMMARY ===== */
-  .order-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.6rem 0;
-    font-size: 0.9rem;
-  }
-
-  .order-row:not(:last-child) {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  }
-
-  .order-label {
-    color: #94a3b8;
-  }
-
-  .order-value {
-    color: #f1f5f9;
-    font-weight: 600;
-  }
-
-  .order-total {
-    border-top: 2px solid rgba(52, 211, 153, 0.3) !important;
-    margin-top: 0.5rem;
-    padding-top: 1rem !important;
-  }
-
-  .order-total .order-value {
-    color: #34d399;
-    font-size: 1.3rem;
-    font-weight: 800;
-  }
-
-  .field-type-badge {
+  .custom-file-input::-webkit-file-upload-button { visibility: hidden; display: none; }
+  .custom-file-input::before {
+    content: 'Tải ảnh lên';
     display: inline-block;
-    padding: 0.2rem 0.6rem;
-    background: rgba(52, 211, 153, 0.15);
-    border: 1px solid rgba(52, 211, 153, 0.3);
-    border-radius: 6px;
-    font-size: 0.75rem;
-    color: #34d399;
+    background: #059669;
+    color: white;
+    border-radius: 8px;
+    padding: 8px 16px;
+    cursor: pointer;
     font-weight: 600;
+    font-size: 0.875rem;
+    transition: background 0.2s;
   }
-
-  /* ===== QR SECTION ===== */
-  .qr-section {
-    text-align: center;
-    margin-bottom: 1.5rem;
-  }
-
-  .qr-section img {
-    max-width: 220px;
-    border-radius: 12px;
-    border: 2px solid rgba(52, 211, 153, 0.3);
-    margin-bottom: 0.8rem;
-  }
-
-  .qr-instructions {
-    font-size: 0.85rem;
-    color: #94a3b8;
-    line-height: 1.6;
-  }
-
-  .qr-instructions strong {
-    color: #fbbf24;
-  }
-
-  .qr-step {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.6rem;
-    margin-bottom: 0.5rem;
-    text-align: left;
-  }
-
-  .step-number {
-    min-width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #34d399, #059669);
-    color: #fff;
-    font-size: 0.75rem;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  /* ===== UPLOAD SECTION ===== */
-  .upload-area {
-    border: 2px dashed rgba(255, 255, 255, 0.15);
-    border-radius: 12px;
-    padding: 1.5rem;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.3s;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .upload-area:hover {
-    border-color: #34d399;
-    background: rgba(52, 211, 153, 0.05);
-  }
-
-  .upload-area.has-file {
-    border-color: #34d399;
-    border-style: solid;
-  }
-
-  .upload-icon {
-    font-size: 2.5rem;
-    color: #475569;
-    margin-bottom: 0.5rem;
-  }
-
-  .upload-text {
-    font-size: 0.9rem;
-    color: #94a3b8;
-    margin-bottom: 0.3rem;
-  }
-
-  .upload-hint {
-    font-size: 0.75rem;
-    color: #475569;
-  }
-
-  .upload-preview {
-    display: none;
-  }
-
-  .upload-preview.show {
-    display: block;
-  }
-
-  .upload-preview img {
-    max-width: 100%;
-    max-height: 200px;
-    border-radius: 8px;
-    margin-top: 0.5rem;
-  }
-
-  .upload-preview .file-name {
-    font-size: 0.8rem;
-    color: #34d399;
-    margin-top: 0.5rem;
-  }
-
-  .upload-input {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    cursor: pointer;
-  }
-
-  /* ===== SUBMIT BUTTON ===== */
-  .btn-submit {
-    width: 100%;
-    padding: 1rem;
-    background: linear-gradient(135deg, #34d399, #059669);
-    color: #fff;
-    border: none;
-    border-radius: 12px;
-    font-family: 'Inter', sans-serif;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    margin-top: 1.5rem;
-  }
-
-  .btn-submit:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(52, 211, 153, 0.3);
-  }
-
-  .btn-submit:disabled {
-    background: #334155;
-    color: #64748b;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-  }
-
-  .btn-back {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.6rem 1rem;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #94a3b8;
-    text-decoration: none;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    transition: all 0.2s;
-    margin-top: 1rem;
-  }
-
-  .btn-back:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #f1f5f9;
-  }
-
-  .warning-box {
-    background: rgba(251, 191, 36, 0.1);
-    border: 1px solid rgba(251, 191, 36, 0.3);
-    border-radius: 10px;
-    padding: 0.8rem 1rem;
-    font-size: 0.8rem;
-    color: #fbbf24;
-    margin-top: 1rem;
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-
-  .warning-box i {
-    margin-top: 2px;
-  }
-
-  @media (max-width: 768px) {
-    .checkout-container {
-      grid-template-columns: 1fr;
-    }
-  }
+  .custom-file-input:hover::before { background: #047857; }
 </style>
 
-<!-- BREADCRUMB -->
-<div class="breadcrumb">
-  <a href="/">Trang chủ</a> &rsaquo;
-  <a href="/fields">Danh sách sân</a> &rsaquo;
-  <a href="/fields/<%= field._id %>">
-    <%= field.name %>
-  </a> &rsaquo;
-  <span>Thanh toán</span>
-</div>
+<div class="max-w-4xl mx-auto px-6 py-10 animate-fade-in">
+  <div class="text-center mb-8">
+    <h1 class="text-3xl font-extrabold text-on-surface tracking-tight flex items-center justify-center gap-2">
+      <span class="material-symbols-outlined text-primary text-3xl">payments</span>
+      Thanh toán đặt sân
+    </h1>
+    <p class="text-on-surface-variant mt-2">Vui lòng kiểm tra thông tin và tải lên biên lai chuyển khoản để hoàn tất.</p>
+  </div>
 
-<!-- CHECKOUT CONTENT -->
-<div class="checkout-container">
+  <div class="grid grid-cols-1 md:grid-cols-[1.5fr_1fr] gap-8">
+    <!-- LEFT: Thông tin Booking -->
+    <div>
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 mb-6">
+        <h2 class="text-lg font-bold text-on-surface mb-4 border-b border-slate-100 pb-2">Thông tin sân bóng</h2>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Tên sân</label>
+            <div class="text-lg font-semibold text-on-surface"><%= field.name %></div>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Loại sân</label>
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 text-slate-700 rounded-lg text-sm font-medium">
+              <span class="material-symbols-outlined text-sm">groups</span>
+              <%= field.type === '5-a-side' ? 'Sân 5 người' : field.type === '7-a-side' ? 'Sân 7 người' : 'Sân 11 người' %>
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Địa chỉ</label>
+            <div class="text-sm text-on-surface-variant"><%= field.address %></div>
+          </div>
+        </div>
+      </div>
 
-  <!-- LEFT: Order Summary + QR -->
-  <div>
-    <!-- Tóm tắt đơn hàng -->
-    <div class="card" style="margin-bottom: 1.5rem;">
-      <h2 class="card-title"><i class="fas fa-receipt"></i> Tóm tắt đơn hàng</h2>
-      <div class="order-row">
-        <span class="order-label">Sân bóng</span>
-        <span class="order-value">
-          <%= field.name %>
-        </span>
-      </div>
-      <div class="order-row">
-        <span class="order-label">Loại sân</span>
-        <span class="field-type-badge">
-          <%= field.type==='5-a-side' ? 'Sân 5 người' : field.type==='7-a-side' ? 'Sân 7 người' : 'Sân 11 người' %>
-        </span>
-      </div>
-      <div class="order-row">
-        <span class="order-label">Ngày đá</span>
-        <span class="order-value">
-          <%= new Date(bookingDate).toLocaleDateString('vi-VN', { weekday: 'long' , day: '2-digit' , month: '2-digit' ,
-            year: 'numeric' }) %>
-        </span>
-      </div>
-      <div class="order-row">
-        <span class="order-label">Khung giờ</span>
-        <span class="order-value">
-          <%= startTime %> — <%= endTime %>
-        </span>
-      </div>
-      <div class="order-row">
-        <span class="order-label">Địa chỉ</span>
-        <span class="order-value" style="font-size: 0.85rem; text-align: right; max-width: 60%;">
-          <%= field.address %>
-        </span>
-      </div>
-      <div class="order-row order-total">
-        <span class="order-label" style="font-size: 1rem;">Tổng tiền</span>
-        <span class="order-value">
-          <%= totalPrice.toLocaleString('vi-VN') %>đ
-        </span>
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+        <h2 class="text-lg font-bold text-on-surface mb-4 border-b border-slate-100 pb-2">Thời gian thi đấu</h2>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Ngày đá</label>
+            <div class="text-base font-semibold text-emerald-700 bg-emerald-50 px-4 py-2 rounded-xl inline-block">
+              <%= new Date(bookingDate).toLocaleDateString('vi-VN', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' }) %>
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Khung giờ</label>
+            <div class="text-base font-semibold text-sky-700 bg-sky-50 px-4 py-2 rounded-xl inline-block">
+              <%= startTime %> - <%= endTime %>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- QR Chuyển khoản -->
-    <div class="card">
-      <h2 class="card-title"><i class="fas fa-qrcode"></i> Chuyển khoản ngân hàng</h2>
-      <div class="qr-section">
-        <img src="/public/images/qr-bank.png" alt="Mã QR chuyển khoản" />
-        <div class="qr-instructions">
-          <div class="qr-step"><span class="step-number">1</span><span>Mở ứng dụng ngân hàng trên điện thoại</span>
-          </div>
-          <div class="qr-step"><span class="step-number">2</span><span>Quét mã QR bên trên và chuyển <strong>
-                <%= totalPrice.toLocaleString('vi-VN') %>đ
-              </strong></span></div>
-          <div class="qr-step"><span class="step-number">3</span><span>Nội dung chuyển khoản: <strong>DAT SAN <%=
-                  field.name.toUpperCase() %></strong></span></div>
-          <div class="qr-step"><span class="step-number">4</span><span>Chụp màn hình bill chuyển khoản thành công</span>
-          </div>
-          <div class="qr-step"><span class="step-number">5</span><span>Upload ảnh bill ở bên phải và bấm <strong>"Xác
-                nhận đặt sân"</strong></span></div>
+    <!-- RIGHT: Thanh toán & Upload -->
+    <div>
+      <div class="bg-surface-container-lowest rounded-2xl shadow-lg border-2 border-emerald-100 p-6 sticky top-24">
+        <h2 class="text-lg font-bold text-on-surface mb-6 border-b border-slate-100 pb-2 flex items-center gap-2">
+          <span class="material-symbols-outlined text-emerald-600">account_balance_wallet</span>
+          Chi tiết thanh toán
+        </h2>
+
+        <div class="flex justify-between items-center mb-4">
+          <span class="text-slate-500">Giá 1 slot</span>
+          <span class="font-semibold"><%= field.pricePerSlot.toLocaleString('vi-VN') %>đ</span>
         </div>
+        <div class="flex justify-between items-center mb-6 pt-4 border-t border-slate-100">
+          <span class="text-slate-700 font-bold">Tổng thanh toán</span>
+          <span class="text-2xl font-black text-primary"><%= totalPrice.toLocaleString('vi-VN') %>đ</span>
+        </div>
+
+        <div class="bg-slate-50 rounded-xl p-4 mb-6 border border-slate-200">
+          <p class="text-xs text-slate-500 uppercase font-bold tracking-widest mb-3">Thông tin chuyển khoản</p>
+          <div class="space-y-2 text-sm text-on-surface">
+            <div class="flex justify-between">
+              <span class="text-slate-500">Ngân hàng</span>
+              <span class="font-bold">Vietcombank</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">Chủ tài khoản</span>
+              <span class="font-bold">DAT SAN VN</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-500">Số tài khoản</span>
+              <span class="font-bold text-emerald-700 text-lg">19039281928</span>
+            </div>
+            <div class="mt-3 pt-3 border-t border-slate-200 text-center">
+              <span class="text-xs text-slate-500 mb-1 block">Nội dung chuyển khoản:</span>
+              <strong class="text-sky-700 bg-sky-50 px-3 py-1 rounded">DATSAN <%= currentUser.phone %></strong>
+            </div>
+          </div>
+        </div>
+
+        <form action="/checkout" method="POST" enctype="multipart/form-data">
+          <input type="hidden" name="fieldId" value="<%= field._id %>" />
+          <input type="hidden" name="slotId" value="<%= slot._id %>" />
+          <input type="hidden" name="bookingDate" value="<%= bookingDate %>" />
+          <input type="hidden" name="startTime" value="<%= startTime %>" />
+          <input type="hidden" name="endTime" value="<%= endTime %>" />
+          <input type="hidden" name="totalPrice" value="<%= totalPrice %>" />
+
+          <div class="mb-6">
+            <label class="block text-sm font-bold text-slate-700 mb-2">
+              Tải lên biên lai / ảnh chụp màn hình CK <span class="text-red-500">*</span>
+            </label>
+            <input type="file" name="paymentImage" accept="image/*" required
+                   class="custom-file-input block w-full text-sm text-slate-500 cursor-pointer" />
+          </div>
+
+          <button type="submit" class="w-full bg-primary hover:bg-emerald-700 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all hover:shadow-lg hover:-translate-y-0.5">
+            <span class="material-symbols-outlined">check_circle</span>
+            Xác nhận thanh toán & Đặt sân
+          </button>
+        </form>
       </div>
     </div>
   </div>
-
-  <!-- RIGHT: Upload + Submit -->
-  <div>
-    <form action="/checkout" method="POST" enctype="multipart/form-data" id="checkout-form">
-      <input type="hidden" name="fieldId" value="<%= field._id %>" />
-      <input type="hidden" name="slotId" value="<%= slot._id %>" />
-      <input type="hidden" name="bookingDate" value="<%= bookingDate %>" />
-      <input type="hidden" name="startTime" value="<%= startTime %>" />
-      <input type="hidden" name="endTime" value="<%= endTime %>" />
-      <input type="hidden" name="totalPrice" value="<%= totalPrice %>" />
-
-      <div class="card" style="margin-bottom: 1.5rem;">
-        <h2 class="card-title"><i class="fas fa-cloud-upload-alt"></i> Upload ảnh hóa đơn</h2>
-        <div class="upload-area" id="upload-area">
-          <input type="file" name="paymentImage" id="payment-image" accept="image/jpeg,image/png,image/jpg,image/webp"
-            class="upload-input" />
-          <div class="upload-placeholder" id="upload-placeholder">
-            <div class="upload-icon"><i class="fas fa-image"></i></div>
-            <div class="upload-text">Bấm để chọn ảnh hoặc kéo thả vào đây</div>
-            <div class="upload-hint">Chỉ chấp nhận: JPG, PNG, WEBP — Tối đa 5MB</div>
-          </div>
-          <div class="upload-preview" id="upload-preview">
-            <img id="preview-img" src="" alt="Preview" />
-            <div class="file-name" id="file-name"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" style="margin-bottom: 1.5rem;">
-        <h2 class="card-title"><i class="fas fa-user"></i> Thông tin người đặt</h2>
-        <div class="order-row">
-          <span class="order-label">Họ tên</span>
-          <span class="order-value">
-            <%= currentUser.name %>
-          </span>
-        </div>
-        <div class="order-row">
-          <span class="order-label">Số điện thoại</span>
-          <span class="order-value">
-            <%= currentUser.phone %>
-          </span>
-        </div>
-        <div class="order-row">
-          <span class="order-label">Email</span>
-          <span class="order-value">
-            <%= currentUser.email %>
-          </span>
-        </div>
-      </div>
-
-      <div class="warning-box">
-        <i class="fas fa-exclamation-triangle"></i>
-        <span>Sau khi bấm "Xác nhận đặt sân", khung giờ sẽ được giữ chỗ cho bạn. Admin sẽ kiểm tra bill chuyển khoản và
-          duyệt đơn trong thời gian sớm nhất.</span>
-      </div>
-
-      <button type="submit" class="btn-submit" id="btn-submit">
-        <i class="fas fa-check-circle"></i> Xác nhận đặt sân
-      </button>
-
-      <a href="/fields/<%= field._id %>" class="btn-back">
-        <i class="fas fa-arrow-left"></i> Quay lại chọn giờ
-      </a>
-    </form>
-  </div>
 </div>
-
-<script src="/public/js/upload-preview.js"></script>

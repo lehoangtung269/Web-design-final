@@ -1,254 +1,98 @@
-<style>
-  /* ===== CONFIRMATION PAGE ===== */
-  .confirmation-container {
-    max-width: 650px;
-    margin: 3rem auto;
-    padding: 0 2rem;
-    text-align: center;
-  }
+<div class="max-w-3xl mx-auto px-6 py-10 animate-fade-in text-center">
 
-  .success-icon {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, rgba(52, 211, 153, 0.2), rgba(5, 150, 105, 0.2));
-    border: 3px solid #34d399;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 1.5rem;
-    animation: scaleIn 0.5s ease-out;
-  }
-
-  .success-icon i {
-    font-size: 2.5rem;
-    color: #34d399;
-    animation: checkmark 0.3s ease-out 0.3s both;
-  }
-
-  @keyframes scaleIn {
-    0% {
-      transform: scale(0);
-      opacity: 0;
-    }
-
-    100% {
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
-
-  @keyframes checkmark {
-    0% {
-      transform: scale(0);
-      opacity: 0;
-    }
-
-    100% {
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
-
-  .success-title {
-    font-size: 1.6rem;
-    font-weight: 800;
-    color: #f1f5f9;
-    margin-bottom: 0.5rem;
-  }
-
-  .success-subtitle {
-    font-size: 0.95rem;
-    color: #94a3b8;
-    margin-bottom: 2rem;
-    line-height: 1.6;
-  }
-
-  .status-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.4rem 1rem;
-    background: rgba(251, 191, 36, 0.15);
-    border: 1px solid rgba(251, 191, 36, 0.3);
-    border-radius: 20px;
-    color: #fbbf24;
-    font-size: 0.85rem;
-    font-weight: 600;
-    margin-bottom: 2rem;
-  }
-
-  .status-badge .dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #fbbf24;
-    animation: pulse 1.5s ease-in-out infinite;
-  }
-
-  @keyframes pulse {
-
-    0%,
-    100% {
-      opacity: 1;
-    }
-
-    50% {
-      opacity: 0.3;
-    }
-  }
-
-  .booking-card {
-    background: rgba(30, 41, 59, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 16px;
-    padding: 1.5rem;
-    text-align: left;
-    margin-bottom: 1.5rem;
-  }
-
-  .booking-card-title {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: #f1f5f9;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .booking-card-title i {
-    color: #34d399;
-  }
-
-  .booking-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 0;
-    font-size: 0.9rem;
-  }
-
-  .booking-row:not(:last-child) {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  }
-
-  .booking-label {
-    color: #94a3b8;
-  }
-
-  .booking-value {
-    color: #f1f5f9;
-    font-weight: 600;
-  }
-
-  .booking-id {
-    font-family: monospace;
-    font-size: 0.8rem;
-    color: #64748b;
-    background: rgba(15, 23, 42, 0.6);
-    padding: 0.2rem 0.5rem;
-    border-radius: 4px;
-  }
-
-  .price-highlight {
-    color: #34d399 !important;
-    font-size: 1.2rem !important;
-    font-weight: 800 !important;
-  }
-
-  .btn-group {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  .btn {
-    padding: 0.8rem 1.5rem;
-    border-radius: 10px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.9rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: all 0.2s;
-  }
-
-  .btn-primary {
-    background: linear-gradient(135deg, #34d399, #059669);
-    color: #fff;
-  }
-
-  .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(52, 211, 153, 0.3);
-  }
-
-  .btn-secondary {
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #94a3b8;
-  }
-
-  .btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #f1f5f9;
-  }
-</style>
-
-<div class="confirmation-container">
-  <div class="success-icon"><i class="fas fa-check"></i></div>
-  <h1 class="success-title">Đặt sân thành công!</h1>
-  <p class="success-subtitle">
-    Yêu cầu đặt sân của bạn đã được ghi nhận.<br />
-    Đơn đang chờ Admin kiểm tra bill chuyển khoản và duyệt.
-  </p>
-  <div class="status-badge"><span class="dot"></span> Đang chờ duyệt</div>
-
-  <div class="booking-card">
-    <div class="booking-card-title"><i class="fas fa-receipt"></i> Chi tiết đơn đặt sân</div>
-    <div class="booking-row"><span class="booking-label">Mã đơn</span><span class="booking-id">
-        <%= booking._id %>
-      </span></div>
-    <div class="booking-row"><span class="booking-label">Sân bóng</span><span class="booking-value">
-        <%= booking.field ? booking.field.name : 'N/A' %>
-      </span></div>
-    <div class="booking-row">
-      <span class="booking-label">Loại sân</span>
-      <span class="booking-value">
-        <% if (booking.field) { %>
-          <%= booking.field.type==='5-a-side' ? 'Sân 5 người' : booking.field.type==='7-a-side' ? 'Sân 7 người'
-            : 'Sân 11 người' %>
-            <% } else { %> N/A <% } %>
-      </span>
+  <% if (booking.status === 'pending') { %>
+    <div class="w-24 h-24 mx-auto bg-amber-50 rounded-full border-4 border-amber-100 flex items-center justify-center mb-6">
+      <span class="material-symbols-outlined text-5xl text-amber-500">hourglass_empty</span>
     </div>
-    <div class="booking-row"><span class="booking-label">Ngày đá</span><span class="booking-value">
-        <%= new Date(booking.date).toLocaleDateString('vi-VN', { weekday: 'long' , day: '2-digit' , month: '2-digit' ,
-          year: 'numeric' }) %>
-      </span></div>
-    <div class="booking-row"><span class="booking-label">Khung giờ</span><span class="booking-value">
-        <%= booking.startTime %> — <%= booking.endTime %>
-      </span></div>
-    <div class="booking-row"><span class="booking-label">Tổng tiền</span><span class="booking-value price-highlight">
-        <%= booking.totalPrice.toLocaleString('vi-VN') %>đ
-      </span></div>
-    <div class="booking-row">
-      <span class="booking-label">Ảnh bill</span>
-      <span class="booking-value" style="font-size: 0.85rem;">
-        <% if (booking.paymentImage) { %><i class="fas fa-check-circle" style="color: #34d399;"></i> Đã upload
-          <% } else { %><i class="fas fa-times-circle" style="color: #ef4444;"></i> Chưa upload<% } %>
-      </span>
+    <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight mb-3">Đang xử lý đơn</h1>
+    <p class="text-slate-500 mb-8 max-w-lg mx-auto">
+      Yêu cầu đặt sân của bạn đã được ghi nhận.<br/>
+      Đơn đang chờ Admin kiểm tra bill và duyệt.
+    </p>
+    <div class="inline-flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-600 px-4 py-2 rounded-full text-sm font-bold mb-10 shadow-sm">
+      <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse block"></span> Đang chờ duyệt
     </div>
-    <div class="booking-row"><span class="booking-label">Thời gian đặt</span><span class="booking-value"
-        style="font-size: 0.85rem;">
-        <%= new Date(booking.createdAt).toLocaleString('vi-VN') %>
-      </span></div>
+  <% } else if (booking.status === 'confirmed') { %>
+    <div class="w-24 h-24 mx-auto bg-emerald-50 rounded-full border-4 border-emerald-100 flex items-center justify-center mb-6">
+      <span class="material-symbols-outlined text-5xl text-emerald-500">check</span>
+    </div>
+    <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight mb-3">Đặt sân thành công!</h1>
+    <p class="text-slate-500 mb-8 max-w-lg mx-auto">
+      Sân bóng đã được chuẩn bị sẵn sàng cho bạn.<br/>
+      Vui lòng đến đúng giờ để trải nghiệm tốt nhất!
+    </p>
+    <div class="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-600 px-4 py-2 rounded-full text-sm font-bold mb-10 shadow-sm">
+      <span class="material-symbols-outlined text-base">verified</span> Đã duyệt thành công
+    </div>
+  <% } else { %>
+    <div class="w-24 h-24 mx-auto bg-red-50 rounded-full border-4 border-red-100 flex items-center justify-center mb-6">
+      <span class="material-symbols-outlined text-5xl text-red-500">close</span>
+    </div>
+    <h1 class="text-3xl font-extrabold text-red-600 tracking-tight mb-3">Đơn đã bị từ chối</h1>
+    <p class="text-slate-500 mb-8 max-w-lg mx-auto">
+      Rất tiếc yêu cầu đặt sân của bạn đã bị từ chối.<br/>
+      Lý do: <strong class="text-slate-700"><%= booking.rejectedReason || 'Không cung cấp' %></strong>
+    </p>
+    <div class="inline-flex items-center gap-2 bg-red-50 border border-red-200 text-red-600 px-4 py-2 rounded-full text-sm font-bold mb-10 shadow-sm">
+      <span class="material-symbols-outlined text-base">warning</span> Đã bị từ chối Admin
+    </div>
+  <% } %>
+
+  <!-- Booking Detail Card -->
+  <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 text-left mb-8">
+    <h2 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2 border-b border-slate-100 pb-3">
+      <span class="material-symbols-outlined text-primary">receipt_long</span>
+      Chi tiết đơn đặt sân
+    </h2>
+    <div class="space-y-4">
+      <div class="flex justify-between items-center py-2">
+        <span class="text-slate-500 text-sm">Mã đơn</span>
+        <span class="font-mono text-xs text-slate-500 bg-slate-50 px-2 py-1 rounded"><%= booking._id %></span>
+      </div>
+      <div class="flex justify-between items-center py-2 border-t border-slate-50">
+        <span class="text-slate-500 text-sm">Sân bóng</span>
+        <span class="font-bold text-slate-800"><%= booking.field ? booking.field.name : 'N/A' %></span>
+      </div>
+      <div class="flex justify-between items-center py-2 border-t border-slate-50">
+        <span class="text-slate-500 text-sm">Ngày đá</span>
+        <span class="font-semibold text-slate-800">
+          <%= new Date(booking.date).toLocaleDateString('vi-VN', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' }) %>
+        </span>
+      </div>
+      <div class="flex justify-between items-center py-2 border-t border-slate-50">
+        <span class="text-slate-500 text-sm">Khung giờ</span>
+        <span class="font-semibold text-primary bg-emerald-50 px-3 py-1 rounded-lg">
+          <%= booking.startTime %> — <%= booking.endTime %>
+        </span>
+      </div>
+      <div class="flex justify-between items-center py-2 border-t border-slate-50">
+        <span class="text-slate-500 text-sm">Ảnh bill</span>
+        <% if (booking.paymentImage) { %>
+          <a href="<%= booking.paymentImage %>" target="_blank" class="inline-flex items-center gap-1 text-sm font-bold text-sky-600 hover:text-sky-700">
+            <span class="material-symbols-outlined text-[16px]">image</span> Xem ảnh
+          </a>
+        <% } else { %>
+          <span class="inline-flex items-center gap-1 text-sm font-bold text-red-500">
+            <span class="material-symbols-outlined text-[16px]">image_not_supported</span> Chưa upload
+          </span>
+        <% } %>
+      </div>
+      <div class="flex justify-between items-center py-4 mt-2 border-t-2 border-slate-100">
+        <span class="text-slate-600 font-bold uppercase tracking-widest text-xs">Tổng thanh toán</span>
+        <span class="font-black text-2xl text-emerald-600"><%= booking.totalPrice.toLocaleString('vi-VN') %>đ</span>
+      </div>
+    </div>
   </div>
 
-  <div class="btn-group">
-    <a href="/history" class="btn btn-primary"><i class="fas fa-history"></i> Xem lịch sử đặt sân</a>
-    <a href="/" class="btn btn-secondary"><i class="fas fa-home"></i> Về trang chủ</a>
+  <!-- Action Buttons -->
+  <div class="flex flex-col sm:flex-row gap-4 justify-center">
+    <a href="/history" class="inline-flex items-center justify-center gap-2 bg-primary hover:bg-emerald-700 text-white px-6 py-3.5 rounded-xl font-bold transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 w-full sm:w-auto">
+      <span class="material-symbols-outlined text-xl">history</span>
+      Xem lịch sử đặt sân
+    </a>
+    <a href="/" class="inline-flex items-center justify-center gap-2 bg-white border-2 border-slate-200 text-slate-600 hover:text-slate-800 hover:border-slate-300 px-6 py-3.5 rounded-xl font-bold transition-all w-full sm:w-auto">
+      <span class="material-symbols-outlined text-xl">home</span>
+      Về trang chủ
+    </a>
   </div>
 </div>

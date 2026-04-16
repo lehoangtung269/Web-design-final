@@ -281,7 +281,11 @@ const updateField = async (req, res) => {
 const deleteField = async (req, res) => {
   try {
     const { id } = req.params;
+    // Xóa tất cả Booking và TimeSlot liên kết để tránh rác dữ liệu
+    await Booking.deleteMany({ field: id });
+    await TimeSlot.deleteMany({ field: id });
 
+    // Sau đó mới xóa Sân bóng
     await Field.findByIdAndDelete(id);
 
     req.flash('success', 'Đã xóa sân thành công!');
