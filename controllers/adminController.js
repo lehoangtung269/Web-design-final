@@ -3,6 +3,9 @@ const Booking = require('../models/Booking');
 const Field = require('../models/Field');
 const TimeSlot = require('../models/TimeSlot');
 
+// Layout chung cho tất cả admin views
+const adminLayout = { layout: 'layouts/admin' };
+
 // ================================
 // GET /admin/dashboard — Trang tổng quan
 // ================================
@@ -14,7 +17,11 @@ const getDashboard = async (req, res) => {
     const totalFields = await Field.countDocuments();
 
     res.render('admin/dashboard', {
+      ...adminLayout,
       title: 'Admin Dashboard',
+      activeNav: 'dashboard',
+      pageIcon: '📊',
+      pageTitle: 'Dashboard',
       stats: {
         totalUsers,
         totalBookings,
@@ -52,7 +59,11 @@ const getBookings = async (req, res) => {
     const total = await Booking.countDocuments(filter);
 
     res.render('admin/bookings/index', {
+      ...adminLayout,
       title: 'Quản lý đơn đặt sân',
+      activeNav: 'bookings',
+      pageIcon: '📋',
+      pageTitle: 'Quản lý đơn đặt sân',
       bookings,
       currentStatus: status || 'all',
       currentPage: parseInt(page),
@@ -80,7 +91,12 @@ const getBookingDetail = async (req, res) => {
     }
 
     res.render('admin/bookings/detail', {
+      ...adminLayout,
       title: 'Chi tiết đơn đặt sân',
+      activeNav: 'bookings',
+      pageIcon: '📄',
+      pageTitle: 'Chi tiết đơn đặt sân',
+      topbarRight: '<a href="/admin/bookings" class="btn btn-sm btn-outline">← Quay lại</a>',
       booking,
     });
   } catch (error) {
@@ -165,7 +181,12 @@ const getFields = async (req, res) => {
     const fields = await Field.find().sort({ createdAt: -1 });
 
     res.render('admin/fields/index', {
+      ...adminLayout,
       title: 'Quản lý sân bóng',
+      activeNav: 'fields',
+      pageIcon: '🏟️',
+      pageTitle: 'Quản lý sân bóng',
+      topbarRight: '<a href="/admin/fields/create" class="btn btn-sm btn-green">➕ Thêm sân mới</a>',
       fields,
     });
   } catch (error) {
@@ -178,7 +199,12 @@ const getFields = async (req, res) => {
 // GET /admin/fields/create — Form tạo sân mới
 const showCreateField = (req, res) => {
   res.render('admin/fields/create', {
+    ...adminLayout,
     title: 'Thêm sân mới',
+    activeNav: 'fields',
+    pageIcon: '➕',
+    pageTitle: 'Thêm sân bóng mới',
+    topbarRight: '<a href="/admin/fields" class="btn btn-sm btn-outline">← Quay lại</a>',
   });
 };
 
@@ -217,7 +243,12 @@ const showEditField = async (req, res) => {
     }
 
     res.render('admin/fields/edit', {
+      ...adminLayout,
       title: 'Chỉnh sửa sân',
+      activeNav: 'fields',
+      pageIcon: '✏️',
+      pageTitle: 'Chỉnh sửa sân bóng',
+      topbarRight: '<a href="/admin/fields" class="btn btn-sm btn-outline">← Quay lại</a>',
       field,
     });
   } catch (error) {
@@ -272,7 +303,12 @@ const getUsers = async (req, res) => {
     const users = await User.find().sort({ createdAt: -1 });
 
     res.render('admin/users/index', {
+      ...adminLayout,
       title: 'Quản lý người dùng',
+      activeNav: 'users',
+      pageIcon: '👥',
+      pageTitle: 'Quản lý người dùng',
+      topbarRight: `<span>Tổng: <strong>${users.length}</strong> người dùng</span>`,
       users,
     });
   } catch (error) {

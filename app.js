@@ -3,6 +3,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const path = require('path');
 const flash = require('connect-flash');
+const expressLayouts = require('express-ejs-layouts');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 const connectDB = require('./config/db');
@@ -29,10 +30,12 @@ const app = express();
 connectDB();
 
 // ================================
-// View Engine (EJS)
+// View Engine (EJS) + Layout System
 // ================================
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+app.use(expressLayouts);
+app.set('layout', 'layouts/main');
 
 // ================================
 // Middlewares toàn cục

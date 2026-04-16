@@ -1,73 +1,48 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><%= title %> | Admin</title>
-</head>
-<body>
-  <%- include('../partials/sidebar', { activeNav: 'fields' }) %>
+<div class="card" style="max-width: 700px;">
+  <form action="/admin/fields" method="POST" enctype="multipart/form-data">
+    <div class="form-group">
+      <label for="name">Tên sân <span style="color: #ef4444;">*</span></label>
+      <input type="text" id="name" name="name" placeholder="VD: Sân Mini Thủ Đức" required />
+    </div>
 
-  <div class="main-content">
-    <div class="topbar">
-      <h1>➕ Thêm sân bóng mới</h1>
-      <div class="topbar-user">
-        <a href="/admin/fields" class="btn btn-sm btn-outline">← Quay lại</a>
+    <div class="form-group">
+      <label for="address">Địa chỉ <span style="color: #ef4444;">*</span></label>
+      <input type="text" id="address" name="address" placeholder="VD: 123 Đường ABC, Quận XYZ" required />
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="type">Loại sân <span style="color: #ef4444;">*</span></label>
+        <select id="type" name="type" required>
+          <option value="">-- Chọn loại sân --</option>
+          <option value="5-a-side">Sân 5 người</option>
+          <option value="7-a-side">Sân 7 người</option>
+          <option value="11-a-side">Sân 11 người</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="pricePerSlot">Giá mỗi slot (VNĐ) <span style="color: #ef4444;">*</span></label>
+        <input type="number" id="pricePerSlot" name="pricePerSlot" placeholder="VD: 300000" min="0" required />
       </div>
     </div>
 
-    <div class="page-content">
-      <% if (typeof error !== 'undefined' && error.length > 0) { %>
-        <div class="alert alert-error"><%= error[0] %></div>
-      <% } %>
-
-      <div class="card" style="max-width: 700px;">
-        <form action="/admin/fields" method="POST" enctype="multipart/form-data">
-          <div class="form-group">
-            <label for="name">Tên sân <span style="color: #ef4444;">*</span></label>
-            <input type="text" id="name" name="name" placeholder="VD: Sân Mini Thủ Đức" required />
-          </div>
-
-          <div class="form-group">
-            <label for="address">Địa chỉ <span style="color: #ef4444;">*</span></label>
-            <input type="text" id="address" name="address" placeholder="VD: 123 Đường ABC, Quận XYZ" required />
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="type">Loại sân <span style="color: #ef4444;">*</span></label>
-              <select id="type" name="type" required>
-                <option value="">-- Chọn loại sân --</option>
-                <option value="5-a-side">Sân 5 người</option>
-                <option value="7-a-side">Sân 7 người</option>
-                <option value="11-a-side">Sân 11 người</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="pricePerSlot">Giá mỗi slot (VNĐ) <span style="color: #ef4444;">*</span></label>
-              <input type="number" id="pricePerSlot" name="pricePerSlot" placeholder="VD: 300000" min="0" required />
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="description">Mô tả</label>
-            <textarea id="description" name="description" placeholder="Mô tả thêm về sân (sân cỏ nhân tạo, có đèn chiếu sáng...)"></textarea>
-          </div>
-
-          <div class="form-group">
-            <label for="images">Hình ảnh sân</label>
-            <input type="file" id="images" name="images" accept="image/*" multiple
-                   style="padding: 10px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #cbd5e1;" />
-            <p style="color: #64748b; font-size: 12px; margin-top: 4px;">Có thể chọn nhiều ảnh. Hỗ trợ: JPG, PNG, WebP (tối đa 5MB/ảnh)</p>
-          </div>
-
-          <div style="display: flex; gap: 12px; margin-top: 24px;">
-            <button type="submit" class="btn btn-green">💾 Lưu sân mới</button>
-            <a href="/admin/fields" class="btn btn-outline">Hủy</a>
-          </div>
-        </form>
-      </div>
+    <div class="form-group">
+      <label for="description">Mô tả</label>
+      <textarea id="description" name="description"
+        placeholder="Mô tả thêm về sân (sân cỏ nhân tạo, có đèn chiếu sáng...)"></textarea>
     </div>
-  </div>
-</body>
-</html>
+
+    <div class="form-group">
+      <label for="images">Hình ảnh sân</label>
+      <input type="file" id="images" name="images" accept="image/*" multiple
+        style="padding: 10px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #cbd5e1;" />
+      <p style="color: #64748b; font-size: 12px; margin-top: 4px;">Có thể chọn nhiều ảnh. Hỗ trợ: JPG, PNG, WebP (tối đa
+        5MB/ảnh)</p>
+    </div>
+
+    <div style="display: flex; gap: 12px; margin-top: 24px;">
+      <button type="submit" class="btn btn-green">💾 Lưu sân mới</button>
+      <a href="/admin/fields" class="btn btn-outline">Hủy</a>
+    </div>
+  </form>
+</div>

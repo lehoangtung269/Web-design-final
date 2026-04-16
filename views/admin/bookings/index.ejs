@@ -1,99 +1,85 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><%= title %> | Admin</title>
-</head>
-<body>
-  <%- include('../partials/sidebar', { activeNav: 'bookings' }) %>
+<!-- Filter Tabs -->
+<div style="display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap;">
+  <a href="/admin/bookings" class="btn btn-sm <%= currentStatus === 'all' ? 'btn-blue' : 'btn-outline' %>">Tất cả</a>
+  <a href="/admin/bookings?status=pending"
+    class="btn btn-sm <%= currentStatus === 'pending' ? 'btn-blue' : 'btn-outline' %>">⏳ Chờ duyệt</a>
+  <a href="/admin/bookings?status=confirmed"
+    class="btn btn-sm <%= currentStatus === 'confirmed' ? 'btn-blue' : 'btn-outline' %>">✅ Đã duyệt</a>
+  <a href="/admin/bookings?status=rejected"
+    class="btn btn-sm <%= currentStatus === 'rejected' ? 'btn-blue' : 'btn-outline' %>">❌ Đã từ chối</a>
+</div>
 
-  <div class="main-content">
-    <div class="topbar">
-      <h1>📋 Quản lý đơn đặt sân</h1>
-      <div class="topbar-user">
-        <span><%= currentUser.name %></span>
-        <a href="/auth/logout">Đăng xuất</a>
-      </div>
+<!-- Bảng danh sách -->
+<div class="card" style="padding: 0; overflow: hidden;">
+  <% if (bookings.length===0) { %>
+    <div class="empty-state">
+      <div class="icon">📭</div>
+      <p>Chưa có đơn đặt sân nào</p>
+      <p style="font-size: 13px;">Đơn đặt sân sẽ xuất hiện ở đây khi khách hàng đặt sân.</p>
     </div>
-
-    <div class="page-content">
-      <% if (typeof error !== 'undefined' && error.length > 0) { %>
-        <div class="alert alert-error"><%= error[0] %></div>
-      <% } %>
-      <% if (typeof success !== 'undefined' && success.length > 0) { %>
-        <div class="alert alert-success"><%= success[0] %></div>
-      <% } %>
-
-      <!-- Filter Tabs -->
-      <div style="display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap;">
-        <a href="/admin/bookings" class="btn btn-sm <%= currentStatus === 'all' ? 'btn-blue' : 'btn-outline' %>">Tất cả</a>
-        <a href="/admin/bookings?status=pending" class="btn btn-sm <%= currentStatus === 'pending' ? 'btn-blue' : 'btn-outline' %>">⏳ Chờ duyệt</a>
-        <a href="/admin/bookings?status=confirmed" class="btn btn-sm <%= currentStatus === 'confirmed' ? 'btn-blue' : 'btn-outline' %>">✅ Đã duyệt</a>
-        <a href="/admin/bookings?status=rejected" class="btn btn-sm <%= currentStatus === 'rejected' ? 'btn-blue' : 'btn-outline' %>">❌ Đã từ chối</a>
-      </div>
-
-      <!-- Bảng danh sách -->
-      <div class="card" style="padding: 0; overflow: hidden;">
-        <% if (bookings.length === 0) { %>
-          <div class="empty-state">
-            <div class="icon">📭</div>
-            <p>Chưa có đơn đặt sân nào</p>
-            <p style="font-size: 13px;">Đơn đặt sân sẽ xuất hiện ở đây khi khách hàng đặt sân.</p>
-          </div>
-        <% } else { %>
-          <table>
-            <thead>
-              <tr>
-                <th>Khách hàng</th>
-                <th>Sân</th>
-                <th>Ngày</th>
-                <th>Khung giờ</th>
-                <th>Giá</th>
-                <th>Trạng thái</th>
-                <th>Thao tác</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% bookings.forEach(function(booking) { %>
-                <tr>
-                  <td>
-                    <strong><%= booking.user ? booking.user.name : 'N/A' %></strong><br/>
-                    <span style="color: #64748b; font-size: 12px;"><%= booking.user ? booking.user.phone : '' %></span>
-                  </td>
-                  <td><%= booking.field ? booking.field.name : 'N/A' %></td>
-                  <td><%= booking.date ? new Date(booking.date).toLocaleDateString('vi-VN') : 'N/A' %></td>
-                  <td><%= booking.startTime %> — <%= booking.endTime %></td>
-                  <td><%= booking.totalPrice ? booking.totalPrice.toLocaleString('vi-VN') + 'đ' : 'N/A' %></td>
-                  <td>
-                    <% if (booking.status === 'pending') { %>
-                      <span class="badge badge-pending">Chờ duyệt</span>
-                    <% } else if (booking.status === 'confirmed') { %>
-                      <span class="badge badge-confirmed">Đã duyệt</span>
+    <% } else { %>
+      <table>
+        <thead>
+          <tr>
+            <th>Khách hàng</th>
+            <th>Sân</th>
+            <th>Ngày</th>
+            <th>Khung giờ</th>
+            <th>Giá</th>
+            <th>Trạng thái</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% bookings.forEach(function(booking) { %>
+            <tr>
+              <td>
+                <strong>
+                  <%= booking.user ? booking.user.name : 'N/A' %>
+                </strong><br />
+                <span style="color: #64748b; font-size: 12px;">
+                  <%= booking.user ? booking.user.phone : '' %>
+                </span>
+              </td>
+              <td>
+                <%= booking.field ? booking.field.name : 'N/A' %>
+              </td>
+              <td>
+                <%= booking.date ? new Date(booking.date).toLocaleDateString('vi-VN') : 'N/A' %>
+              </td>
+              <td>
+                <%= booking.startTime %> — <%= booking.endTime %>
+              </td>
+              <td>
+                <%= booking.totalPrice ? booking.totalPrice.toLocaleString('vi-VN') + 'đ' : 'N/A' %>
+              </td>
+              <td>
+                <% if (booking.status==='pending' ) { %>
+                  <span class="badge badge-pending">Chờ duyệt</span>
+                  <% } else if (booking.status==='confirmed' ) { %>
+                    <span class="badge badge-confirmed">Đã duyệt</span>
                     <% } else { %>
                       <span class="badge badge-rejected">Từ chối</span>
-                    <% } %>
-                  </td>
-                  <td>
-                    <a href="/admin/bookings/<%= booking._id %>" class="btn btn-sm btn-outline">Chi tiết</a>
-                  </td>
-                </tr>
-              <% }); %>
-            </tbody>
-          </table>
-        <% } %>
-      </div>
-
-      <!-- Pagination -->
-      <% if (totalPages > 1) { %>
-        <div style="display: flex; justify-content: center; gap: 8px; margin-top: 24px;">
-          <% for (let i = 1; i <= totalPages; i++) { %>
-            <a href="/admin/bookings?status=<%= currentStatus %>&page=<%= i %>"
-               class="btn btn-sm <%= currentPage === i ? 'btn-blue' : 'btn-outline' %>"><%= i %></a>
-          <% } %>
-        </div>
+                      <% } %>
+              </td>
+              <td>
+                <a href="/admin/bookings/<%= booking._id %>" class="btn btn-sm btn-outline">Chi tiết</a>
+              </td>
+            </tr>
+            <% }); %>
+        </tbody>
+      </table>
       <% } %>
-    </div>
+</div>
+
+<!-- Pagination -->
+<% if (totalPages> 1) { %>
+  <div style="display: flex; justify-content: center; gap: 8px; margin-top: 24px;">
+    <% for (let i=1; i <=totalPages; i++) { %>
+      <a href="/admin/bookings?status=<%= currentStatus %>&page=<%= i %>"
+        class="btn btn-sm <%= currentPage === i ? 'btn-blue' : 'btn-outline' %>">
+        <%= i %>
+      </a>
+      <% } %>
   </div>
-</body>
-</html>
+  <% } %>

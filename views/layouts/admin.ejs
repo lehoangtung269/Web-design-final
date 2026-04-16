@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+        <%= title %> | Admin
+    </title>
+</head>
+
+<body>
+    <%- include('../admin/partials/sidebar', { activeNav: typeof activeNav !=='undefined' ? activeNav : '' }) %>
+
+        <div class="main-content">
+            <div class="topbar">
+                <h1>
+                    <%= typeof pageIcon !=='undefined' ? pageIcon + ' ' : '' %>
+                        <%= typeof pageTitle !=='undefined' ? pageTitle : title %>
+                </h1>
+                <div class="topbar-user">
+                    <% if (typeof topbarRight !=='undefined' ) { %>
+                        <%- topbarRight %>
+                            <% } else { %>
+                                <span>Xin chào, <strong>
+                                        <%= currentUser.name %>
+                                    </strong></span>
+                                <a href="/auth/logout">Đăng xuất</a>
+                                <% } %>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <% if (typeof error !=='undefined' && error.length> 0) { %>
+                    <div class="alert alert-error">
+                        <%= error[0] %>
+                    </div>
+                    <% } %>
+                        <% if (typeof success !=='undefined' && success.length> 0) { %>
+                            <div class="alert alert-success">
+                                <%= success[0] %>
+                            </div>
+                            <% } %>
+
+                                <%- body %>
+            </div>
+        </div>
+</body>
+
+</html>

@@ -39,6 +39,7 @@ const getCheckout = async (req, res) => {
 
     res.render('bookings/checkout', {
       title: 'Thanh toán đặt sân',
+      layout: false,
       field,
       slot,
       bookingDate: date,
@@ -144,6 +145,7 @@ const getConfirmation = async (req, res) => {
 
     res.render('bookings/confirmation', {
       title: 'Xác nhận đặt sân',
+      layout: false,
       booking,
     });
   } catch (error) {
@@ -164,6 +166,7 @@ const getHistory = async (req, res) => {
 
     res.render('bookings/history', {
       title: 'Lịch sử đặt sân',
+      layout: false,
       bookings,
     });
   } catch (error) {

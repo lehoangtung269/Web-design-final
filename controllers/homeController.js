@@ -12,6 +12,7 @@ const getHomePage = async (req, res) => {
 
     res.render('home/index', {
       title: 'Trang chủ - Đặt Sân Bóng Đá',
+      layout: false,
       featuredFields,
     });
   } catch (error) {
@@ -19,6 +20,7 @@ const getHomePage = async (req, res) => {
     req.flash('error', 'Lỗi khi tải trang chủ!');
     res.render('home/index', {
       title: 'Trang chủ - Đặt Sân Bóng Đá',
+      layout: false,
       featuredFields: [],
     });
   }
@@ -50,6 +52,7 @@ const searchFields = async (req, res) => {
 
     res.render('fields/list', {
       title: 'Kết quả tìm kiếm',
+      layout: false,
       fields,
       searchParams: { date, time, type, keyword },
     });
@@ -58,6 +61,7 @@ const searchFields = async (req, res) => {
     req.flash('error', 'Lỗi khi tìm kiếm sân!');
     res.render('fields/list', {
       title: 'Kết quả tìm kiếm',
+      layout: false,
       fields: [],
       searchParams: req.query,
     });
