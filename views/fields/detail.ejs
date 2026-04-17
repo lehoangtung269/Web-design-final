@@ -425,7 +425,7 @@
 
         <!-- Hidden native input for form fallback -->
         <input type="date" id="slot-date" value="<%= selectedDate %>"
-          min="<%= new Date().toISOString().split('T')[0] %>"
+          min="<%= selectedDate %>"
           style="display:none;" />
       </div>
 
@@ -610,9 +610,17 @@
     }
   }
 
+  // Helper: format date to YYYY-MM-DD in local timezone (avoid UTC shift from toISOString)
+  function formatLocalDate(dateObj) {
+    const y = dateObj.getFullYear();
+    const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const d = String(dateObj.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
+
   function selectCalDate(dateObj) {
     calSelectedDate = dateObj;
-    const iso = dateObj.toISOString().split('T')[0];
+    const iso = formatLocalDate(dateObj);
     document.getElementById('slot-date').value = iso;
     updateCalDisplay(dateObj);
     renderCalendar();

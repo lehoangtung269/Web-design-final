@@ -3,6 +3,20 @@ const Booking = require('../models/Booking');
 const Field = require('../models/Field');
 const TimeSlot = require('../models/TimeSlot');
 
+// Helper: Parse 'YYYY-MM-DD' string as LOCAL midnight (not UTC)
+function parseLocalDate(dateStr) {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  return new Date(y, m - 1, d); // local midnight
+}
+
+// Helper: Format date to 'YYYY-MM-DD' in local timezone
+function toLocalDateString(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
 // Layout chung cho tất cả admin views
 const adminLayout = { layout: 'layouts/admin' };
 
@@ -46,7 +60,7 @@ const getDashboard = async (req, res) => {
       const d = new Date();
       d.setDate(d.getDate() - i);
       
-      const dateStr = d.toISOString().split('T')[0];
+      const dateStr = toLocalDateString(d);
       const match = bookingTrendsObj.find(b => b._id === dateStr);
       const count = match ? match.count : 0;
       
@@ -92,9 +106,9 @@ const getSchedule = async (req, res) => {
   try {
     // Determine the base date from query, or default to today
     const queryDateStr = req.query.date;
-    const baseDate = queryDateStr ? new Date(queryDateStr) : new Date();
+    const baseDate = queryDateStr ? parseLocalDate(queryDateStr) : new Date();
     
-    // Set to 00:00:00 to avoid timezone shift issues
+    // Set to 00:00:00 local time
     baseDate.setHours(0, 0, 0, 0);
 
     // Calculate Monday (1) to Sunday (0 -> 7 in logic) of the current base date's week
@@ -139,14 +153,15 @@ const getSchedule = async (req, res) => {
         
         // Find bookings exactly falling on this day
         const dayBookings = bookings.filter(b => {
-             const bDate = new Date(b.date);
-             return bDate.getDate() === currentDate.getDate() && bDate.getMonth() === currentDate.getMonth() && bDate.getFullYear() === currentDate.getFullYear();
+        const bDate = new Date(b.date);
+             // Compare using local date components to avoid timezone shift
+             return bDate.getFullYear() === currentDate.getFullYear() && bDate.getMonth() === currentDate.getMonth() && bDate.getDate() === currentDate.getDate();
         });
 
         weekDays.push({
             name: daysName[i],
             dateNum: currentDate.getDate(),
-            fullDateStr: currentDate.toISOString(),
+            fullDateStr: toLocalDateString(currentDate),
             isToday: (currentDate.toDateString() === new Date().toDateString()),
             bookings: dayBookings
         });
@@ -159,9 +174,9 @@ const getSchedule = async (req, res) => {
       pageTitle: 'Pitch Schedule',
       weekTitle,
       weekDays,
-      prevWeekStr: prevWeek.toISOString().split('T')[0],
-      nextWeekStr: nextWeek.toISOString().split('T')[0],
-      todayStr: new Date().toISOString().split('T')[0]
+      prevWeekStr: toLocalDateString(prevWeek),
+      nextWeekStr: toLocalDateString(nextWeek),
+      todayStr: toLocalDateString(new Date())
     });
   } catch (error) {
     console.error('Schedule Error:', error);

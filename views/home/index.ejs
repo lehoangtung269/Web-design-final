@@ -27,7 +27,7 @@
         <div class="flex-1 flex items-center px-4 bg-gray-100 rounded-xl min-h-[56px]">
           <span class="material-symbols-outlined text-gray-400 mr-3">calendar_today</span>
           <input name="date" class="bg-transparent border-none focus:ring-0 w-full text-gray-900 font-medium"
-            type="date" value="<%= new Date().toISOString().split('T')[0] %>" />
+            type="date" value="<%= (() => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); })() %>" />
         </div>
         <div class="flex-1 flex items-center px-4 bg-gray-100 rounded-xl min-h-[56px]">
           <span class="material-symbols-outlined text-gray-400 mr-3">groups</span>

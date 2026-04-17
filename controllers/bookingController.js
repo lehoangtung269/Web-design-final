@@ -4,6 +4,12 @@ const TimeSlot = require('../models/TimeSlot');
 const cloudinary = require('../config/cloudinary');
 const fs = require('fs');
 
+// Helper: Parse 'YYYY-MM-DD' string as LOCAL midnight (not UTC)
+function parseLocalDate(dateStr) {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  return new Date(y, m - 1, d); // local midnight
+}
+
 // ================================
 // GET /checkout — Trang thanh toán
 // ================================
@@ -18,8 +24,7 @@ const getCheckout = async (req, res) => {
     }
 
     // Chặn đặt sân trong quá khứ
-    const selectedDate = new Date(date);
-    selectedDate.setHours(0, 0, 0, 0);
+    const selectedDate = parseLocalDate(date);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     if (selectedDate < today) {
@@ -101,7 +106,7 @@ const postBooking = async (req, res) => {
       user: req.session.user._id,
       field: fieldId,
       timeSlot: slotId,
-      date: new Date(bookingDate),
+      date: parseLocalDate(bookingDate),
       startTime,
       endTime,
       totalPrice: parseInt(totalPrice),

@@ -1,6 +1,20 @@
 const Field = require('../models/Field');
 const TimeSlot = require('../models/TimeSlot');
 
+// Helper: Parse 'YYYY-MM-DD' string as LOCAL midnight (not UTC)
+function parseLocalDate(dateStr) {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  return new Date(y, m - 1, d); // local midnight
+}
+
+// Helper: Format date to 'YYYY-MM-DD' in local timezone
+function toLocalDateString(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
 // ================================
 // GET /fields — Danh sách tất cả sân đang hoạt động
 // ================================
@@ -47,8 +61,8 @@ const getFieldDetail = async (req, res) => {
       return res.redirect('/fields');
     }
 
-    // Ngày mặc định = hôm nay
-    const selectedDate = date ? new Date(date) : new Date();
+    // Ngày mặc định = hôm nay (local timezone)
+    const selectedDate = date ? parseLocalDate(date) : new Date();
     selectedDate.setHours(0, 0, 0, 0);
 
     // Tự động tạo slots nếu chưa có
@@ -62,7 +76,7 @@ const getFieldDetail = async (req, res) => {
       activeNav: 'fields',
       field,
       slots: sortedSlots,
-      selectedDate: selectedDate.toISOString().split('T')[0],
+      selectedDate: toLocalDateString(selectedDate),
     });
   } catch (error) {
     console.error('Field Detail Error:', error);
@@ -89,8 +103,7 @@ const getSlotsByDate = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Không tìm thấy sân!' });
     }
 
-    const selectedDate = new Date(date);
-    selectedDate.setHours(0, 0, 0, 0);
+    const selectedDate = parseLocalDate(date);
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
