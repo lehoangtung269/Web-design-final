@@ -32,8 +32,17 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['user', 'admin'],
+      enum: ['user', 'field_owner', 'admin'],
       default: 'user',
+    },
+    commissionRate: {
+      type: Number,
+      min: 2,
+      max: 10,
+      default: 5,
+      required: function () {
+        return this.role === 'field_owner';
+      },
     },
     isActive: {
       type: Boolean,

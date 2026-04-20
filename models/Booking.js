@@ -40,7 +40,7 @@ const bookingSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['pending', 'confirmed', 'rejected'],
+      enum: ['pending', 'confirmed', 'rejected', 'cancelled'],
       default: 'pending',
     },
     rejectedReason: {
@@ -55,6 +55,30 @@ const bookingSchema = new mongoose.Schema(
     approvedAt: {
       type: Date,
       default: null,
+    },
+    basePrice: {
+      type: Number,
+      default: 0,
+    },
+    servicesTotal: {
+      type: Number,
+      default: 0,
+    },
+    finalTotal: {
+      type: Number,
+      required: true,
+    },
+    commissionAmount: {
+      type: Number,
+      default: 0,
+    },
+    ownerRevenue: {
+      type: Number,
+      default: 0,
+    },
+    isRevenueCalculated: {
+      type: Boolean,
+      default: false,
     },
   },
   {

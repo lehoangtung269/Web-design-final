@@ -4,6 +4,7 @@ const adminController = require('../controllers/adminController');
 const { isAuthenticated } = require('../middlewares/authMiddleware');
 const { authorizeRole } = require('../middlewares/roleMiddleware');
 const { uploadFieldImages } = require('../middlewares/uploadMiddleware');
+const { checkFieldOwnership } = require('../middlewares/ownershipMiddleware');
 
 // Tất cả route admin đều cần đăng nhập + role admin
 router.use(isAuthenticated, authorizeRole('admin'));
@@ -29,8 +30,8 @@ router.post('/bookings/:id/reject', adminController.rejectBooking);
 router.get('/fields', adminController.getFields);
 router.get('/fields/create', adminController.showCreateField);
 router.post('/fields', uploadFieldImages, adminController.createField);
-router.get('/fields/:id/edit', adminController.showEditField);
-router.post('/fields/:id', uploadFieldImages, adminController.updateField);
+router.get('/fields/:id/edit', isAuthenticated, authorizeRole('admin', 'field_owner'), checkFieldOwnership, adminController.showEditField);
+router.post('/fields/:id', isAuthenticated, authorizeRole('admin', 'field_owner'), uploadFieldImages, checkFieldOwnership, adminController.updateField);
 router.post('/fields/:id/delete', adminController.deleteField);
 
 // ================================

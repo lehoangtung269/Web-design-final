@@ -38,12 +38,26 @@ const fieldSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['active', 'maintenance'],
+      enum: ['active', 'maintenance', 'deleted'],
       default: 'active',
     },
     facilities: {
       type: [String],
       default: [],
+    },
+    owner: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      default: null,
+    },
+    fieldCode: {
+      type: String,
+      trim: true,
+      uppercase: true,
+    },
+    deletedAt: {
+      type: Date,
+      default: null,
     },
   },
   {

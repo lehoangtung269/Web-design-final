@@ -298,9 +298,14 @@ const approveBooking = async (req, res) => {
     booking.status = 'confirmed';
     booking.approvedBy = req.session.user._id;
     booking.approvedAt = new Date();
-    await booking.save();
 
-    // Cập nhật TimeSlot → booked (khóa chính thức)
+    const field = await Field.findById(booking.field).populate('owner', 'commissionRate');
+    const rate = field.owner?.commissionRate || 5;
+    booking.commissionAmount = Math.round(booking.finalTotal * (rate / 100));
+    booking.ownerRevenue = booking.finalTotal - booking.commissionAmount;
+    booking.isRevenueCalculated = true;
+
+    await booking.save();
     await TimeSlot.findByIdAndUpdate(booking.timeSlot, {
       status: 'booked',
       bookedBy: booking.user,

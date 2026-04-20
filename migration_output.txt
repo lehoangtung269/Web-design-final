@@ -1,0 +1,12 @@
+◇ injected env (10) from .env // tip: ⌘ suppress logs { quiet: true }
+Loaded MONGODB_URI: mongodb://localhost:27017/web_design_final
+🔌 Đã kết nối DB
+✅ Đã gán owner cho 0 sân cũ
+MongooseError: Cannot pass an array to query updates unless the `updatePipeline` option is set.
+    at Query._mergeUpdate (C:\Users\benja\Documents\Web-design-final\Web-design-final\node_modules\mongoose\lib\query.js:4054:11)
+    at _update (C:\Users\benja\Documents\Web-design-final\Web-design-final\node_modules\mongoose\lib\query.js:4517:9)
+    at Query.updateMany (C:\Users\benja\Documents\Web-design-final\Web-design-final\node_modules\mongoose\lib\query.js:4331:10)
+    at _update (C:\Users\benja\Documents\Web-design-final\Web-design-final\node_modules\mongoose\lib\model.js:4119:16)
+    at model.updateMany (C:\Users\benja\Documents\Web-design-final\Web-design-final\node_modules\mongoose\lib\model.js:4009:10)
+    at migrate (C:\Users\benja\Documents\Web-design-final\Web-design-final\scripts\migrate-group1.js:30:38)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
