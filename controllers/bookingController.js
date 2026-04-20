@@ -75,10 +75,31 @@ const getCheckout = async (req, res) => {
 // ================================
 const postBooking = async (req, res) => {
   try {
-    const { fieldId, slotId, bookingDate, startTime, endTime, totalPrice } = req.body;
+    const { fieldId, slotId, bookingDate, startTime, endTime } = req.body;
     const slot = req.bookedSlot; // Từ middleware preventDoubleBooking
 
-    // Upload ảnh bill lên Cloudinary nếu có
+    // Lấy giá từ DB — KHÔNG tin client gửi lên (chống hack giá)
+    const field = await Field.findById(fieldId);
+    if (!field) {
+      req.flash('error', 'Không tìm thấy sân bóng!');
+      return res.redirect('/fields');
+    }
+    const totalPrice = field.pricePerSlot;
+
+    // Bắt buộc upload ảnh bill chuyển khoản
+    if (!req.file) {
+      // Nhả slot về available vì chưa hoàn tất booking
+      if (slot) {
+        await TimeSlot.findByIdAndUpdate(slot._id, {
+          status: 'available',
+          bookedBy: null,
+        });
+      }
+      req.flash('error', 'Vui lòng upload ảnh bill chuyển khoản!');
+      return res.redirect(`/checkout?field=${fieldId}&slot=${slotId}&date=${bookingDate}&start=${startTime}&end=${endTime}`);
+    }
+
+    // Upload ảnh bill lên Cloudinary
     let paymentImageUrl = null;
 
     if (req.file) {
@@ -97,6 +118,10 @@ const postBooking = async (req, res) => {
         });
       } catch (uploadError) {
         console.error('Cloudinary Upload Error:', uploadError);
+        // Xóa file tạm khi upload thất bại (Bug 4 fix)
+        fs.unlink(req.file.path, (err) => {
+          if (err) console.error('Lỗi xóa file tạm trong catch:', err);
+        });
         // Vẫn tiếp tục tạo booking, admin sẽ kiểm tra sau
       }
     }
@@ -109,7 +134,7 @@ const postBooking = async (req, res) => {
       date: parseLocalDate(bookingDate),
       startTime,
       endTime,
-      totalPrice: parseInt(totalPrice),
+      totalPrice,
       paymentImage: paymentImageUrl,
       status: 'pending',
     });
