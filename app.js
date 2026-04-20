@@ -10,6 +10,7 @@ const connectDB = require('./config/db');
 const sessionConfig = require('./config/session');
 const { setLocals } = require('./middlewares/authMiddleware');
 const { errorHandler, notFound } = require('./middlewares/errorHandler');
+const { startCleanupInterval } = require('./utils/cleanupPendingSlots');
 
 // Import Routes
 const authRoutes = require('./routes/authRoutes');
@@ -28,6 +29,9 @@ const app = express();
 // Kết nối Database
 // ================================
 connectDB();
+
+// Khởi động cleanup: tự nhả slot pending bị kẹt sau 15 phút
+startCleanupInterval();
 
 // ================================
 // View Engine (EJS) + Layout System
