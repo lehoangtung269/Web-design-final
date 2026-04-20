@@ -62,8 +62,15 @@ const getFieldDetail = async (req, res) => {
     }
 
     // Ngày mặc định = hôm nay (local timezone)
-    const selectedDate = date ? parseLocalDate(date) : new Date();
+    let selectedDate = date ? parseLocalDate(date) : new Date();
     selectedDate.setHours(0, 0, 0, 0);
+
+    // Chặn xem ngày quá khứ — clamp về hôm nay
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (selectedDate < today) {
+      selectedDate = today;
+    }
 
     // Tự động tạo slots nếu chưa có
     const slots = await TimeSlot.generateSlotsForDate(id, selectedDate);
