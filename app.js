@@ -62,8 +62,25 @@ app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use(sessionConfig);
 app.use(flash());
 
-// Gắn user + flash messages vào tất cả views
+// ================================
+// CSRF Protection
+// ================================
+const csrf = require('csurf');
+const csrfProtection = csrf();
+app.use((req, res, next) => {
+  // Bỏ qua CSRF cho multipart/form-data (upload file) — multer xử lý trước csurf
+  if (req.headers['content-type'] && req.headers['content-type'].includes('multipart/form-data')) {
+    return next();
+  }
+  csrfProtection(req, res, next);
+});
+
+// Gắn user + flash messages + CSRF token vào tất cả views
 app.use(setLocals);
+app.use((req, res, next) => {
+  res.locals.csrfToken = req.csrfToken ? req.csrfToken() : '';
+  next();
+});
 
 // ================================
 // Routes

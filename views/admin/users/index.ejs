@@ -6,20 +6,39 @@
     overflow: hidden;
     transition: border-color 0.2s;
   }
-  .users-table-wrap:hover { border-color: #374151; }
-  .user-cell { display: flex; flex-direction: column; gap: 1px; }
-  .user-name { font-weight: 600; color: #F3F4F6; font-size: 13px; }
-  .user-email { color: #6B7280; font-size: 12px; }
+
+  .users-table-wrap:hover {
+    border-color: #374151;
+  }
+
+  .user-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .user-name {
+    font-weight: 600;
+    color: #F3F4F6;
+    font-size: 13px;
+  }
+
+  .user-email {
+    color: #6B7280;
+    font-size: 12px;
+  }
+
   .you-tag {
     display: inline-block;
     padding: 2px 8px;
     border-radius: 4px;
     font-size: 10px;
     font-weight: 600;
-    background: rgba(16,185,129,0.1);
+    background: rgba(16, 185, 129, 0.1);
     color: #10B981;
     letter-spacing: 0.03em;
   }
+
   .btn-lock {
     padding: 5px 12px;
     border-radius: 6px;
@@ -33,91 +52,107 @@
     align-items: center;
     gap: 4px;
   }
-  .btn-lock:active { transform: scale(0.95); }
+
+  .btn-lock:active {
+    transform: scale(0.95);
+  }
+
   .btn-lock-danger {
-    background: rgba(239,68,68,0.1);
+    background: rgba(239, 68, 68, 0.1);
     color: #F87171;
-    border: 1px solid rgba(239,68,68,0.2);
+    border: 1px solid rgba(239, 68, 68, 0.2);
   }
-  .btn-lock-danger:hover { background: rgba(239,68,68,0.18); }
+
+  .btn-lock-danger:hover {
+    background: rgba(239, 68, 68, 0.18);
+  }
+
   .btn-lock-success {
-    background: rgba(16,185,129,0.1);
+    background: rgba(16, 185, 129, 0.1);
     color: #10B981;
-    border: 1px solid rgba(16,185,129,0.2);
+    border: 1px solid rgba(16, 185, 129, 0.2);
   }
-  .btn-lock-success:hover { background: rgba(16,185,129,0.18); }
+
+  .btn-lock-success:hover {
+    background: rgba(16, 185, 129, 0.18);
+  }
 </style>
 
 <div class="users-table-wrap">
-  <% if (users.length === 0) { %>
+  <% if (users.length===0) { %>
     <div class="empty-state">
       <div class="icon">👥</div>
       <p>Chưa có người dùng nào</p>
     </div>
-  <% } else { %>
-    <table>
-      <thead>
-        <tr>
-          <th>Người dùng</th>
-          <th>Số điện thoại</th>
-          <th>Vai trò</th>
-          <th>Trạng thái</th>
-          <th>Ngày đăng ký</th>
-          <th style="width: 100px;"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% users.forEach(function(user) { %>
+    <% } else { %>
+      <table>
+        <thead>
           <tr>
-            <td>
-              <div class="user-cell">
-                <span class="user-name">
-                  <%= user.name %>
-                  <% if (user._id.toString() === currentUser._id.toString()) { %>
-                    <span class="you-tag">Bạn</span>
-                  <% } %>
-                </span>
-                <span class="user-email"><%= user.email %></span>
-              </div>
-            </td>
-            <td style="color: #9CA3AF; font-size: 13px;"><%= user.phone %></td>
-            <td>
-              <% if (user.role === 'admin') { %>
-                <span class="badge badge-admin">Admin</span>
-              <% } else { %>
-                <span class="badge badge-user">User</span>
-              <% } %>
-            </td>
-            <td>
-              <% if (user.isActive) { %>
-                <span class="badge badge-active">Hoạt động</span>
-              <% } else { %>
-                <span class="badge badge-inactive">Đã khóa</span>
-              <% } %>
-            </td>
-            <td style="color: #6B7280; font-size: 12px;">
-              <%= user.createdAt ? new Date(user.createdAt).toLocaleDateString('vi-VN') : 'N/A' %>
-            </td>
-            <td>
-              <% if (user._id.toString() !== currentUser._id.toString()) { %>
-                <form action="/admin/users/<%= user._id %>/toggle" method="POST" style="display: inline; margin: 0;">
-                  <% if (user.isActive) { %>
-                    <button type="submit" class="btn-lock btn-lock-danger"
-                      onclick="return confirm('Khóa tài khoản <%= user.name %>?')">
-                      🔒 Khóa
-                    </button>
-                  <% } else { %>
-                    <button type="submit" class="btn-lock btn-lock-success"
-                      onclick="return confirm('Mở khóa tài khoản <%= user.name %>?')">
-                      🔓 Mở khóa
-                    </button>
-                  <% } %>
-                </form>
-              <% } %>
-            </td>
+            <th>Người dùng</th>
+            <th>Số điện thoại</th>
+            <th>Vai trò</th>
+            <th>Trạng thái</th>
+            <th>Ngày đăng ký</th>
+            <th style="width: 100px;"></th>
           </tr>
-        <% }); %>
-      </tbody>
-    </table>
-  <% } %>
+        </thead>
+        <tbody>
+          <% users.forEach(function(user) { %>
+            <tr>
+              <td>
+                <div class="user-cell">
+                  <span class="user-name">
+                    <%= user.name %>
+                      <% if (user._id.toString()===currentUser._id.toString()) { %>
+                        <span class="you-tag">Bạn</span>
+                        <% } %>
+                  </span>
+                  <span class="user-email">
+                    <%= user.email %>
+                  </span>
+                </div>
+              </td>
+              <td style="color: #9CA3AF; font-size: 13px;">
+                <%= user.phone %>
+              </td>
+              <td>
+                <% if (user.role==='admin' ) { %>
+                  <span class="badge badge-admin">Admin</span>
+                  <% } else { %>
+                    <span class="badge badge-user">User</span>
+                    <% } %>
+              </td>
+              <td>
+                <% if (user.isActive) { %>
+                  <span class="badge badge-active">Hoạt động</span>
+                  <% } else { %>
+                    <span class="badge badge-inactive">Đã khóa</span>
+                    <% } %>
+              </td>
+              <td style="color: #6B7280; font-size: 12px;">
+                <%= user.createdAt ? new Date(user.createdAt).toLocaleDateString('vi-VN') : 'N/A' %>
+              </td>
+              <td>
+                <% if (user._id.toString() !==currentUser._id.toString()) { %>
+                  <form action="/admin/users/<%= user._id %>/toggle" method="POST" style="display: inline; margin: 0;">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                    <% if (user.isActive) { %>
+                      <button type="submit" class="btn-lock btn-lock-danger"
+                        onclick="return confirm('Khóa tài khoản <%= user.name %>?')">
+                        🔒 Khóa
+                      </button>
+                      <% } else { %>
+                        <button type="submit" class="btn-lock btn-lock-success"
+                          onclick="return confirm('Mở khóa tài khoản <%= user.name %>?')">
+                          🔓 Mở khóa
+                        </button>
+                        <% } %>
+                  </form>
+                  <% } %>
+              </td>
+            </tr>
+            <% }); %>
+        </tbody>
+      </table>
+      <% } %>
 </div>

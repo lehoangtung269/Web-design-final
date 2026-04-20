@@ -5,10 +5,14 @@
     </div>
     <div class="flex items-center gap-3">
         <div class="relative hidden md:block">
-            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
-            <input class="w-64 bg-surface-container-high border border-outline-variant/10 rounded-lg pl-9 pr-4 py-2 text-sm text-on-surface focus:ring-1 focus:ring-primary/30 placeholder-on-surface-variant/50 transition-all" placeholder="Search fields..." type="text"/>
+            <span
+                class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+            <input
+                class="w-64 bg-surface-container-high border border-outline-variant/10 rounded-lg pl-9 pr-4 py-2 text-sm text-on-surface focus:ring-1 focus:ring-primary/30 placeholder-on-surface-variant/50 transition-all"
+                placeholder="Search fields..." type="text" />
         </div>
-        <a href="/admin/fields/create" class="flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg bg-primary text-on-primary hover:opacity-90 transition-opacity">
+        <a href="/admin/fields/create"
+            class="flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg bg-primary text-on-primary hover:opacity-90 transition-opacity">
             <span class="material-symbols-outlined text-sm">add</span> Add New Field
         </a>
     </div>
@@ -18,17 +22,25 @@
 <div class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
     <div class="bg-surface-container p-5 rounded-xl border border-outline-variant/10">
         <p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2">Total Fields</p>
-        <h3 class="text-3xl font-bold text-on-surface tracking-tight"><%= stats.totalFields %></h3>
+        <h3 class="text-3xl font-bold text-on-surface tracking-tight">
+            <%= stats.totalFields %>
+        </h3>
     </div>
-    
+
     <div class="bg-surface-container p-5 rounded-xl border border-outline-variant/10">
         <p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2">Active</p>
-        <h3 class="text-3xl font-bold text-on-surface tracking-tight"><%= stats.activeFields %> <span class="text-xs font-bold text-primary ml-1 uppercase tracking-widest leading-loose align-bottom">Online</span></h3>
+        <h3 class="text-3xl font-bold text-on-surface tracking-tight">
+            <%= stats.activeFields %> <span
+                    class="text-xs font-bold text-primary ml-1 uppercase tracking-widest leading-loose align-bottom">Online</span>
+        </h3>
     </div>
-    
+
     <div class="bg-surface-container p-5 rounded-xl border border-outline-variant/10">
         <p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2">Maintenance</p>
-        <h3 class="text-3xl font-bold text-on-surface tracking-tight"><%= stats.maintenanceFields %> <span class="text-xs font-bold text-error ml-1 uppercase tracking-widest leading-loose align-bottom">Offline</span></h3>
+        <h3 class="text-3xl font-bold text-on-surface tracking-tight">
+            <%= stats.maintenanceFields %> <span
+                    class="text-xs font-bold text-error ml-1 uppercase tracking-widest leading-loose align-bottom">Offline</span>
+        </h3>
     </div>
 
     <!-- Toggle View Mock Component -->
@@ -37,7 +49,8 @@
             <button class="p-2 bg-[#1C2025] rounded-md text-primary flex items-center justify-center">
                 <span class="material-symbols-outlined text-xl">grid_view</span>
             </button>
-            <button class="p-2 text-on-surface-variant flex items-center justify-center hover:text-white transition-colors">
+            <button
+                class="p-2 text-on-surface-variant flex items-center justify-center hover:text-white transition-colors">
                 <span class="material-symbols-outlined text-xl">menu</span>
             </button>
         </div>
@@ -45,78 +58,92 @@
 </div>
 
 <!-- Field Arsenal Grid -->
-<% if (fields.length === 0) { %>
+<% if (fields.length===0) { %>
     <div class="bg-surface-container rounded-xl border border-outline-variant/10 p-16 text-center">
         <span class="material-symbols-outlined text-5xl text-outline-variant/50 mb-4 block">stadium</span>
         <h3 class="text-lg font-bold text-on-surface mb-2">No Pitches Configured</h3>
-        <p class="text-sm font-medium text-on-surface-variant max-w-sm mx-auto mb-6">You haven't setup any playing fields yet. Add a new field to start accepting bookings.</p>
-        <a href="/admin/fields/create" class="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold rounded-lg bg-primary text-on-primary">
+        <p class="text-sm font-medium text-on-surface-variant max-w-sm mx-auto mb-6">You haven't setup any playing
+            fields yet. Add a new field to start accepting bookings.</p>
+        <a href="/admin/fields/create"
+            class="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold rounded-lg bg-primary text-on-primary">
             Setup First Pitch
         </a>
     </div>
-<% } else { %>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        <% fields.forEach(function(field) { 
-            const isMaintenance = field.status === 'maintenance';
-            const statusClass = isMaintenance ? 'bg-[#3A141A] text-error ring-error/30' : 'bg-[#0B3322] text-primary ring-primary/30';
-            const statusIcon = isMaintenance ? 'build' : 'check_circle';
-            const statusText = isMaintenance ? 'MAINTENANCE' : 'ACTIVE';
-            
-            // Image handling
-            const imageUrl = (field.images && field.images.length > 0) ? field.images[0] : 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=600&auto=format&fit=crop';
-        %>
-            <div class="bg-surface-container rounded-xl border border-outline-variant/10 overflow-hidden flex flex-col group relative">
-                <!-- Status Badge Absolute -->
-                <div class="absolute top-4 right-4 z-10 px-2 py-1 rounded bg-[#0A0E13]/80 backdrop-blur-sm ring-1 flex items-center gap-1.5 text-[9px] font-bold tracking-widest uppercase <%= statusClass %>">
-                    <span class="w-1.5 h-1.5 rounded-full <%= isMaintenance ? 'bg-error animate-pulse' : 'bg-primary' %>"></span>
-                    <%= statusText %>
-                </div>
-
-                <!-- Hero Image Container with Dark Gradient Overlay -->
-                <div class="relative h-48 w-full bg-surface-container-high overflow-hidden">
-                    <img src="<%= imageUrl %>" alt="<%= field.name %>" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                    <!-- Gradient to seamlessly blend image into dark card body -->
-                    <div class="absolute inset-0 bg-gradient-to-t from-surface-container via-surface-container/40 to-transparent"></div>
-                </div>
-
-                <!-- Card Body -->
-                <div class="p-5 flex-1 flex flex-col -mt-10 relative z-10">
-                    <div class="flex justify-between items-start mb-1">
-                        <h3 class="text-lg font-bold text-on-surface truncate pr-2"><%= field.name %></h3>
-                        <div class="text-lg font-mono font-semibold text-on-surface whitespace-nowrap">
-                            <%= field.pricePerSlot.toLocaleString('vi-VN') %>đ
-                        </div>
-                    </div>
-                    
-                    <div class="flex justify-between items-center text-xs font-medium text-on-surface-variant mb-5">
-                        <div class="flex items-center gap-1.5">
-                            <span class="material-symbols-outlined text-xs">sports_soccer</span>
-                            <%= field.type %>
-                        </div>
-                        <div class="text-[10px] uppercase tracking-widest opacity-60">/ Slot</div>
+    <% } else { %>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <% fields.forEach(function(field) { const isMaintenance=field.status==='maintenance' ; const
+                statusClass=isMaintenance ? 'bg-[#3A141A] text-error ring-error/30'
+                : 'bg-[#0B3322] text-primary ring-primary/30' ; const statusIcon=isMaintenance ? 'build'
+                : 'check_circle' ; const statusText=isMaintenance ? 'MAINTENANCE' : 'ACTIVE' ; // Image handling const
+                imageUrl=(field.images && field.images.length> 0) ? field.images[0] :
+                'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=600&auto=format&fit=crop';
+                %>
+                <div
+                    class="bg-surface-container rounded-xl border border-outline-variant/10 overflow-hidden flex flex-col group relative">
+                    <!-- Status Badge Absolute -->
+                    <div
+                        class="absolute top-4 right-4 z-10 px-2 py-1 rounded bg-[#0A0E13]/80 backdrop-blur-sm ring-1 flex items-center gap-1.5 text-[9px] font-bold tracking-widest uppercase <%= statusClass %>">
+                        <span
+                            class="w-1.5 h-1.5 rounded-full <%= isMaintenance ? 'bg-error animate-pulse' : 'bg-primary' %>"></span>
+                        <%= statusText %>
                     </div>
 
-                    <% if (isMaintenance) { %>
-                        <div class="flex-1 rounded-lg bg-error/10 border border-error/20 p-3 mb-5 flex flex-col gap-1 items-center justify-center text-center">
-                            <span class="material-symbols-outlined text-error mb-1">construction</span>
-                            <span class="text-[10px] font-bold text-error uppercase tracking-widest">Turf replacement scheduled</span>
-                            <span class="text-[9px] text-error/70 uppercase">Estimated ETA: 48hrs</span>
+                    <!-- Hero Image Container with Dark Gradient Overlay -->
+                    <div class="relative h-48 w-full bg-surface-container-high overflow-hidden">
+                        <img src="<%= imageUrl %>" alt="<%= field.name %>"
+                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                        <!-- Gradient to seamlessly blend image into dark card body -->
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-surface-container via-surface-container/40 to-transparent">
                         </div>
-                    <% } %>
+                    </div>
 
-                    <!-- Card Actions -->
-                    <div class="flex items-center gap-2 mt-auto pt-4 border-t border-outline-variant/10">
-                        <a href="/admin/fields/<%= field._id %>/edit" class="flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-sm font-semibold text-on-surface transition-colors">
-                            <span class="material-symbols-outlined text-[16px]">edit</span> Edit
-                        </a>
-                        <form action="/admin/fields/<%= field._id %>/delete" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to completely remove this pitch from the database?');">
-                            <button type="submit" class="flex items-center justify-center py-2 px-3 rounded-lg bg-surface-container-high hover:bg-[#3A141A] text-on-surface hover:text-error transition-colors">
-                                <span class="material-symbols-outlined text-[16px]">delete</span>
-                            </button>
-                        </form>
+                    <!-- Card Body -->
+                    <div class="p-5 flex-1 flex flex-col -mt-10 relative z-10">
+                        <div class="flex justify-between items-start mb-1">
+                            <h3 class="text-lg font-bold text-on-surface truncate pr-2">
+                                <%= field.name %>
+                            </h3>
+                            <div class="text-lg font-mono font-semibold text-on-surface whitespace-nowrap">
+                                <%= field.pricePerSlot.toLocaleString('vi-VN') %>đ
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between items-center text-xs font-medium text-on-surface-variant mb-5">
+                            <div class="flex items-center gap-1.5">
+                                <span class="material-symbols-outlined text-xs">sports_soccer</span>
+                                <%= field.type %>
+                            </div>
+                            <div class="text-[10px] uppercase tracking-widest opacity-60">/ Slot</div>
+                        </div>
+
+                        <% if (isMaintenance) { %>
+                            <div
+                                class="flex-1 rounded-lg bg-error/10 border border-error/20 p-3 mb-5 flex flex-col gap-1 items-center justify-center text-center">
+                                <span class="material-symbols-outlined text-error mb-1">construction</span>
+                                <span class="text-[10px] font-bold text-error uppercase tracking-widest">Turf
+                                    replacement scheduled</span>
+                                <span class="text-[9px] text-error/70 uppercase">Estimated ETA: 48hrs</span>
+                            </div>
+                            <% } %>
+
+                                <!-- Card Actions -->
+                                <div class="flex items-center gap-2 mt-auto pt-4 border-t border-outline-variant/10">
+                                    <a href="/admin/fields/<%= field._id %>/edit"
+                                        class="flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-sm font-semibold text-on-surface transition-colors">
+                                        <span class="material-symbols-outlined text-[16px]">edit</span> Edit
+                                    </a>
+                                    <form action="/admin/fields/<%= field._id %>/delete" method="POST" class="inline"
+                                        onsubmit="return confirm('Are you sure you want to completely remove this pitch from the database?');">
+                                        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                                        <button type="submit"
+                                            class="flex items-center justify-center py-2 px-3 rounded-lg bg-surface-container-high hover:bg-[#3A141A] text-on-surface hover:text-error transition-colors">
+                                            <span class="material-symbols-outlined text-[16px]">delete</span>
+                                        </button>
+                                    </form>
+                                </div>
                     </div>
                 </div>
-            </div>
-        <% }) %>
-    </div>
-<% } %>
+                <% }) %>
+        </div>
+        <% } %>
