@@ -11,7 +11,11 @@ const uploadFieldImages = (req, res, next) => {
 
   multerUpload(req, res, async (err) => {
     if (err) {
-      req.flash('error', `Lỗi upload: ${err.message}`);
+      // Bug 13: hiện flash message đẹp khi upload sai file type
+      const message = err.code === 'LIMIT_FILE_SIZE'
+        ? 'File quá lớn! Tối đa 5MB mỗi file.'
+        : err.message || 'Lỗi upload file!';
+      req.flash('error', message);
       return res.redirect('back');
     }
 
@@ -45,6 +49,14 @@ const uploadFieldImages = (req, res, next) => {
       next();
     } catch (uploadError) {
       console.error('Cloudinary Upload Error:', uploadError);
+
+      // Bug 4: Xóa TẤT CẢ file tạm khi upload thất bại
+      for (const file of req.files) {
+        fs.unlink(file.path, (unlinkErr) => {
+          if (unlinkErr) console.error('Lỗi xóa file tạm trong catch:', unlinkErr);
+        });
+      }
+
       req.flash('error', 'Lỗi khi upload ảnh lên cloud!');
       return res.redirect('back');
     }

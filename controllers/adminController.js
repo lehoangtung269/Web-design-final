@@ -543,7 +543,14 @@ const deleteField = async (req, res) => {
 // GET /admin/users — Danh sách người dùng
 const getUsers = async (req, res) => {
   try {
-    const users = await User.find().sort({ createdAt: -1 });
+    const page = parseInt(req.query.page) || 1;
+    const limit = 20;
+
+    const total = await User.countDocuments();
+    const users = await User.find()
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit);
 
     res.render('admin/users/index', {
       ...adminLayout,
@@ -551,8 +558,10 @@ const getUsers = async (req, res) => {
       activeNav: 'users',
       pageIcon: '👥',
       pageTitle: 'Quản lý người dùng',
-      topbarRight: `<span>Tổng: <strong>${users.length}</strong> người dùng</span>`,
+      topbarRight: `<span>Tổng: <strong>${total}</strong> người dùng</span>`,
       users,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit) || 1,
     });
   } catch (error) {
     console.error('Get Users Error:', error);
