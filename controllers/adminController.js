@@ -45,27 +45,29 @@ const getDashboard = async (req, res) => {
 
     const bookingTrendsObj = await Booking.aggregate([
       { $match: { createdAt: { $gte: startDate } } },
-      { $group: {
+      {
+        $group: {
           _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
           count: { $sum: 1 }
-      } },
+        }
+      },
       { $sort: { _id: 1 } }
     ]);
 
     const chartData = [];
     let maxBookings = 0;
-    
+
     // Generate dates including empty days
     for (let i = range - 1; i >= 0; i--) {
       const d = new Date();
       d.setDate(d.getDate() - i);
-      
+
       const dateStr = toLocalDateString(d);
       const match = bookingTrendsObj.find(b => b._id === dateStr);
       const count = match ? match.count : 0;
-      
+
       if (count > maxBookings) maxBookings = count;
-      
+
       chartData.push({
         date: dateStr,
         label: d.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' }),
@@ -107,17 +109,17 @@ const getSchedule = async (req, res) => {
     // Determine the base date from query, or default to today
     const queryDateStr = req.query.date;
     const baseDate = queryDateStr ? parseLocalDate(queryDateStr) : new Date();
-    
+
     // Set to 00:00:00 local time
     baseDate.setHours(0, 0, 0, 0);
 
     // Calculate Monday (1) to Sunday (0 -> 7 in logic) of the current base date's week
     const dayOfWeek = baseDate.getDay();
     const diffToMonday = baseDate.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
-    
+
     const startOfWeek = new Date(baseDate.setDate(diffToMonday));
     startOfWeek.setHours(0, 0, 0, 0);
-    
+
     const endOfWeek = new Date(startOfWeek);
     endOfWeek.setDate(startOfWeek.getDate() + 6);
     endOfWeek.setHours(23, 59, 59, 999);
@@ -125,7 +127,7 @@ const getSchedule = async (req, res) => {
     // Prepare navigation dates (prev week, next week, today)
     const prevWeek = new Date(startOfWeek);
     prevWeek.setDate(startOfWeek.getDate() - 7);
-    
+
     const nextWeek = new Date(startOfWeek);
     nextWeek.setDate(startOfWeek.getDate() + 7);
 
@@ -133,9 +135,9 @@ const getSchedule = async (req, res) => {
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     let weekTitle = `${monthNames[startOfWeek.getMonth()]} ${startOfWeek.getDate()}`;
     if (startOfWeek.getMonth() === endOfWeek.getMonth()) {
-        weekTitle += ` — ${endOfWeek.getDate()}`;
+      weekTitle += ` — ${endOfWeek.getDate()}`;
     } else {
-        weekTitle += ` — ${monthNames[endOfWeek.getMonth()]} ${endOfWeek.getDate()}`;
+      weekTitle += ` — ${monthNames[endOfWeek.getMonth()]} ${endOfWeek.getDate()}`;
     }
 
     // Fetch all bookings within this week
@@ -146,25 +148,25 @@ const getSchedule = async (req, res) => {
     // Create a 7-day array structure
     const daysName = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
     const weekDays = [];
-    
-    for (let i = 0; i < 7; i++) {
-        const currentDate = new Date(startOfWeek);
-        currentDate.setDate(startOfWeek.getDate() + i);
-        
-        // Find bookings exactly falling on this day
-        const dayBookings = bookings.filter(b => {
-        const bDate = new Date(b.date);
-             // Compare using local date components to avoid timezone shift
-             return bDate.getFullYear() === currentDate.getFullYear() && bDate.getMonth() === currentDate.getMonth() && bDate.getDate() === currentDate.getDate();
-        });
 
-        weekDays.push({
-            name: daysName[i],
-            dateNum: currentDate.getDate(),
-            fullDateStr: toLocalDateString(currentDate),
-            isToday: (currentDate.toDateString() === new Date().toDateString()),
-            bookings: dayBookings
-        });
+    for (let i = 0; i < 7; i++) {
+      const currentDate = new Date(startOfWeek);
+      currentDate.setDate(startOfWeek.getDate() + i);
+
+      // Find bookings exactly falling on this day
+      const dayBookings = bookings.filter(b => {
+        const bDate = new Date(b.date);
+        // Compare using local date components to avoid timezone shift
+        return bDate.getFullYear() === currentDate.getFullYear() && bDate.getMonth() === currentDate.getMonth() && bDate.getDate() === currentDate.getDate();
+      });
+
+      weekDays.push({
+        name: daysName[i],
+        dateNum: currentDate.getDate(),
+        fullDateStr: toLocalDateString(currentDate),
+        isToday: (currentDate.toDateString() === new Date().toDateString()),
+        bookings: dayBookings
+      });
     }
 
     res.render('admin/schedule', {
@@ -211,13 +213,13 @@ const getBookings = async (req, res) => {
     const totalVolume = await Booking.countDocuments();
     const pendingConf = await Booking.countDocuments({ status: 'pending' });
     const confirmedConf = await Booking.countDocuments({ status: 'confirmed' });
-    
+
     const revenueAgg = await Booking.aggregate([
       { $match: { status: 'confirmed' } },
       { $group: { _id: null, total: { $sum: '$totalPrice' } } }
     ]);
     const totalRevenue = revenueAgg.length > 0 ? revenueAgg[0].total : 0;
-    
+
     // Utilization logic (Confirmed vs Total possible, or just Confirmed vs All Bookings)
     const utilization = totalVolume > 0 ? Math.round((confirmedConf / totalVolume) * 100) : 0;
 
@@ -286,6 +288,12 @@ const approveBooking = async (req, res) => {
       return res.redirect('/admin/bookings');
     }
 
+    // Chỉ cho phép duyệt đơn đang pending
+    if (booking.status !== 'pending') {
+      req.flash('error', 'Đơn này đã được xử lý rồi!');
+      return res.redirect(`/admin/bookings/${id}`);
+    }
+
     // Cập nhật trạng thái booking → confirmed
     booking.status = 'confirmed';
     booking.approvedBy = req.session.user._id;
@@ -317,6 +325,12 @@ const rejectBooking = async (req, res) => {
     if (!booking) {
       req.flash('error', 'Không tìm thấy đơn!');
       return res.redirect('/admin/bookings');
+    }
+
+    // Chỉ cho phép từ chối đơn đang pending
+    if (booking.status !== 'pending') {
+      req.flash('error', 'Đơn này đã được xử lý rồi!');
+      return res.redirect(`/admin/bookings/${id}`);
     }
 
     // Cập nhật trạng thái booking → rejected
