@@ -47,7 +47,7 @@ const getDashboard = async (req, res) => {
       { $match: { createdAt: { $gte: startDate } } },
       {
         $group: {
-          _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt", timezone: "Asia/Ho_Chi_Minh" } },
           count: { $sum: 1 }
         }
       },
@@ -509,6 +509,17 @@ const updateField = async (req, res) => {
 const deleteField = async (req, res) => {
   try {
     const { id } = req.params;
+
+    // Kiểm tra còn booking confirmed/pending không
+    const activeBookings = await Booking.countDocuments({
+      field: id,
+      status: { $in: ['confirmed', 'pending'] },
+    });
+    if (activeBookings > 0) {
+      req.flash('error', `Không thể xóa sân vì còn ${activeBookings} đơn đặt đang hoạt động (confirmed/pending). Vui lòng xử lý hết trước!`);
+      return res.redirect('/admin/fields');
+    }
+
     // Xóa tất cả Booking và TimeSlot liên kết để tránh rác dữ liệu
     await Booking.deleteMany({ field: id });
     await TimeSlot.deleteMany({ field: id });
@@ -562,7 +573,7 @@ const toggleUserStatus = async (req, res) => {
     }
 
     // Không cho phép tự khóa chính mình
-    if (user._id.toString() === req.session.user._id) {
+    if (user._id.toString() === req.session.user._id.toString()) {
       req.flash('error', 'Không thể khóa tài khoản của chính mình!');
       return res.redirect('/admin/users');
     }
