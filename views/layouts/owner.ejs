@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html class="dark" lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>
+        <%= title %> | Owner Portal
+    </title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0A0E13;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+
+        /* Custom scrollbar for premium feel */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0A0E13;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1C2025;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #262A30;
+        }
+    </style>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface": "#e0e2ea",
+                        "primary": "#4edea3",
+                        "surface": "#101419",
+                        "surface-variant": "#31353b",
+                        "surface-container-low": "#181c21",
+                        "outline": "#86948a",
+                        "tertiary-container": "#fc7c78",
+                        "on-surface-variant": "#bbcabf",
+                        "secondary": "#adc6ff",
+                        "surface-container-high": "#262a30",
+                        "surface-container": "#1c2025",
+                        "secondary-container": "#0566d9",
+                        "error": "#ffb4ab",
+                        "surface-container-highest": "#31353b",
+                        "surface-container-lowest": "#0a0e13",
+                        "tertiary": "#ffb3af",
+                        "outline-variant": "#3c4a42",
+                        "on-primary": "#003824",
+                        "background": "#101419",
+                        "primary-container": "#10b981",
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+
+<body class="text-on-surface overflow-x-hidden">
+    <!-- SideNavBar Anchor -->
+    <%- include('../owner/partials/sidebar', { activeNav: typeof activeNav !=='undefined' ? activeNav : '' }) %>
+
+        <!-- TopNavBar Anchor -->
+        <header
+            class="bg-[#101419]/80 backdrop-blur-md sticky top-0 z-40 lg:ml-64 w-full lg:w-[calc(100%-16rem)] flex justify-between items-center h-16 px-8 border-b border-[#1C2025]">
+            <div class="flex items-center w-full max-w-md">
+                <div class="relative w-full">
+                    <span
+                        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">search</span>
+                    <input
+                        class="w-full bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-2 text-sm text-on-surface focus:ring-1 focus:ring-primary/30 placeholder-on-surface-variant/50 transition-all"
+                        placeholder="Search analytics, customers, or schedules..." type="text" />
+                </div>
+            </div>
+            <div class="flex items-center gap-6">
+                <div class="flex items-center gap-4 text-[#BBCABF]">
+                    <button class="material-symbols-outlined hover:text-white transition-colors">notifications</button>
+                    <div class="h-4 w-px bg-outline-variant/30"></div>
+                    <button class="flex items-center gap-2 hover:text-white transition-colors">
+                        <span class="material-symbols-outlined">account_circle</span>
+                        <span class="text-xs font-medium">
+                            <%= currentUser ? currentUser.name : 'Owner Portal' %>
+                        </span>
+                    </button>
+                </div>
+                <a href="/owner/bookings"
+                    class="bg-primary text-on-primary px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-80 transition-all active:scale-[0.98]">
+                    View Bookings
+                </a>
+            </div>
+        </header>
+
+        <!-- Main Content Canvas -->
+        <main class="lg:ml-64 p-8 min-h-screen">
+            <% if (typeof error !=='undefined' && error.length> 0) { %>
+                <div
+                    class="mb-4 p-4 rounded-lg bg-red-900/20 border border-red-500/50 text-red-200 text-sm font-medium flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">warning</span>
+                    <%= error[0] %>
+                </div>
+                <% } %>
+                    <% if (typeof success !=='undefined' && success.length> 0) { %>
+                        <div
+                            class="mb-4 p-4 rounded-lg bg-primary/10 border border-primary/30 text-primary text-sm font-medium flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">check_circle</span>
+                            <%= success[0] %>
+                        </div>
+                        <% } %>
+
+                            <%- body %>
+        </main>
+</body>
+
+</html>

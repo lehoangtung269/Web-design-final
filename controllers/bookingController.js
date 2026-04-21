@@ -1,6 +1,8 @@
 const Booking = require('../models/Booking');
 const Field = require('../models/Field');
 const TimeSlot = require('../models/TimeSlot');
+const Service = require('../models/Service');
+const BookingService = require('../models/BookingService');
 const cloudinary = require('../config/cloudinary');
 const fs = require('fs');
 
@@ -52,6 +54,8 @@ const getCheckout = async (req, res) => {
       return res.redirect(`/fields/${fieldId}`);
     }
 
+    const services = await Service.find({ field: fieldId, isActive: true });
+
     res.render('bookings/checkout', {
       title: 'Thanh toán đặt sân',
       activeNav: 'fields',
@@ -60,6 +64,7 @@ const getCheckout = async (req, res) => {
       bookingDate: date,
       startTime: start,
       endTime: end,
+      services, // Truyền services vào view
       totalPrice: field.pricePerSlot,
     });
   } catch (error) {
@@ -84,7 +89,23 @@ const postBooking = async (req, res) => {
       req.flash('error', 'Không tìm thấy sân bóng!');
       return res.redirect('/fields');
     }
-    const totalPrice = field.pricePerSlot;
+
+    const basePrice = Number(field.pricePerSlot);
+    let servicesTotal = 0;
+    const bookingServicesData = [];
+
+    const { services: serviceIds } = req.body;
+    if (serviceIds && serviceIds.length > 0) {
+      const ids = Array.isArray(serviceIds) ? serviceIds : [serviceIds];
+      const selectedServices = await Service.find({ _id: { $in: ids } });
+      for (const svc of selectedServices) {
+        const qty = 1;
+        servicesTotal += svc.price * qty;
+        bookingServicesData.push({ service: svc._id, name: svc.name, price: svc.price, quantity: qty });
+      }
+    }
+
+    const finalTotal = basePrice + servicesTotal;
 
     // Bắt buộc upload ảnh bill chuyển khoản
     if (!req.file) {
@@ -134,12 +155,18 @@ const postBooking = async (req, res) => {
       date: parseLocalDate(bookingDate),
       startTime,
       endTime,
-      totalPrice: totalPrice,
-      basePrice: totalPrice,
-      finalTotal: totalPrice,
+      totalPrice: finalTotal,
+      basePrice,
+      servicesTotal,
+      finalTotal,
       paymentImage: paymentImageUrl,
       status: 'pending',
     });
+
+    // Lưu junction table BookingService
+    if (bookingServicesData.length > 0) {
+      await BookingService.insertMany(bookingServicesData.map(bs => ({ ...bs, booking: booking._id })));
+    }
 
     req.flash('success', 'Đặt sân thành công! Đơn của bạn đang chờ Admin duyệt.');
     res.redirect(`/checkout/confirmation/${booking._id}`);

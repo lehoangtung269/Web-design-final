@@ -52,12 +52,10 @@ const uploadFieldImages = (req, res, next) => {
 
       // Bug 4: Xóa TẤT CẢ file tạm khi upload thất bại
       for (const file of req.files) {
-        fs.unlink(file.path, (unlinkErr) => {
-          if (unlinkErr) console.error('Lỗi xóa file tạm trong catch:', unlinkErr);
-        });
+        try { fs.unlinkSync(file.path); } catch (e) { }
       }
 
-      req.flash('error', 'Lỗi khi upload ảnh lên cloud!');
+      req.flash('error', 'Lỗi upload ảnh!');
       return res.redirect('back');
     }
   });

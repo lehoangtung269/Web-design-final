@@ -116,18 +116,21 @@
           <% if (currentUser.role==='admin' ) { %>
             <a href="/admin/dashboard"
               class="text-emerald-600 font-bold px-4 py-2 transition-all hover:bg-emerald-50 rounded-lg text-sm">Admin</a>
-            <% } %>
-              <a href="/history"
-                class="text-slate-600 hover:text-emerald-600 font-bold px-3 py-2 transition-all text-sm">Lịch sử</a>
-              <a href="/auth/logout"
-                class="text-slate-600 hover:text-emerald-600 font-bold px-4 py-2 transition-all">Đăng xuất</a>
-              <% } else { %>
-                <a href="/auth/login"
-                  class="text-slate-600 hover:text-emerald-600 font-bold px-4 py-2 transition-all">Đăng nhập</a>
-                <a href="/auth/register"
-                  class="bg-emerald-600 text-white px-6 py-2.5 rounded-xl font-bold shadow-md hover:bg-emerald-700 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200">Đăng
-                  ký</a>
-                <% } %>
+            <% } else if (currentUser.role==='field_owner' ) { %>
+              <a href="/owner/dashboard"
+                class="text-blue-600 font-bold px-4 py-2 transition-all hover:bg-blue-50 rounded-lg text-sm">Chủ sân</a>
+              <% } %>
+                <a href="/history"
+                  class="text-slate-600 hover:text-emerald-600 font-bold px-3 py-2 transition-all text-sm">Lịch sử</a>
+                <a href="/auth/logout"
+                  class="text-slate-600 hover:text-emerald-600 font-bold px-4 py-2 transition-all">Đăng xuất</a>
+                <% } else { %>
+                  <a href="/auth/login"
+                    class="text-slate-600 hover:text-emerald-600 font-bold px-4 py-2 transition-all">Đăng nhập</a>
+                  <a href="/auth/register"
+                    class="bg-emerald-600 text-white px-6 py-2.5 rounded-xl font-bold shadow-md hover:bg-emerald-700 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200">Đăng
+                    ký</a>
+                  <% } %>
       </div>
     </nav>
   </header>

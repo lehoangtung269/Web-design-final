@@ -94,9 +94,8 @@ const login = async (req, res) => {
     req.flash('success', `Xin chào, ${user.name}!`);
 
     // Admin → redirect về dashboard, User → redirect về trang chủ
-    if (user.role === 'admin') {
-      return res.redirect('/admin/dashboard');
-    }
+    if (user.role === 'admin') return res.redirect('/admin/dashboard');
+    if (user.role === 'field_owner') return res.redirect('/owner/dashboard');
     return res.redirect('/');
   } catch (error) {
     console.error('Login Error:', error);

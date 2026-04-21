@@ -1,0 +1,55 @@
+<div class="space-y-6">
+    <div class="flex justify-between items-center">
+        <h1 class="text-2xl font-bold tracking-tight text-on-surface">Cơ sở của bạn (Sân bóng)</h1>
+    </div>
+
+    <div class="bg-surface-container rounded-xl overflow-hidden shadow-lg border border-transparent">
+        <% if (fields && fields.length> 0) { %>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+                <% fields.forEach(field=> { %>
+                    <div
+                        class="bg-surface-container-high rounded-xl overflow-hidden border border-outline-variant/20 hover:border-primary/50 transition-colors">
+                        <div class="h-40 bg-surface-variant/50 flex">
+                            <% if (field.images && field.images.length> 0) { %>
+                                <img src="<%= field.images[0] %>" alt="<%= field.name %>"
+                                    class="w-full h-full object-cover" />
+                                <% } else { %>
+                                    <div
+                                        class="m-auto flex flex-col items-center justify-center text-on-surface-variant opacity-50">
+                                        <span class="material-symbols-outlined text-4xl mb-2">image</span>
+                                        <span class="text-xs font-bold uppercase tracking-widest">No Image</span>
+                                    </div>
+                                    <% } %>
+                        </div>
+                        <div class="p-5">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-lg font-bold text-primary truncate">
+                                    <%= field.name %>
+                                </h3>
+                            </div>
+                            <p class="text-sm text-on-surface-variant mb-4 truncate">
+                                <%= field.address %>
+                            </p>
+                            <div class="flex justify-between items-center">
+                                <span
+                                    class="px-2 py-1 rounded bg-secondary-container/20 text-secondary text-[10px] font-bold uppercase">
+                                    <%= field.type==='5-a-side' ? 'Sân 5' : field.type==='7-a-side' ? 'Sân 7' : 'Sân 11'
+                                        %>
+                                </span>
+                                <span class="text-sm font-bold text-on-surface">
+                                    <%= field.pricePerSlot.toLocaleString('vi-VN') %>đ / slot
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <% }) %>
+            </div>
+            <% } else { %>
+                <div
+                    class="p-12 flex flex-col items-center justify-center text-on-surface-variant gap-4 bg-surface-container-low/30 backdrop-blur-sm">
+                    <span class="material-symbols-outlined text-6xl opacity-20">stadium</span>
+                    <p class="font-medium text-lg tracking-tight">Bạn chưa quản lý sân nào</p>
+                </div>
+                <% } %>
+    </div>
+</div>

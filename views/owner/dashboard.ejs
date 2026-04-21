@@ -1,0 +1,167 @@
+<div class="grid grid-cols-12 gap-8">
+    <!-- Left Column (75%) -->
+    <div class="col-span-12 lg:col-span-9 space-y-8">
+
+        <!-- KPI Bento Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div
+                class="bg-surface-container p-5 rounded-xl border border-transparent hover:border-primary/10 transition-colors">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="material-symbols-outlined text-secondary"
+                        style="font-variation-settings: 'FILL' 1;">stadium</span>
+                </div>
+                <p class="text-on-surface-variant text-xs font-medium uppercase tracking-wider mb-1">Cơ sở (Sân)</p>
+                <h3 class="text-2xl font-bold tracking-tight">
+                    <%= stats.totalFields %>
+                </h3>
+            </div>
+
+            <div
+                class="bg-surface-container p-5 rounded-xl border border-transparent hover:border-primary/10 transition-colors">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="material-symbols-outlined text-primary"
+                        style="font-variation-settings: 'FILL' 1;">event_available</span>
+                    <% if (stats.pendingBookings> 0) { %>
+                        <span class="text-[10px] font-bold text-error px-2 py-0.5 bg-error/10 rounded-full">
+                            <%= stats.pendingBookings %> Đang chờ
+                        </span>
+                        <% } %>
+                </div>
+                <p class="text-on-surface-variant text-xs font-medium uppercase tracking-wider mb-1">Chờ duyệt</p>
+                <h3 class="text-2xl font-bold tracking-tight">
+                    <%= stats.pendingBookings %>
+                </h3>
+            </div>
+
+            <div
+                class="bg-surface-container p-5 rounded-xl border border-transparent hover:border-primary/10 transition-colors">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="material-symbols-outlined text-tertiary-container"
+                        style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                </div>
+                <p class="text-on-surface-variant text-xs font-medium uppercase tracking-wider mb-1">Đã duyệt</p>
+                <h3 class="text-2xl font-bold tracking-tight">
+                    <%= stats.confirmedBookings %>
+                </h3>
+            </div>
+
+            <div
+                class="bg-surface-container p-5 rounded-xl border border-transparent hover:border-primary/10 transition-colors">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="material-symbols-outlined text-secondary-container"
+                        style="font-variation-settings: 'FILL' 1;">payments</span>
+                </div>
+                <p class="text-on-surface-variant text-xs font-medium uppercase tracking-wider mb-1">Doanh thu dự kiến
+                </p>
+                <h3 class="text-2xl font-bold tracking-tight text-[#4edea3]">
+                    <%= stats.revenue.toLocaleString('vi-VN') %> ₫
+                </h3>
+            </div>
+        </div>
+
+        <!-- Booking Table -->
+        <div
+            class="bg-surface-container rounded-xl overflow-hidden border border-transparent hover:border-outline-variant/10 transition-all">
+            <div class="p-6 flex justify-between items-center border-b border-[#1C2025]">
+                <h2 class="text-lg font-bold tracking-tight text-on-surface">Đơn đặt sân gần đây (Top 5)</h2>
+                <a href="/owner/bookings" class="text-xs font-bold text-primary hover:underline">Xem tất cả</a>
+            </div>
+
+            <% if (typeof recentBookings !=='undefined' && recentBookings.length> 0) { %>
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-surface-container-low/50">
+                            <th
+                                class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest hidden sm:table-cell">
+                                ID</th>
+                            <th
+                                class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+                                Khách hàng</th>
+                            <th
+                                class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+                                Sân</th>
+                            <th
+                                class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest hidden md:table-cell">
+                                Thời gian</th>
+                            <th
+                                class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+                                Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-[#1C2025]">
+                        <% recentBookings.forEach(booking=> { %>
+                            <tr class="hover:bg-surface-container-high transition-colors group">
+                                <td class="px-6 py-4 text-xs font-mono text-on-surface-variant hidden sm:table-cell">#
+                                    <%= booking._id.toString().substring(booking._id.toString().length -
+                                        6).toUpperCase() %>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center border border-outline-variant/30 text-xs font-bold text-on-surface overflow-hidden">
+                                            <%= booking.user && booking.user.name ? booking.user.name.substring(0,
+                                                2).toUpperCase() : 'NA' %>
+                                        </div>
+                                        <div>
+                                            <span class="text-sm font-medium text-on-surface block">
+                                                <%= booking.user ? booking.user.name : 'Unknown User' %>
+                                            </span>
+                                            <span class="text-[10px] text-on-surface-variant">
+                                                <%= booking.user ? booking.user.phone : '' %>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-sm font-medium text-on-surface">
+                                    <%= booking.field ? booking.field.name : 'Unknown Field' %>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-on-surface-variant hidden md:table-cell">
+                                    <%= new Date(booking.date).toLocaleDateString('vi-VN') %> <br />
+                                        <%= booking.startTime %> - <%= booking.endTime %>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <% if (booking.status==='confirmed' ) { %>
+                                        <span
+                                            class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-primary/10 text-primary uppercase tracking-wider">Confirmed</span>
+                                        <% } else if (booking.status==='pending' ) { %>
+                                            <span
+                                                class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-secondary/10 text-secondary uppercase tracking-wider">Pending</span>
+                                            <% } else { %>
+                                                <span
+                                                    class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-error/10 text-error uppercase tracking-wider">Rejected</span>
+                                                <% } %>
+                                </td>
+                            </tr>
+                            <% }) %>
+                    </tbody>
+                </table>
+                <% } else { %>
+                    <div class="p-8 text-center text-on-surface-variant text-sm">
+                        Không có đơn đặt sân nào gần đây.
+                    </div>
+                    <% } %>
+        </div>
+    </div>
+
+    <!-- Right Column (25%) -->
+    <aside class="col-span-12 lg:col-span-3 space-y-8">
+        <!-- Quick Actions -->
+        <div class="bg-surface-container rounded-xl p-6 space-y-4">
+            <h2 class="text-sm font-bold uppercase tracking-widest text-on-surface-variant mb-4">Quick Actions</h2>
+
+            <a href="/owner/bookings"
+                class="w-full flex items-center gap-3 p-3 rounded-lg bg-surface-container-high hover:bg-surface-container-highest border border-outline-variant/10 transition-all text-sm font-medium group text-on-surface">
+                <span
+                    class="material-symbols-outlined text-secondary group-hover:scale-110 transition-transform">fact_check</span>
+                Duyệt đơn chờ
+            </a>
+
+            <a href="/owner/fields"
+                class="w-full flex items-center gap-3 p-3 rounded-lg bg-surface-container-high hover:bg-surface-container-highest border border-outline-variant/10 transition-all text-sm font-medium group text-on-surface">
+                <span
+                    class="material-symbols-outlined text-tertiary-container group-hover:scale-110 transition-transform">stadium</span>
+                Quản lý sân
+            </a>
+        </div>
+    </aside>
+</div>
