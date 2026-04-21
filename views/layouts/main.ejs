@@ -1,17 +1,11 @@
 <!DOCTYPE html>
 <html class="light" lang="vi">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>
-    <%= title %> | ĐặtSân.vn
-  </title>
-  <meta name="description"
-    content="Hệ thống đặt sân bóng đá online nhanh chóng, tiện lợi. Tìm sân, chọn giờ, đặt ngay!" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,500;1,900&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+  <title><%= title %> | DatSan.vn</title>
+  <meta name="description" content="DatSan.vn - Kinetic Editorial football booking experience." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,700;0,900;1,900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <script>
@@ -19,149 +13,132 @@
       theme: {
         extend: {
           colors: {
-            "primary": "#6a37d3",
+            primary: "#6a37d3",
             "primary-container": "#ae8dff",
-            "on-primary": "#ffffff",
-            "secondary": "#00675c",
-            "background": "#f4f6ff",
-            "surface": "#f4f6ff",
+            secondary: "#00675c",
+            background: "#f4f6ff",
+            surface: "#f4f6ff",
             "surface-container-low": "#ebf1ff",
             "surface-container": "#dde9ff",
             "surface-container-lowest": "#ffffff",
             "on-surface": "#0b1c30",
-            "outline-variant": "rgba(11, 28, 48, 0.15)"
+            "on-surface-variant": "#334155",
+            "outline-variant": "#a5b4cf",
+            "on-primary": "#ffffff"
           },
-          fontFamily: { 
-            headline: ["Inter", "sans-serif"], 
-            title: ["Inter", "sans-serif"],
+          fontFamily: {
+            headline: ["Inter", "sans-serif"],
             body: ["Inter", "sans-serif"],
-            display: ["Inter", "sans-serif"],
-            label: ["Space Grotesk", "sans-serif"] 
+            label: ["Space Grotesk", "sans-serif"]
           },
-        },
-      },
-    }
+          boxShadow: {
+            "cta-glow": "0 10px 25px -5px rgba(107, 56, 212, 0.4)",
+            "ambient": "0 22px 40px -24px rgba(11, 28, 48, 0.12)"
+          }
+        }
+      }
+    };
   </script>
   <style>
-    .material-symbols-outlined {
-      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-    }
-
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(24px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .animate-fade-in {
-      animation: fadeInUp 0.7s ease-out both;
-    }
-
-    .animate-delay-1 {
-      animation-delay: 0.1s;
-    }
-
-    .animate-delay-2 {
-      animation-delay: 0.2s;
-    }
-
-    .animate-delay-3 {
-      animation-delay: 0.3s;
-    }
-
-    .animate-delay-4 {
-      animation-delay: 0.4s;
+    .material-symbols-outlined { font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24; }
+    body { font-family: Inter, sans-serif; }
+    .kinetic-display { font-style: italic; font-weight: 900; letter-spacing: -0.05em; }
+    .kinetic-headline { font-style: italic; font-weight: 900; letter-spacing: -0.02em; }
+    .kinetic-label {
+      font-family: "Space Grotesk", sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      font-size: 0.72rem;
     }
   </style>
 </head>
-
-<body class="bg-surface text-on-surface min-h-screen flex flex-col">
-
-  <!-- ===== KINETIC NAVBAR ===== -->
-  <header class="fixed top-6 left-0 right-0 z-50 flex justify-center px-6 pointer-events-none">
-    <nav class="pointer-events-auto bg-white/80 backdrop-blur-md shadow-[0_10px_25px_-5px_rgba(0,0,0,0.05)] rounded-full flex justify-between items-center px-3 py-2 max-w-5xl w-full border border-gray-100/50">
-      <a href="/" class="pl-4 text-xl font-black italic tracking-tighter text-[#0b1c30]">
-        OBSIDIAN
-      </a>
-      <div class="hidden md:flex flex-row items-center space-x-1">
-        <a class="px-5 py-2 text-[10px] uppercase tracking-[0.15em] font-['Space_Grotesk'] font-bold text-[#6a37d3] border-b-2 border-[#6a37d3]" href="/">COLLECTIONS</a>
-        <a class="px-5 py-2 text-[10px] uppercase tracking-[0.15em] font-['Space_Grotesk'] text-[#0b1c30] hover:text-[#6a37d3] transition-colors" href="/fields">CURATED MATCHES</a>
-        <a class="px-5 py-2 text-[10px] uppercase tracking-[0.15em] font-['Space_Grotesk'] text-[#0b1c30] hover:text-[#6a37d3] transition-colors" href="#">MEMBERSHIP</a>
-        <a class="px-5 py-2 text-[10px] uppercase tracking-[0.15em] font-['Space_Grotesk'] text-[#0b1c30] hover:text-[#6a37d3] transition-colors" href="#">THE ARCHIVE</a>
+<body class="bg-background text-on-surface min-h-screen flex flex-col">
+  <header class="fixed top-4 left-0 right-0 z-50 px-4 md:px-6">
+    <nav class="max-w-7xl mx-auto rounded-full bg-white/80 backdrop-blur-md shadow-ambient px-4 md:px-6 py-3 flex items-center justify-between">
+      <a href="/" class="font-black italic tracking-tight text-lg md:text-xl text-on-surface">⚽ DatSan.vn</a>
+      <div class="hidden md:flex items-center gap-7 text-sm">
+        <a href="/" class="<%= typeof activeNav !== 'undefined' && activeNav === 'home' ? 'text-primary border-b-2 border-primary pb-1' : 'text-on-surface-variant hover:text-primary' %> font-semibold transition-all duration-300">Trang chủ</a>
+        <a href="/fields" class="<%= typeof activeNav !== 'undefined' && activeNav === 'fields' ? 'text-primary border-b-2 border-primary pb-1' : 'text-on-surface-variant hover:text-primary' %> font-semibold transition-all duration-300">Sân bóng</a>
+        <a href="/#about" class="text-on-surface-variant hover:text-primary font-semibold transition-all duration-300">Giới thiệu</a>
       </div>
-      <div class="flex items-center gap-4 pr-1">
-        <a href="#" class="text-[#0b1c30] flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors w-8 h-8">
-          <span class="material-symbols-outlined text-[18px]">shopping_bag</span>
-        </a>
-        <a href="/auth/login" class="text-[#0b1c30] flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors w-8 h-8">
-          <span class="material-symbols-outlined text-[18px]">account_circle</span>
-        </a>
-        <a href="/fields" class="bg-[#6a37d3] text-white px-5 py-2.5 rounded-full text-[10px] uppercase tracking-[0.15em] font-bold shadow-[0_10px_25px_-5px_rgba(107,56,212,0.4)] hover:bg-[#ae8dff] hover:-translate-y-0.5 transition-all">
-          BOOK NOW
-        </a>
+      <div class="hidden md:flex items-center gap-3">
+        <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+          <% if (currentUser.role === 'admin') { %><a href="/admin/dashboard" class="text-xs font-semibold rounded-full px-4 py-2 bg-surface-container-low text-primary">Admin</a><% } %>
+          <% if (currentUser.role === 'field_owner') { %><a href="/owner/dashboard" class="text-xs font-semibold rounded-full px-4 py-2 bg-surface-container-low text-primary">Chủ sân</a><% } %>
+          <a href="/history" class="text-sm text-on-surface-variant hover:text-primary px-2">Lịch sử</a>
+          <a href="/auth/logout" class="text-sm text-on-surface-variant hover:text-primary px-2">Đăng xuất</a>
+        <% } else { %>
+          <a href="/auth/login" class="text-sm text-on-surface-variant hover:text-primary px-2">Đăng nhập</a>
+          <a href="/auth/register" class="rounded-full bg-gradient-to-r from-primary to-primary-container text-white px-5 py-2.5 font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-cta-glow">Đăng ký</a>
+        <% } %>
       </div>
+      <button id="mobile-menu-btn" class="md:hidden rounded-full p-2 text-on-surface hover:bg-surface-container-low" aria-label="Mở menu điều hướng">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
     </nav>
+    <div id="mobile-menu" class="hidden mt-3 max-w-7xl mx-auto rounded-2xl bg-white/90 backdrop-blur-md p-4 shadow-ambient">
+      <div class="flex flex-col gap-3">
+        <a href="/" class="px-3 py-2 rounded-xl bg-surface-container-low text-on-surface font-medium">Trang chủ</a>
+        <a href="/fields" class="px-3 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-low">Sân bóng</a>
+        <a href="/#about" class="px-3 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-low">Giới thiệu</a>
+        <a href="/#contact" class="px-3 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-low">Liên hệ</a>
+        <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+          <a href="/history" class="px-3 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-low">Lịch sử đặt sân</a>
+          <a href="/auth/logout" class="px-3 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-low">Đăng xuất</a>
+        <% } else { %>
+          <a href="/auth/login" class="px-3 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-low">Đăng nhập</a>
+          <a href="/auth/register" class="px-3 py-2 rounded-xl bg-primary text-white text-center font-semibold">Đăng ký</a>
+        <% } %>
+      </div>
+    </div>
   </header>
 
-  <main class="pt-[72px] flex-1">
-    <!-- ===== FLASH MESSAGES ===== -->
-    <% if (typeof success !=='undefined' && success && success.length> 0) { %>
-      <div class="max-w-7xl mx-auto px-6 pt-4">
-        <% success.forEach(msg=> { %>
-          <div
-            class="bg-emerald-50 border-l-4 border-emerald-500 text-emerald-800 px-5 py-3 rounded-xl mb-2 flex items-center gap-3 animate-fade-in">
-            <span class="material-symbols-outlined text-emerald-600">check_circle</span>
-            <%= msg %>
+  <main class="pt-24 md:pt-28 flex-1">
+    <% if (typeof success !== 'undefined' && success && success.length > 0) { %>
+      <div class="max-w-7xl mx-auto px-6 pt-2">
+        <% success.forEach(msg => { %>
+          <div class="bg-surface-container-low text-on-surface px-4 py-3 rounded-2xl mb-2 flex items-center gap-2">
+            <span class="material-symbols-outlined text-secondary">check_circle</span><%= msg %>
           </div>
-          <% }); %>
+        <% }) %>
       </div>
-      <% } %>
-        <% if (typeof error !=='undefined' && error && error.length> 0) { %>
-          <div class="max-w-7xl mx-auto px-6 pt-4">
-            <% error.forEach(msg=> { %>
-              <div
-                class="bg-red-50 border-l-4 border-red-500 text-red-800 px-5 py-3 rounded-xl mb-2 flex items-center gap-3 animate-fade-in">
-                <span class="material-symbols-outlined text-red-600">error</span>
-                <%= msg %>
-              </div>
-              <% }); %>
+    <% } %>
+    <% if (typeof error !== 'undefined' && error && error.length > 0) { %>
+      <div class="max-w-7xl mx-auto px-6 pt-2">
+        <% error.forEach(msg => { %>
+          <div class="bg-red-50 text-red-700 px-4 py-3 rounded-2xl mb-2 flex items-center gap-2">
+            <span class="material-symbols-outlined text-red-500">error</span><%= msg %>
           </div>
-          <% } %>
-
-            <%- body %>
+        <% }) %>
+      </div>
+    <% } %>
+    <%- body %>
   </main>
 
-  <!-- ===== KINETIC FOOTER ===== -->
-  <footer class="w-full py-20 bg-slate-950 flex flex-col items-center justify-center mt-auto">
-    <div class="text-4xl font-black italic tracking-tighter text-white mb-8">OBSIDIAN</div>
-    <div class="flex flex-wrap justify-center gap-10 mb-12">
-      <a class="text-gray-400 text-[10px] uppercase tracking-[0.15em] hover:text-white transition-colors" href="#">PRIVACY</a>
-      <a class="text-gray-400 text-[10px] uppercase tracking-[0.15em] hover:text-white transition-colors" href="#">TERMS</a>
-      <a class="text-gray-400 text-[10px] uppercase tracking-[0.15em] hover:text-white transition-colors" href="#">CAREERS</a>
-      <a class="text-gray-400 text-[10px] uppercase tracking-[0.15em] hover:text-white transition-colors" href="#">CONTACT</a>
-    </div>
-    <div class="text-[9px] uppercase tracking-[0.2em] text-gray-500 font-['Space_Grotesk']">
-      © 2026 KINETIC OBSIDIAN ARCHIVE. ALL RIGHTS RESERVED.
+  <footer id="contact" class="bg-slate-950 text-slate-300 py-14 mt-10">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-8">
+      <div class="text-center md:text-left">
+        <p class="text-3xl font-black italic text-white">DatSan.vn</p>
+        <p class="kinetic-label text-slate-500 mt-2">Premium Football Booking Archive</p>
+      </div>
+      <div class="flex flex-wrap justify-center gap-6 text-xs uppercase tracking-[0.14em]">
+        <a href="/#about" class="hover:text-white transition-colors duration-300">Giới thiệu</a>
+        <a href="/#policy" class="hover:text-white transition-colors duration-300">Điều khoản</a>
+        <a href="/#policy" class="hover:text-white transition-colors duration-300">Bảo mật</a>
+        <a href="/#contact" class="hover:text-white transition-colors duration-300">Liên hệ</a>
+      </div>
     </div>
   </footer>
 
+  <script src="/public/js/analytics.js"></script>
   <script>
-    // Navbar scroll shadow
-    window.addEventListener('scroll', () => {
-      const header = document.querySelector('header');
-      header.classList.toggle('shadow-md', window.scrollY > 10);
-    });
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (menuBtn && mobileMenu) {
+      menuBtn.addEventListener('click', function () {
+        mobileMenu.classList.toggle('hidden');
+      });
+    }
   </script>
 </body>
-
 </html>
