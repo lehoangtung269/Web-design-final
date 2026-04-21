@@ -1,191 +1,99 @@
-<div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
-    <div>
-        <h1 class="text-2xl font-bold tracking-tight text-on-surface">Booking Ledger</h1>
-        <p class="text-sm text-on-surface-variant font-medium mt-1">Manage and review all pitch reservations.</p>
-    </div>
-    <div class="flex items-center gap-3">
-        <button class="flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-colors">
-            <span class="material-symbols-outlined text-sm">calendar_month</span> THIS WEEK
-        </button>
-        <button class="flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg bg-surface-container-highest text-on-surface hover:text-white border border-outline-variant/10 transition-colors">
-            <span class="material-symbols-outlined text-sm">filter_list</span> FILTER
-        </button>
-        <button class="flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg bg-surface-container-highest text-on-surface hover:text-white border border-outline-variant/10 transition-colors">
-            <span class="material-symbols-outlined text-sm">download</span> EXPORT
-        </button>
-    </div>
-</div>
-
-<!-- KPI Grid -->
-<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-    <div class="bg-surface-container p-5 rounded-xl border border-outline-variant/10">
-        <p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2">Total Volume</p>
-        <h3 class="text-3xl font-bold text-on-surface tracking-tight mb-2"><%= stats.totalVolume.toLocaleString('vi-VN') %></h3>
-        <p class="text-xs font-medium text-primary flex items-center gap-1">
-            <span class="material-symbols-outlined text-[14px]">trending_up</span> +12% vs last week
-        </p>
-    </div>
-    
-    <div class="bg-surface-container p-5 rounded-xl border border-outline-variant/10">
-        <p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2">Revenue</p>
-        <h3 class="text-3xl font-bold text-on-surface tracking-tight mb-2"><%= stats.totalRevenue.toLocaleString('vi-VN') %>đ</h3>
-        <p class="text-xs font-medium text-primary flex items-center gap-1">
-            <span class="material-symbols-outlined text-[14px]">trending_up</span> +8% vs last week
-        </p>
-    </div>
-    
-    <div class="bg-surface-container p-5 rounded-xl border border-outline-variant/10 flex flex-col justify-between relative">
-        <div>
-            <p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2">Pending Conf</p>
-            <h3 class="text-3xl font-bold text-on-surface tracking-tight"><%= stats.pendingConf %></h3>
-        </div>
-        <% if (stats.pendingConf > 0) { %>
-            <p class="text-xs font-bold text-error flex items-center gap-1 mt-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-error"></span> Requires attention
-            </p>
-        <% } else { %>
-            <p class="text-xs font-bold text-on-surface-variant flex items-center gap-1 mt-2">
-                All caught up
-            </p>
-        <% } %>
-    </div>
-    
-    <div class="bg-surface-container p-5 rounded-xl border border-outline-variant/10 relative overflow-hidden flex items-center justify-between">
-        <div>
-            <p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2">Pitch Utilization</p>
-            <h3 class="text-3xl font-bold text-on-surface tracking-tight"><%= stats.utilization %>%</h3>
-        </div>
-        <div class="w-12 h-12 rounded-xl border-2 border-primary/20 flex flex-col items-center justify-center relative">
-             <div class="absolute inset-0 bg-primary/10 rounded-xl"></div>
-             <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">stadium</span>
-        </div>
-    </div>
-</div>
-
-<!-- Table Container -->
-<div class="bg-surface-container rounded-xl border border-outline-variant/10 overflow-hidden">
-    <!-- Table Toolbar -->
-    <div class="p-4 border-b border-[#1C2025] flex items-center justify-between">
-        <div class="flex items-center gap-2">
-            <a href="/admin/bookings" class="px-3 py-1.5 text-xs font-bold rounded-md transition-colors <%= currentStatus === 'all' ? 'bg-surface-container-highest text-on-surface' : 'text-on-surface-variant hover:text-white' %>">All Statuses</a>
-            <div class="w-px h-4 bg-outline-variant/30 mx-1"></div>
-            <a href="/admin/bookings?status=pending" class="px-3 py-1.5 text-xs font-bold rounded-md transition-colors flex items-center gap-1.5 <%= currentStatus === 'pending' ? 'bg-surface-container-highest text-on-surface' : 'text-on-surface-variant hover:text-white' %>">
-                <span class="w-2 h-2 rounded-full bg-secondary"></span> Pending
+<div class="space-y-6">
+    <!-- Filter HUD -->
+    <div class="flex flex-col sm:flex-row justify-between items-center gap-4 bg-surface p-4 rounded-2xl ghost-border shadow-ambient">
+        <div class="flex bg-surface-low rounded-xl p-1 ghost-border w-full sm:w-auto">
+            <a href="?status=all" class="flex-1 sm:flex-none text-center px-6 py-2 rounded-lg text-sm font-medium transition-all <%= currentStatus === 'all' ? 'bg-primary/20 text-primary shadow-glow' : 'text-on-surface-variant hover:text-white' %>">All Signals</a>
+            <a href="?status=pending" class="flex-1 sm:flex-none text-center px-6 py-2 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2 <%= currentStatus === 'pending' ? 'bg-warning/20 text-warning shadow-[0_0_15px_rgba(255,209,102,0.2)]' : 'text-on-surface-variant hover:text-white' %>">
+                Pending <% if(stats.pendingConf > 0) { %><span class="bg-warning text-black text-[10px] px-1.5 rounded font-bold"><%= stats.pendingConf %></span><% } %>
             </a>
-            <a href="/admin/bookings?status=confirmed" class="px-3 py-1.5 text-xs font-bold rounded-md transition-colors flex items-center gap-1.5 <%= currentStatus === 'confirmed' ? 'bg-surface-container-highest text-on-surface' : 'text-on-surface-variant hover:text-white' %>">
-                <span class="w-2 h-2 rounded-full bg-primary flex-shrink-0"></span> Confirmed
-            </a>
-            <a href="/admin/bookings?status=rejected" class="px-3 py-1.5 text-xs font-bold rounded-md transition-colors flex items-center gap-1.5 <%= currentStatus === 'rejected' ? 'bg-surface-container-highest text-on-surface' : 'text-on-surface-variant hover:text-white' %>">
-                <span class="w-2 h-2 rounded-full bg-error flex-shrink-0"></span> Rejected
-            </a>
+            <a href="?status=confirmed" class="flex-1 sm:flex-none text-center px-6 py-2 rounded-lg text-sm font-medium transition-all <%= currentStatus === 'confirmed' ? 'bg-primary/20 text-primary shadow-glow' : 'text-on-surface-variant hover:text-white' %>">Confirmed</a>
         </div>
-        <div class="text-xs font-medium text-on-surface-variant hidden md:block">
-            <% if (bookings.length > 0) { %>
-                Showing Page <%= currentPage %> of <%= totalPages %> (Total <%= stats.totalVolume %>)
-            <% } %>
+        
+        <div class="label-sm text-on-surface-variant text-right">
+            Vol: <span class="text-white ml-1"><%= stats.totalVolume %></span> <br/>
+            Rev: <span class="text-primary ml-1"><%= stats.totalRevenue.toLocaleString('vi-VN') %>₫</span>
         </div>
     </div>
 
-    <!-- The actual table -->
-    <% if (bookings.length === 0) { %>
-        <div class="p-12 text-center">
-            <span class="material-symbols-outlined text-4xl text-outline-variant/50 mb-3">receipt_long</span>
-            <p class="text-sm font-medium text-on-surface-variant">No bookings matched this filter.</p>
-        </div>
-    <% } else { %>
-        <table class="w-full text-left border-collapse">
+    <!-- Data Matrix (No-Line Table) -->
+    <div class="bg-surface rounded-3xl p-6 ghost-border shadow-ambient overflow-x-auto">
+        <table class="w-full text-left whitespace-nowrap border-spacing-y-2 border-separate">
             <thead>
-                <tr class="bg-surface-container-low/50 border-b border-[#1C2025]">
-                    <th class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest hidden sm:table-cell w-20">ID</th>
-                    <th class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Customer</th>
-                    <th class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Field</th>
-                    <th class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Date & Time</th>
-                    <th class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Amount</th>
-                    <th class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Status</th>
+                <tr class="!bg-transparent hover:!bg-transparent hover:!translate-y-0">
+                    <th class="px-6 py-4 label-sm text-on-surface-variant font-medium">Transmission ID / Time</th>
+                    <th class="px-6 py-4 label-sm text-on-surface-variant font-medium">Entity</th>
+                    <th class="px-6 py-4 label-sm text-on-surface-variant font-medium">Arena Details</th>
+                    <th class="px-6 py-4 label-sm text-on-surface-variant font-medium text-right">Value</th>
+                    <th class="px-6 py-4 label-sm text-on-surface-variant font-medium text-center">Status</th>
+                    <th class="px-6 py-4 label-sm text-on-surface-variant font-medium text-right">Action</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-[#1C2025]">
-                <% bookings.forEach(function(booking) { 
-                    const initial = booking.user && booking.user.name ? booking.user.name.substring(0,2).toUpperCase() : 'NA';
-                    let statusClass, statusText;
-                    if (booking.status === 'confirmed') {
-                        statusClass = 'border-primary/30 text-primary';
-                        statusText = 'CONFIRMED';
-                    } else if (booking.status === 'pending') {
-                        statusClass = 'border-secondary/30 text-secondary';
-                        statusText = 'PENDING';
-                    } else {
-                        statusClass = 'border-error/30 text-error';
-                        statusText = 'REJECTED';
-                    }
-                %>
-                <tr class="hover:bg-surface-container-high transition-colors group cursor-pointer" onclick="window.location='/admin/bookings/<%= booking._id %>'">
-                    <td class="px-6 py-4 text-xs font-mono text-on-surface-variant hidden sm:table-cell">
-                        #<%= booking._id.toString().substring(18).toUpperCase() %>
-                    </td>
-                    <td class="px-6 py-4">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-secondary-container/20 text-secondary flex items-center justify-center font-bold text-xs ring-1 ring-secondary/30">
-                                <%= initial %>
+            <tbody>
+                <% if (bookings.length > 0) { %>
+                    <% bookings.forEach(booking => { %>
+                        <tr class="group cursor-pointer hover:shadow-ambient" onclick="window.location='/admin/bookings/<%= booking._id %>'">
+                            <td class="px-6 py-5">
+                                <div class="font-mono text-xs text-on-surface-variant mb-1">#<%= booking._id.toString().slice(-8).toUpperCase() %></div>
+                                <div class="text-sm text-white font-medium"><%= booking.date.toLocaleDateString('vi-VN') %></div>
+                                <div class="text-xs text-primary bg-primary/10 inline-block px-2 py-0.5 rounded mt-1 font-mono"><%= booking.startTime %> - <%= booking.endTime %></div>
+                            </td>
+                            <td class="px-6 py-5">
+                                <div class="text-sm font-semibold text-white"><%= booking.user ? booking.user.name : 'Unknown' %></div>
+                                <div class="text-xs text-on-surface-variant mt-1"><%= booking.user ? booking.user.phone : '' %></div>
+                            </td>
+                            <td class="px-6 py-5">
+                                <div class="text-sm text-white"><%= booking.field ? booking.field.name : 'Deleted Arena' %></div>
+                            </td>
+                            <td class="px-6 py-5 text-right">
+                                <div class="text-sm font-bold text-white"><%= booking.totalPrice.toLocaleString('vi-VN') %>₫</div>
+                            </td>
+                            <td class="px-6 py-5 text-center">
+                                <% if (booking.status === 'pending') { %>
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-warning/10 text-warning border border-warning/20">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-warning animate-pulse"></span> Pending
+                                    </span>
+                                <% } else if (booking.status === 'confirmed') { %>
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-primary"></span> Confirmed
+                                    </span>
+                                <% } else { %>
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-danger/10 text-danger border border-danger/20">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-danger"></span> Rejected
+                                    </span>
+                                <% } %>
+                            </td>
+                            <td class="px-6 py-5 text-right">
+                                <button class="w-8 h-8 rounded-full bg-surface-low flex items-center justify-center text-on-surface-variant group-hover:text-white group-hover:bg-primary/20 transition-all hover:shadow-glow">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                </button>
+                            </td>
+                        </tr>
+                    <% }) %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="6" class="px-6 py-12 text-center !bg-transparent">
+                            <div class="inline-flex justify-center items-center w-16 h-16 rounded-full bg-surface-high mb-4">
+                                <svg class="w-8 h-8 text-on-surface-variant" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
                             </div>
-                            <div>
-                                <div class="text-sm font-medium text-on-surface"><%= booking.user ? booking.user.name : 'Unknown User' %></div>
-                                <div class="text-xs text-on-surface-variant truncate w-32 md:w-auto"><%= booking.user ? booking.user.email : '' %></div>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 text-sm font-semibold text-on-surface">
-                        <%= booking.field ? booking.field.name : 'N/A' %>
-                    </td>
-                    <td class="px-6 py-4">
-                        <div class="text-sm font-medium text-on-surface">
-                            <%= booking.date ? new Date(booking.date).toLocaleDateString('en-GB', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A' %>
-                        </div>
-                        <div class="text-xs text-on-surface-variant font-mono">
-                            <%= booking.startTime %> - <%= booking.endTime %>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 font-mono text-sm font-medium text-on-surface">
-                        <%= booking.totalPrice ? booking.totalPrice.toLocaleString('vi-VN') + 'đ' : 'N/A' %>
-                    </td>
-                    <td class="px-6 py-4">
-                        <span class="px-2 py-1 rounded text-[9px] font-bold tracking-widest border <%= statusClass %> bg-transparent">
-                            <%= statusText %>
-                        </span>
-                    </td>
-                </tr>
-                <% }); %>
+                            <h3 class="text-lg font-medium text-white mb-1">No signals detected</h3>
+                            <p class="text-sm text-on-surface-variant">Adjust your parameters to find transmissions.</p>
+                        </td>
+                    </tr>
+                <% } %>
             </tbody>
         </table>
-    <% } %>
 
-    <!-- Pagination Footer -->
-    <% if (totalPages > 1) { %>
-    <div class="p-4 border-t border-[#1C2025] flex justify-between items-center">
-        <a href="/admin/bookings?status=<%= currentStatus %>&page=<%= currentPage > 1 ? currentPage - 1 : 1 %>" 
-           class="text-xs font-bold text-on-surface-variant hover:text-white flex items-center gap-1 uppercase tracking-widest">
-            <span class="material-symbols-outlined text-sm">chevron_left</span> PREV
-        </a>
-        <div class="flex items-center gap-2 relative">
-            <!-- Center pagination logic inside -->
-            <div class="flex gap-1 absolute left-1/2 -translate-x-1/2">
-                <% for (let i = 1; i <= totalPages; i++) { 
-                    if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
-                %>
-                    <a href="/admin/bookings?status=<%= currentStatus %>&page=<%= i %>" 
-                       class="w-6 h-6 flex items-center justify-center rounded text-xs font-bold <%= i === currentPage ? 'bg-primary text-on-primary' : 'text-on-surface-variant hover:bg-surface-container-highest' %>">
+        <!-- Pagination HUD -->
+        <% if (totalPages > 1) { %>
+            <div class="flex justify-center items-center gap-2 mt-8 pt-4">
+                <% for (let i = 1; i <= totalPages; i++) { %>
+                    <a href="?status=<%= currentStatus %>&page=<%= i %>" 
+                       class="w-10 h-10 flex items-center justify-center rounded-xl text-sm font-medium transition-all ghost-border
+                              <%= currentPage === i ? 'bg-primary/20 text-primary shadow-glow' : 'bg-surface-lowest text-on-surface-variant hover:bg-surface-high hover:text-white' %>">
                         <%= i %>
                     </a>
-                <%  } else if (i === currentPage - 2 || i === currentPage + 2) { %>
-                    <span class="text-on-surface-variant text-xs">...</span>
-                <%  }
-                 } %>
+                <% } %>
             </div>
-        </div>
-        <a href="/admin/bookings?status=<%= currentStatus %>&page=<%= currentPage < totalPages ? currentPage + 1 : totalPages %>" 
-           class="text-xs font-bold text-on-surface-variant hover:text-white flex items-center gap-1 uppercase tracking-widest">
-            NEXT <span class="material-symbols-outlined text-sm">chevron_right</span>
-        </a>
+        <% } %>
     </div>
-    <% } %>
 </div>

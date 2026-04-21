@@ -1,66 +1,51 @@
-<!-- SideNavBar Anchor -->
-<aside class="h-screen w-64 fixed left-0 top-0 border-r border-[#1C2025] bg-[#0A0E13] flex flex-col p-4 gap-2 z-50 overflow-y-auto hidden lg:flex">
-    <div class="mb-8 px-2 flex items-center gap-3">
-        <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-            <span class="material-symbols-outlined text-on-primary text-xl" style="font-variation-settings: 'FILL' 1;">sports_soccer</span>
-        </div>
-        <div>
-            <h1 class="text-lg font-bold tracking-tighter text-[#4EDE63]">Kinetic Pitch</h1>
-            <p class="text-[10px] font-medium tracking-widest text-on-surface-variant uppercase">Admin Panel</p>
-        </div>
+<aside class="w-72 h-screen glass-panel flex flex-col ghost-border relative z-20 shrink-0">
+    <!-- Brand HUD -->
+    <div class="h-20 flex items-center px-8 shrink-0">
+        <a href="/" class="flex items-center gap-3 group">
+            <div class="w-10 h-10 rounded-xl bg-surface flex items-center justify-center ghost-border group-hover:shadow-glow transition-all duration-300">
+                <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+            </div>
+            <span class="headline-md text-xl tracking-tight text-white group-hover:text-primary transition-colors">Kinetic<span class="font-light text-on-surface-variant">HUD</span></span>
+        </a>
     </div>
-    
-    <nav class="flex-1 space-y-1">
-        <!-- Overview -->
-        <% const isDashboard = typeof activeNav !== 'undefined' && activeNav === 'dashboard'; %>
-        <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 <%= isDashboard ? 'text-[#4EDE63] bg-[#1C2025]/50 font-semibold scale-[0.98]' : 'text-[#BBCABF] hover:text-white hover:bg-[#1C2025]' %>" href="/admin/dashboard">
-            <span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
-            <span class="font-['Inter'] text-sm font-medium tracking-tight">Overview</span>
-        </a>
+
+    <!-- Navigation -->
+    <nav class="flex-1 px-4 py-8 space-y-2 overflow-y-auto">
+        <div class="px-4 mb-4 label-sm text-on-surface-variant">Core Control</div>
         
-        <!-- Bookings -->
-        <% const isBookings = typeof activeNav !== 'undefined' && activeNav === 'bookings'; %>
-        <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 <%= isBookings ? 'text-[#4EDE63] bg-[#1C2025]/50 font-semibold scale-[0.98]' : 'text-[#BBCABF] hover:text-white hover:bg-[#1C2025]' %>" href="/admin/bookings">
-            <span class="material-symbols-outlined" data-icon="confirmation_number">confirmation_number</span>
-            <span class="font-['Inter'] text-sm font-medium tracking-tight">Bookings</span>
+        <a href="/admin/dashboard" class="flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 <%= activeNav === 'dashboard' ? 'bg-gradient-to-r from-primary/20 to-transparent text-primary shadow-glow' : 'text-on-surface-variant hover:bg-surface hover:text-on-surface' %>">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+            <span class="font-medium tracking-wide">Dashboard</span>
         </a>
 
-        <!-- Schedule -->
-        <% const isSchedule = typeof activeNav !== 'undefined' && activeNav === 'schedule'; %>
-        <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 <%= isSchedule ? 'text-[#4EDE63] bg-[#1C2025]/50 font-semibold scale-[0.98]' : 'text-[#BBCABF] hover:text-white hover:bg-[#1C2025]' %>" href="/admin/schedule">
-            <span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
-            <span class="font-['Inter'] text-sm font-medium tracking-tight">Pitch Schedule</span>
+        <a href="/admin/schedule" class="flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 <%= activeNav === 'schedule' ? 'bg-gradient-to-r from-primary/20 to-transparent text-primary shadow-glow' : 'text-on-surface-variant hover:bg-surface hover:text-on-surface' %>">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            <span class="font-medium tracking-wide">Pitch Visualizer</span>
         </a>
 
-        <!-- Fields -->
-        <% const isFields = typeof activeNav !== 'undefined' && activeNav === 'fields'; %>
-        <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 <%= isFields ? 'text-[#4EDE63] bg-[#1C2025]/50 font-semibold scale-[0.98]' : 'text-[#BBCABF] hover:text-white hover:bg-[#1C2025]' %>" href="/admin/fields">
-            <span class="material-symbols-outlined" data-icon="stadium">stadium</span>
-            <span class="font-['Inter'] text-sm font-medium tracking-tight">Pitches & Fields</span>
+        <a href="/admin/bookings" class="flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 <%= activeNav === 'bookings' ? 'bg-gradient-to-r from-primary/20 to-transparent text-primary shadow-glow' : 'text-on-surface-variant hover:bg-surface hover:text-on-surface' %>">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+            <span class="font-medium tracking-wide">Transmissions</span>
         </a>
-        
-        <!-- Customers -->
-        <% const isUsers = typeof activeNav !== 'undefined' && activeNav === 'users'; %>
-        <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 <%= isUsers ? 'text-[#4EDE63] bg-[#1C2025]/50 font-semibold scale-[0.98]' : 'text-[#BBCABF] hover:text-white hover:bg-[#1C2025]' %>" href="/admin/users">
-            <span class="material-symbols-outlined" data-icon="group">group</span>
-            <span class="font-['Inter'] text-sm font-medium tracking-tight">Customers</span>
+
+        <div class="px-4 mt-8 mb-4 label-sm text-on-surface-variant">Asset Matrix</div>
+
+        <a href="/admin/fields" class="flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 <%= activeNav === 'fields' ? 'bg-gradient-to-r from-primary/20 to-transparent text-primary shadow-glow' : 'text-on-surface-variant hover:bg-surface hover:text-on-surface' %>">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <span class="font-medium tracking-wide">Arenas</span>
+        </a>
+
+        <a href="/admin/users" class="flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 <%= activeNav === 'users' ? 'bg-gradient-to-r from-primary/20 to-transparent text-primary shadow-glow' : 'text-on-surface-variant hover:bg-surface hover:text-on-surface' %>">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+            <span class="font-medium tracking-wide">Entities</span>
         </a>
     </nav>
-    
-    <div class="mt-auto pt-4 space-y-1 border-t border-[#1C2025]">
-        <div class="px-3 py-2 mb-2">
-            <div class="flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-                <span class="text-[10px] text-on-surface-variant font-medium">System Status: Active</span>
-            </div>
-        </div>
-        <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#BBCABF] hover:text-white hover:bg-[#1C2025] transition-all duration-150" href="/">
-            <span class="material-symbols-outlined" data-icon="home">home</span>
-            <span class="font-['Inter'] text-sm font-medium tracking-tight">Back to Web</span>
-        </a>
-        <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-error/80 hover:text-error hover:bg-[#1C2025] transition-all duration-150" href="/auth/logout">
-            <span class="material-symbols-outlined" data-icon="logout">logout</span>
-            <span class="font-['Inter'] text-sm font-medium tracking-tight">Logout</span>
+
+    <!-- Logout Action -->
+    <div class="p-4 shrink-0">
+        <a href="/auth/logout" class="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-surface-low hover:bg-danger/10 text-on-surface-variant hover:text-danger hover:shadow-[0_0_15px_rgba(255,76,76,0.2)] transition-all duration-300">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+            <span class="font-semibold text-sm">Terminate Session</span>
         </a>
     </div>
 </aside>

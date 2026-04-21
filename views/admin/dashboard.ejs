@@ -1,213 +1,113 @@
-<div class="grid grid-cols-12 gap-8">
-    <!-- Left Column (75%) -->
-    <div class="col-span-12 lg:col-span-9 space-y-12">
-        
-        <!-- KPI Bento Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div class="bg-surface p-6 relative group overflow-hidden">
-                <div class="absolute inset-0 bg-surface-container transition-transform duration-300 transform scale-y-0 origin-bottom group-hover:scale-y-100 z-0"></div>
-                <div class="relative z-10">
-                    <div class="flex justify-between items-start mb-6">
-                        <span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">stadium</span>
-                    </div>
-                    <p class="label-sm text-on-surface-variant mb-2">TOTAL FIELDS</p>
-                    <h3 class="headline-lg text-on-surface"><%= stats.totalFields %></h3>
-                </div>
-            </div>
-            
-            <div class="bg-surface-container p-6 relative group overflow-hidden">
-                <div class="absolute inset-0 bg-surface-container-high transition-transform duration-300 transform scale-y-0 origin-bottom group-hover:scale-y-100 z-0"></div>
-                <div class="relative z-10">
-                    <div class="flex justify-between items-start mb-6">
-                        <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">event_available</span>
-                        <% if (stats.pendingBookings > 0) { %>
-                            <span class="label-sm text-background bg-primary px-3 py-1 ghost-border"><%= stats.pendingBookings %> PENDING</span>
-                        <% } %>
-                    </div>
-                    <p class="label-sm text-on-surface-variant mb-2">TOTAL BOOKINGS</p>
-                    <h3 class="headline-lg text-on-surface"><%= stats.totalBookings %></h3>
-                </div>
-            </div>
-            
-            <div class="bg-surface p-6 relative group overflow-hidden">
-                <div class="absolute inset-0 bg-surface-container transition-transform duration-300 transform scale-y-0 origin-bottom group-hover:scale-y-100 z-0"></div>
-                <div class="relative z-10">
-                    <div class="flex justify-between items-start mb-6">
-                        <span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">group</span>
-                    </div>
-                    <p class="label-sm text-on-surface-variant mb-2">TOTAL USERS</p>
-                    <h3 class="headline-lg text-on-surface"><%= stats.totalUsers %></h3>
-                </div>
-            </div>
-            
-            <div class="bg-surface-container p-6 relative group overflow-hidden">
-                <div class="absolute inset-0 bg-surface-container-high transition-transform duration-300 transform scale-y-0 origin-bottom group-hover:scale-y-100 z-0"></div>
-                <div class="relative z-10">
-                    <div class="flex justify-between items-start mb-6">
-                        <span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">pending_actions</span>
-                    </div>
-                    <p class="label-sm text-on-surface-variant mb-2">CRITICAL ACTIONS</p>
-                    <h3 class="headline-lg text-error"><%= stats.pendingBookings %></h3>
-                </div>
-            </div>
-        </div>
-
-        <!-- Booking Trends Chart (Visual Mock) -->
-        <div class="bg-surface-container p-8 relative">
-            <div class="flex justify-between items-center mb-10">
-                <div>
-                    <h2 class="headline-sm text-on-surface mb-1">Utilization Matrix</h2>
-                    <p class="label-md text-on-surface-variant">REAL-TIME PITCH ANALYTICS</p>
-                </div>
-                <div class="flex gap-4">
-                    <a href="/admin/dashboard?range=7" class="label-sm px-4 py-2 <%= currentRange === 7 ? 'bg-surface-container-highest text-primary ghost-border' : 'bg-surface-container-low text-on-surface-variant hover:text-white' %> transition-colors">7 DAYS</a>
-                    <a href="/admin/dashboard?range=30" class="label-sm px-4 py-2 <%= currentRange === 30 ? 'bg-surface-container-highest text-primary ghost-border' : 'bg-surface-container-low text-on-surface-variant hover:text-white' %> transition-colors">30 DAYS</a>
-                </div>
-            </div>
-            
-            <div class="h-48 flex items-end justify-between gap-[2px] px-2 border-b border-surface-container-highest pb-2">
-                <% if (typeof chartData !== 'undefined' && chartData.length > 0) { 
-                    chartData.forEach((point, i) => { 
-                        const heightPercent = point.count > 0 ? (point.count / maxBookings) * 100 : 2;
-                        const isToday = i === chartData.length - 1;
-                %>
-                    <div class="flex-1 bg-surface-container-highest relative group/bar transition-all hover:bg-outline-variant" style="height: <%= heightPercent %>%;">
-                        <div class="absolute inset-0 <%= isToday && point.count > 0 ? 'bg-primary' : point.count === 0 ? 'bg-surface-container-lowest' : 'bg-secondary/40 group-hover/bar:bg-secondary' %> transition-all"></div>
-                        <!-- Tooltip -->
-                        <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 opacity-0 group-hover/bar:opacity-100 transition-opacity pointer-events-none z-10 w-max bg-surface-container-highest text-primary label-sm px-3 py-2 ambient-shadow">
-                            <%= point.count %> OPS<br><span class="text-on-surface-variant"><%= point.date %></span>
-                        </div>
-                    </div>
-                <% 
-                    });
-                } else { 
-                %>
-                    <div class="w-full flex items-center justify-center h-full text-on-surface-variant label-md">NO DATA IN REGION</div>
-                <% } %>
-            </div>
-            <div class="flex justify-between mt-3 px-2 label-sm text-outline-variant">
-                <% if (typeof chartData !== 'undefined' && chartData.length > 0) { 
-                    const step = chartData.length > 15 ? Math.ceil(chartData.length / 5) : 1;
-                    chartData.forEach((point, i) => {
-                        if (i % step === 0 || i === chartData.length - 1) {
-                %>
-                    <span><%= point.label %></span>
-                <%      } else if (chartData.length <= 15) { %>
-                    <span class="opacity-0 sm:opacity-100"><%= point.label %></span>
-                <%      }
-                    });
-                } %>
-            </div>
-        </div>
-
-        <!-- Booking List Module (No-Line Implementation) -->
-        <div class="bg-surface">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="headline-sm text-on-surface">Recent Logistics</h2>
-                <a href="/admin/bookings" class="label-sm text-primary hover:text-white transition-colors">VIEW ALL OPS</a>
-            </div>
-            
-            <% if (typeof recentBookings !== 'undefined' && recentBookings.length > 0) { %>
-                <div class="flex flex-col gap-3">
-                    <!-- Invisible Header explicitly for alignment in Tactical Mode -->
-                    <div class="hidden md:flex px-6 py-2 label-sm text-on-surface-variant">
-                        <div class="w-24">OP ID</div>
-                        <div class="flex-1">CUSTOMER</div>
-                        <div class="flex-1">PITCH</div>
-                        <div class="flex-1">TIME WINDOW</div>
-                        <div class="w-28 text-right">STATUS</div>
-                    </div>
-                    
-                    <% recentBookings.forEach(booking => { %>
-                    <div class="bg-surface-container hover:bg-surface-container-high transition-colors p-4 md:px-6 md:py-4 flex flex-col md:flex-row items-start md:items-center ghost-border cursor-pointer" onclick="window.location='/admin/bookings/<%= booking._id %>';">
-                        <div class="w-24 label-sm text-on-surface-variant mb-2 md:mb-0">
-                            #<%= booking._id.toString().substring(booking._id.toString().length - 6).toUpperCase() %>
-                        </div>
-                        <div class="flex-1 mb-2 md:mb-0 text-on-surface font-medium">
-                            <%= booking.user ? booking.user.name : 'Unknown Operator' %>
-                        </div>
-                        <div class="flex-1 mb-2 md:mb-0 text-secondary label-md">
-                            <%= booking.field ? booking.field.name : 'Unknown Sector' %>
-                        </div>
-                        <div class="flex-1 mb-3 md:mb-0 label-sm text-on-surface-variant">
-                            <%= booking.startTime %> — <%= booking.endTime %>
-                        </div>
-                        <div class="w-28 flex justify-start md:justify-end">
-                            <% if (booking.status === 'confirmed') { %>
-                                <span class="label-sm bg-primary/20 text-primary px-3 py-1">CLEARED</span>
-                            <% } else if (booking.status === 'pending') { %>
-                                <span class="label-sm bg-secondary/20 text-secondary px-3 py-1">PENDING</span>
-                            <% } else { %>
-                                <span class="label-sm bg-error/20 text-error px-3 py-1">REJECTED</span>
-                            <% } %>
-                        </div>
-                    </div>
-                    <% }) %>
-                </div>
-            <% } else { %>
-            <div class="p-8 text-center text-on-surface-variant label-md bg-surface-container">
-                NO ACTIVE OPERATIONS FOUND.
-            </div>
-            <% } %>
+<!-- Telemetry Modules (Stat Cards) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="bg-surface rounded-3xl p-6 ghost-border relative overflow-hidden group hover:-translate-y-1 hover:bg-surface-high transition-all duration-500 shadow-ambient hover:shadow-glow">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors"></div>
+        <div class="label-sm text-on-surface-variant mb-2">Total Entities</div>
+        <div class="headline-lg text-4xl text-white"><%= stats.totalUsers %></div>
+        <div class="mt-4 flex items-center gap-2 text-xs text-primary bg-primary/10 w-fit px-2 py-1 rounded-md">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+            Live tracking active
         </div>
     </div>
 
-    <!-- Right Column (25%) -->
-    <aside class="col-span-12 lg:col-span-3 space-y-6">
-        
-        <!-- System Tip / Context Card -->
-        <div class="bg-surface-container-lowest ghost-border p-6 relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-16 h-16 bg-primary opacity-20 blur-[30px]"></div>
-            <div class="flex items-center gap-3 text-primary mb-4 relative z-10">
-                <span class="material-symbols-outlined text-lg">radar</span>
-                <span class="label-sm">TACTICAL HUD</span>
-            </div>
-            <p class="text-on-surface-variant text-sm leading-relaxed relative z-10">
-                You have <strong class="text-error"><%= stats.pendingBookings %> pending</strong> operations. Maintain response latency under 15 minutes to guarantee peak retention velocity.
-            </p>
-        </div>
-        
-        <!-- Quick Actions -->
-        <div class="bg-surface p-6 ghost-border">
-            <h2 class="label-sm text-on-surface-variant mb-6">OPERATIONAL DIRECTIVES</h2>
-            
-            <div class="flex flex-col gap-3">
-                <a href="/admin/fields/create" class="flex items-center gap-4 bg-surface-container p-4 hover:bg-surface-container-high transition-colors text-on-surface label-md group">
-                    <span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">add_box</span>
-                    NEW SECTOR
-                </a>
-                
-                <a href="/admin/bookings?status=pending" class="flex items-center gap-4 bg-surface-container p-4 hover:bg-surface-container-high transition-colors text-on-surface label-md group">
-                    <span class="material-symbols-outlined text-secondary group-hover:scale-110 transition-transform">fact_check</span>
-                    REVIEW QUEUE
-                </a>
-                
-                <a href="/admin/users" class="flex items-center gap-4 bg-surface-container p-4 hover:bg-surface-container-high transition-colors text-on-surface label-md group">
-                    <span class="material-symbols-outlined text-outline-variant group-hover:scale-110 transition-transform">manage_accounts</span>
-                    OPERATOR COMM
-                </a>
-            </div>
-        </div>
+    <div class="bg-surface rounded-3xl p-6 ghost-border relative overflow-hidden group hover:-translate-y-1 hover:bg-surface-high transition-all duration-500 shadow-ambient hover:shadow-glow">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors"></div>
+        <div class="label-sm text-on-surface-variant mb-2">Volume Processed</div>
+        <div class="headline-lg text-4xl text-white"><%= stats.totalBookings %></div>
+    </div>
 
-        <!-- Live Feed -->
-        <div class="bg-surface p-6 ghost-border">
-            <h2 class="label-sm text-on-surface-variant mb-6">LIVE TELEMETRY</h2>
-            <div class="space-y-6 relative before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[2px] before:bg-surface-container-high">
-                
-                <div class="relative pl-8">
-                    <div class="absolute left-2 top-1.5 w-2 h-2 rounded-full bg-primary ring-4 ring-surface"></div>
-                    <p class="label-sm text-primary mb-1">T-00:00:01</p>
-                    <p class="text-sm font-medium text-on-surface-variant">Kinetic HUD <span class="text-on-surface">ONLINE</span></p>
-                </div>
-                
-                <div class="relative pl-8">
-                    <div class="absolute left-2 top-1.5 w-2 h-2 rounded-full bg-secondary ring-4 ring-surface"></div>
-                    <p class="label-sm text-on-surface-variant mb-1">T-00:15:00</p>
-                    <p class="text-sm font-medium text-on-surface-variant">Data sync <span class="text-on-surface">success</span></p>
-                </div>
-                
+    <div class="bg-surface rounded-3xl p-6 ghost-border relative overflow-hidden group hover:-translate-y-1 hover:bg-surface-high transition-all duration-500 shadow-ambient hover:shadow-glow">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-warning/5 rounded-full blur-2xl group-hover:bg-warning/10 transition-colors"></div>
+        <div class="label-sm text-on-surface-variant mb-2 text-warning">Pending Signals</div>
+        <div class="headline-lg text-4xl text-warning"><%= stats.pendingBookings %></div>
+        <a href="/admin/bookings?status=pending" class="absolute bottom-6 right-6 text-warning opacity-0 group-hover:opacity-100 transition-opacity">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+        </a>
+    </div>
+
+    <div class="bg-surface rounded-3xl p-6 ghost-border relative overflow-hidden group hover:-translate-y-1 hover:bg-surface-high transition-all duration-500 shadow-ambient hover:shadow-glow">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors"></div>
+        <div class="label-sm text-on-surface-variant mb-2">Active Arenas</div>
+        <div class="headline-lg text-4xl text-white"><%= stats.totalFields %></div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
+    <!-- Signal Activity Chart (No-Line CSS Graph) -->
+    <div class="lg:col-span-2 bg-surface rounded-3xl p-8 ghost-border shadow-ambient flex flex-col">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="headline-md text-xl">Signal Activity (<%= currentRange %> Days)</h2>
+            <div class="flex gap-2 bg-surface-low p-1 rounded-xl ghost-border">
+                <a href="?range=7" class="px-4 py-1.5 rounded-lg text-sm font-medium transition-colors <%= currentRange === 7 ? 'bg-primary/20 text-primary' : 'text-on-surface-variant hover:text-white' %>">7D</a>
+                <a href="?range=30" class="px-4 py-1.5 rounded-lg text-sm font-medium transition-colors <%= currentRange === 30 ? 'bg-primary/20 text-primary' : 'text-on-surface-variant hover:text-white' %>">30D</a>
             </div>
         </div>
         
-    </aside>
+        <div class="flex-1 flex items-end justify-between gap-2 h-48 relative pt-4">
+            <!-- Ghost grid lines -->
+            <div class="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-10">
+                <div class="h-px w-full bg-white"></div>
+                <div class="h-px w-full bg-white"></div>
+                <div class="h-px w-full bg-white"></div>
+            </div>
+            
+            <% chartData.forEach(data => { 
+                const heightPercent = (data.count / maxBookings) * 100;
+            %>
+                <div class="flex flex-col items-center flex-1 group z-10">
+                    <div class="w-full relative flex justify-center h-full items-end">
+                        <div class="w-full max-w-[24px] bg-surface-high rounded-t-sm transition-all duration-500 group-hover:bg-primary relative" style="height: <%= heightPercent === 0 ? 2 : heightPercent %>%">
+                            <% if(data.count > 0) { %>
+                                <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-surface-lowest text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity ghost-border whitespace-nowrap z-20">
+                                    <%= data.count %> units
+                                </div>
+                            <% } %>
+                        </div>
+                    </div>
+                    <% if (currentRange <= 14) { %>
+                        <span class="text-[10px] text-on-surface-variant mt-3 whitespace-nowrap -rotate-45 block origin-top-left"><%= data.label %></span>
+                    <% } %>
+                </div>
+            <% }) %>
+        </div>
+    </div>
+
+    <!-- Recent Transmissions List (No-Line implementation) -->
+    <div class="bg-surface rounded-3xl p-8 ghost-border shadow-ambient flex flex-col">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="headline-md text-xl">Recent Transmissions</h2>
+            <a href="/admin/bookings" class="label-sm text-primary hover:text-white transition-colors">View All</a>
+        </div>
+        
+        <div class="flex flex-col gap-3 flex-1">
+            <% if (recentBookings && recentBookings.length > 0) { %>
+                <% recentBookings.forEach(booking => { %>
+                    <a href="/admin/bookings/<%= booking._id %>" class="bg-surface-lowest p-4 rounded-2xl flex flex-col gap-2 hover:bg-surface-high hover:translate-x-1 transition-all group">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="font-semibold text-white block group-hover:text-primary transition-colors"><%= booking.user ? booking.user.name : 'Unknown Entity' %></span>
+                                <span class="text-xs text-on-surface-variant uppercase tracking-wider"><%= booking.field ? booking.field.name : 'Unknown Arena' %></span>
+                            </div>
+                            <span class="text-xs font-bold font-mono text-on-surface-variant bg-surface px-2 py-1 rounded"><%= booking.startTime %></span>
+                        </div>
+                        <div class="flex justify-between items-end mt-1">
+                            <span class="text-sm text-white font-medium"><%= booking.totalPrice.toLocaleString('vi-VN') %>₫</span>
+                            <% if (booking.status === 'pending') { %>
+                                <span class="w-2 h-2 rounded-full bg-warning animate-pulse shadow-[0_0_8px_#FFD166]"></span>
+                            <% } else if (booking.status === 'confirmed') { %>
+                                <span class="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_#4EDE63]"></span>
+                            <% } else { %>
+                                <span class="w-2 h-2 rounded-full bg-danger"></span>
+                            <% } %>
+                        </div>
+                    </a>
+                <% }) %>
+            <% } else { %>
+                <div class="flex-1 flex flex-col items-center justify-center text-on-surface-variant opacity-50">
+                    <svg class="w-12 h-12 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
+                    <span class="text-sm tracking-wide uppercase">No Signals</span>
+                </div>
+            <% } %>
+        </div>
+    </div>
 </div>

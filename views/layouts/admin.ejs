@@ -1,153 +1,146 @@
 <!DOCTYPE html>
-<html class="dark" lang="vi">
+<html lang="vi">
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title><%= title %> | Kinetic Admin</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #101419;
-            color: #ffffff;
-        }
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-            vertical-align: middle;
-        }
-        
-        /* Tactical HUD Scrollbar */
-        ::-webkit-scrollbar {
-            width: 4px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0A0E13;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #1C2025;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #4EDE63;
-        }
-
-        /* Typography Presets */
-        .headline-lg {
-            font-size: 2.25rem;
-            letter-spacing: -0.04em;
-            font-weight: 700;
-        }
-        .headline-sm {
-            font-size: 1.5rem;
-            letter-spacing: -0.02em;
-            font-weight: 700;
-        }
-        .label-sm {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            font-weight: 700;
-        }
-        .label-md {
-            font-size: 0.875rem;
-            letter-spacing: 0.02em;
-            font-weight: 500;
-        }
-
-        /* Component Utils */
-        .ghost-border {
-            border: 1px solid rgba(134, 148, 138, 0.15);
-        }
-        .ambient-shadow {
-            box-shadow: 0 12px 40px -10px rgba(0, 0, 0, 0.5);
-        }
-        .primary-gradient-text {
-            background: linear-gradient(135deg, #4EDE63, #10B981);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .input-tactical {
-            background-color: #1A1F26;
-            border: none;
-            transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .input-tactical:focus {
-            outline: none;
-            border: 1px solid rgba(134, 148, 138, 0.3);
-            box-shadow: 0 0 0 2px rgba(78, 222, 163, 0.1);
-        }
-    </style>
-    <script id="tailwind-config">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> | Kinetic Pitch Admin</title>
+    
+    <!-- Google Fonts: Inter exclusively -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS (CDN for setup, use build tool in production) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
         tailwind.config = {
-            darkMode: "class",
             theme: {
                 extend: {
-                    colors: {
-                        background: "#101419",
-                        surface: "#101419",
-                        "surface-container-lowest": "#0A0E13",
-                        "surface-container": "#1C2025",
-                        "surface-container-high": "#262A30",
-                        "surface-container-highest": "#323840",
-                        primary: "#4EDE63",
-                        "primary-container": "#10B981",
-                        "on-primary": "#003824",
-                        secondary: "#ADC6FF",
-                        "on-surface": "#ffffff",
-                        "on-surface-variant": "#BBCABF",
-                        "outline-variant": "rgba(134, 148, 138, 0.15)",
-                        error: "#FF5449"
-                    },
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif']
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        background: '#0A0D10', // Deepest atmospheric black
+                        'surface-lowest': '#101419', // Deep charcoal
+                        'surface-low': '#161B22',
+                        surface: '#1C2025', // Main component surface
+                        'surface-high': '#262A30', // Hover state surface
+                        primary: '#4EDE63', // Tactical Green
+                        'primary-glow': 'rgba(78, 222, 99, 0.15)',
+                        'on-surface': '#FFFFFF',
+                        'on-surface-variant': '#8B949E', // Gray text
+                        danger: '#FF4C4C',
+                        warning: '#FFD166'
+                    },
+                    boxShadow: {
+                        'ambient': '0 12px 40px -10px rgba(0, 0, 0, 0.5)',
+                        'glow': '0 0 20px rgba(78, 222, 99, 0.2)',
                     }
                 }
             }
         }
     </script>
+
+    <style>
+        /* Typography Matrix */
+        body { font-family: 'Inter', sans-serif; background-color: #0A0D10; color: #FFFFFF; }
+        .headline-lg { font-weight: 800; letter-spacing: -0.04em; }
+        .headline-md { font-weight: 700; letter-spacing: -0.02em; }
+        .label-sm { font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; font-size: 0.75rem; }
+        
+        /* Tactical Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #262A30; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #4EDE63; }
+
+        /* Structural Utilities */
+        .glass-panel {
+            background: rgba(28, 32, 37, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        
+        .ghost-border {
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+        }
+        
+        .ghost-border-focus:focus-within {
+            box-shadow: inset 0 0 0 1px #4EDE63, 0 0 20px rgba(78, 222, 99, 0.2);
+            outline: none;
+        }
+
+        /* No-Line Table/List Reset */
+        table { border-collapse: separate; border-spacing: 0 8px; }
+        tr { background-color: #1C2025; transition: all 0.3s ease; }
+        tr:hover { background-color: #262A30; transform: translateY(-1px); }
+        td:first-child, th:first-child { border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
+        td:last-child, th:last-child { border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
+    </style>
 </head>
-<body class="text-on-surface overflow-x-hidden bg-background min-h-screen">
-    <!-- SideNavBar Anchor -->
-    <%- include('../admin/partials/sidebar', { activeNav: typeof activeNav !=='undefined' ? activeNav : '' }) %>
+<body class="bg-background text-on-surface antialiased h-screen overflow-hidden flex selection:bg-primary selection:text-black">
 
-    <!-- TopNavBar -->
-    <header class="sticky top-0 z-40 lg:ml-64 w-full lg:w-[calc(100%-16rem)] flex justify-between items-center h-20 px-10 bg-background/80 backdrop-blur-[20px]">
-        <div class="flex items-center w-full max-w-lg">
-            <div class="relative w-full">
-                <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
-                <input class="w-full input-tactical rounded-md pl-12 pr-4 py-3 text-sm text-on-surface placeholder-on-surface-variant/50" placeholder="Search operations, bookings, or intel..." type="text"/>
+    <!-- HUD Sidebar -->
+    <%- include('../admin/partials/sidebar') %>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col h-screen overflow-hidden relative z-0">
+        <!-- Top HUD Bar -->
+        <header class="h-20 px-8 flex justify-between items-center glass-panel ghost-border z-10 shrink-0">
+            <div>
+                <h1 class="text-2xl headline-md text-on-surface flex items-center gap-3">
+                    <% if (typeof pageIcon !== 'undefined') { %><span class="text-primary"><%- pageIcon %></span><% } %>
+                    <%= typeof pageTitle !== 'undefined' ? pageTitle : title %>
+                </h1>
             </div>
-        </div>
-        <div class="flex items-center gap-6">
-            <div class="flex items-center gap-6 text-on-surface-variant">
-                <button class="material-symbols-outlined hover:text-primary transition-colors duration-150">notifications</button>
-                <div class="h-5 w-px bg-on-surface-variant/20"></div>
-                <button class="flex items-center gap-3 hover:text-white transition-colors duration-150 group">
-                    <div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
-                        <span class="material-symbols-outlined text-[18px]">admin_panel_settings</span>
+            <div class="flex items-center gap-6">
+                <% if (typeof topbarRight !== 'undefined') { %>
+                    <div class="text-on-surface-variant"><%- topbarRight %></div>
+                <% } %>
+                <div class="flex items-center gap-3 bg-surface-lowest py-2 px-4 rounded-full ghost-border">
+                    <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold shadow-glow">
+                        <%= currentUser.name.charAt(0) %>
                     </div>
-                    <span class="text-sm font-bold tracking-wide"><%= typeof currentUser !== 'undefined' && currentUser ? currentUser.name : 'Tactical Admin' %></span>
-                </button>
+                    <div class="flex flex-col">
+                        <span class="text-sm font-bold text-on-surface"><%= currentUser.name %></span>
+                        <span class="text-[10px] uppercase tracking-wider text-primary">System Admin</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Flash Messages Overlay -->
+        <% if (success && success.length > 0) { %>
+            <div class="absolute top-24 right-8 z-50 bg-primary/10 border border-primary text-primary px-6 py-4 rounded-xl shadow-glow backdrop-blur-md animate-fade-in-down flex items-center gap-3">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                <span class="font-medium"><%= success %></span>
+            </div>
+        <% } %>
+        <% if (error && error.length > 0) { %>
+            <div class="absolute top-24 right-8 z-50 bg-danger/10 border border-danger text-danger px-6 py-4 rounded-xl shadow-ambient backdrop-blur-md animate-fade-in-down flex items-center gap-3">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span class="font-medium"><%= error %></span>
+            </div>
+        <% } %>
+
+        <!-- Scrollable Canvas -->
+        <div class="flex-1 overflow-y-auto p-8 scroll-smooth">
+            <div class="max-w-7xl mx-auto space-y-8 pb-20">
+                <%- body %>
             </div>
         </div>
-    </header>
-
-    <!-- Main Workspace Area -->
-    <main class="lg:ml-64 p-10 pt-4">
-        <% if (typeof error !=='undefined' && error.length > 0) { %>
-            <div class="mb-6 px-5 py-4 rounded-md bg-error/10 ghost-border text-error text-sm font-medium flex items-center gap-3">
-                <span class="material-symbols-outlined text-[18px]">warning</span> <%= error[0] %>
-            </div>
-        <% } %>
-        <% if (typeof success !=='undefined' && success.length > 0) { %>
-            <div class="mb-6 px-5 py-4 rounded-md bg-primary/10 ghost-border text-primary text-sm font-medium flex items-center gap-3">
-                <span class="material-symbols-outlined text-[18px]">check_circle</span> <%= success[0] %>
-            </div>
-        <% } %>
-
-        <%- body %>
     </main>
+
+    <script>
+        // Auto-hide flash messages
+        setTimeout(() => {
+            const alerts = document.querySelectorAll('.animate-fade-in-down');
+            alerts.forEach(alert => {
+                alert.style.opacity = '0';
+                alert.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => alert.remove(), 500);
+            });
+        }, 4000);
+    </script>
 </body>
 </html>
