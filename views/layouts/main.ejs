@@ -65,8 +65,42 @@
         <% if (typeof currentUser !== 'undefined' && currentUser) { %>
           <% if (currentUser.role === 'admin') { %><a href="/admin/dashboard" class="text-xs font-semibold rounded-full px-4 py-2 bg-surface-container-low text-primary">Admin</a><% } %>
           <% if (currentUser.role === 'field_owner') { %><a href="/owner/dashboard" class="text-xs font-semibold rounded-full px-4 py-2 bg-surface-container-low text-primary">Chủ sân</a><% } %>
-          <a href="/history" class="text-sm text-on-surface-variant hover:text-primary px-2">Lịch sử</a>
-          <a href="/auth/logout" class="text-sm text-on-surface-variant hover:text-primary px-2">Đăng xuất</a>
+          <a href="/history" class="text-sm text-on-surface-variant hover:text-primary px-2 font-semibold transition-all duration-300">Lịch sử</a>
+          <!-- Avatar Dropdown -->
+          <div class="relative" id="avatar-dropdown-container">
+            <button
+              id="avatar-dropdown-btn"
+              class="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-primary-container text-white font-bold text-sm flex items-center justify-center transition-all duration-300 hover:shadow-cta-glow hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2"
+              aria-label="Menu tài khoản"
+              aria-expanded="false"
+              aria-haspopup="true"
+            >
+              <%= currentUser.name.charAt(0).toUpperCase() %>
+            </button>
+            <!-- Dropdown Menu -->
+            <div
+              id="avatar-dropdown-menu"
+              class="absolute right-0 top-full mt-3 w-56 rounded-2xl bg-white/90 backdrop-blur-xl shadow-ambient border border-outline-variant/20 overflow-hidden opacity-0 invisible translate-y-2 transition-all duration-300 z-50"
+              role="menu"
+            >
+              <!-- User info header -->
+              <div class="px-4 py-3 bg-surface-container-low/50">
+                <p class="text-sm font-semibold text-on-surface truncate"><%= currentUser.name %></p>
+                <p class="text-xs text-on-surface-variant truncate"><%= currentUser.email %></p>
+              </div>
+              <!-- Menu items -->
+              <div class="py-1">
+                <a href="/profile" class="flex items-center gap-3 px-4 py-2.5 text-sm text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-all duration-300" role="menuitem">
+                  <span class="material-symbols-outlined text-lg">person</span>
+                  Hồ sơ cá nhân
+                </a>
+                <a href="/auth/logout" class="flex items-center gap-3 px-4 py-2.5 text-sm text-on-surface-variant hover:bg-red-50 hover:text-red-600 transition-all duration-300" role="menuitem">
+                  <span class="material-symbols-outlined text-lg">logout</span>
+                  Đăng xuất
+                </a>
+              </div>
+            </div>
+          </div>
         <% } else { %>
           <a href="/auth/login" class="text-sm text-on-surface-variant hover:text-primary px-2">Đăng nhập</a>
           <a href="/auth/register" class="rounded-full bg-gradient-to-r from-primary to-primary-container text-white px-5 py-2.5 font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-cta-glow">Đăng ký</a>
@@ -83,8 +117,18 @@
         <a href="/#about" class="px-3 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-low">Giới thiệu</a>
         <a href="/#contact" class="px-3 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-low">Liên hệ</a>
         <% if (typeof currentUser !== 'undefined' && currentUser) { %>
-          <a href="/history" class="px-3 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-low">Lịch sử đặt sân</a>
-          <a href="/auth/logout" class="px-3 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-low">Đăng xuất</a>
+          <a href="/profile" class="px-3 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-low flex items-center gap-2">
+            <span class="material-symbols-outlined text-lg">person</span>
+            Hồ sơ cá nhân
+          </a>
+          <a href="/history" class="px-3 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-low flex items-center gap-2">
+            <span class="material-symbols-outlined text-lg">history</span>
+            Lịch sử đặt sân
+          </a>
+          <a href="/auth/logout" class="px-3 py-2 rounded-xl text-red-600 hover:bg-red-50 flex items-center gap-2">
+            <span class="material-symbols-outlined text-lg">logout</span>
+            Đăng xuất
+          </a>
         <% } else { %>
           <a href="/auth/login" class="px-3 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-low">Đăng nhập</a>
           <a href="/auth/register" class="px-3 py-2 rounded-xl bg-primary text-white text-center font-semibold">Đăng ký</a>
@@ -132,11 +176,52 @@
 
   <script src="/public/js/analytics.js"></script>
   <script>
+    // Mobile menu toggle
     const menuBtn = document.getElementById('mobile-menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
     if (menuBtn && mobileMenu) {
       menuBtn.addEventListener('click', function () {
         mobileMenu.classList.toggle('hidden');
+      });
+    }
+
+    // Avatar dropdown toggle
+    const avatarBtn = document.getElementById('avatar-dropdown-btn');
+    const avatarMenu = document.getElementById('avatar-dropdown-menu');
+    if (avatarBtn && avatarMenu) {
+      avatarBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        const isOpen = !avatarMenu.classList.contains('invisible');
+        if (isOpen) {
+          // Close
+          avatarMenu.classList.add('opacity-0', 'invisible', 'translate-y-2');
+          avatarMenu.classList.remove('opacity-100', 'visible', 'translate-y-0');
+          avatarBtn.setAttribute('aria-expanded', 'false');
+        } else {
+          // Open
+          avatarMenu.classList.remove('opacity-0', 'invisible', 'translate-y-2');
+          avatarMenu.classList.add('opacity-100', 'visible', 'translate-y-0');
+          avatarBtn.setAttribute('aria-expanded', 'true');
+        }
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function (e) {
+        if (!avatarBtn.contains(e.target) && !avatarMenu.contains(e.target)) {
+          avatarMenu.classList.add('opacity-0', 'invisible', 'translate-y-2');
+          avatarMenu.classList.remove('opacity-100', 'visible', 'translate-y-0');
+          avatarBtn.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      // Close dropdown on Escape key
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          avatarMenu.classList.add('opacity-0', 'invisible', 'translate-y-2');
+          avatarMenu.classList.remove('opacity-100', 'visible', 'translate-y-0');
+          avatarBtn.setAttribute('aria-expanded', 'false');
+          avatarBtn.focus();
+        }
       });
     }
   </script>

@@ -1,0 +1,348 @@
+<!-- ============================================ -->
+<!-- Profile Hero Section                         -->
+<!-- ============================================ -->
+<section class="relative overflow-hidden px-6 md:px-10 pb-10">
+  <div class="max-w-5xl mx-auto">
+    <div class="rounded-[2rem] bg-gradient-to-br from-primary/10 via-surface-container-low to-primary-container/10 p-8 md:p-12 flex flex-col md:flex-row items-center gap-8">
+      <!-- Avatar lớn -->
+      <div class="relative">
+        <div class="w-28 h-28 md:w-36 md:h-36 rounded-full bg-gradient-to-br from-primary to-primary-container flex items-center justify-center text-white text-5xl md:text-6xl font-black italic shadow-cta-glow">
+          <%= profileUser.name.charAt(0).toUpperCase() %>
+        </div>
+        <div class="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-secondary flex items-center justify-center">
+          <span class="material-symbols-outlined text-white text-base">verified</span>
+        </div>
+      </div>
+      <!-- Info -->
+      <div class="text-center md:text-left flex-1">
+        <p class="kinetic-label text-on-surface-variant mb-1">
+          <%= profileUser.role === 'admin' ? 'Quản trị viên' : profileUser.role === 'field_owner' ? 'Chủ sân' : 'Thành viên' %>
+        </p>
+        <h1 class="kinetic-headline text-4xl md:text-5xl text-on-surface"><%= profileUser.name %></h1>
+        <p class="text-on-surface-variant mt-2 font-light"><%= profileUser.email %></p>
+        <p class="text-sm text-on-surface-variant/70 mt-1">
+          <span class="material-symbols-outlined text-sm align-middle mr-1">calendar_month</span>
+          Tham gia từ <%= new Date(profileUser.createdAt).toLocaleDateString('vi-VN', { year: 'numeric', month: 'long', day: 'numeric' }) %>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- Stats Cards                                  -->
+<!-- ============================================ -->
+<section class="px-6 md:px-10 pb-10">
+  <div class="max-w-5xl mx-auto">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <!-- Tổng đặt sân -->
+      <div class="rounded-2xl bg-surface-container-lowest p-6 transition-all duration-500 hover:-translate-y-1 hover:shadow-ambient">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+            <span class="material-symbols-outlined text-primary">sports_soccer</span>
+          </div>
+          <div>
+            <p class="kinetic-label text-on-surface-variant">Tổng đặt sân</p>
+            <p class="text-3xl font-black text-on-surface"><%= stats.total %></p>
+          </div>
+        </div>
+      </div>
+      <!-- Đang chờ duyệt -->
+      <div class="rounded-2xl bg-surface-container-lowest p-6 transition-all duration-500 hover:-translate-y-1 hover:shadow-ambient">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center">
+            <span class="material-symbols-outlined text-amber-600">hourglass_top</span>
+          </div>
+          <div>
+            <p class="kinetic-label text-on-surface-variant">Đang chờ duyệt</p>
+            <p class="text-3xl font-black text-on-surface"><%= stats.pending %></p>
+          </div>
+        </div>
+      </div>
+      <!-- Đã xác nhận -->
+      <div class="rounded-2xl bg-surface-container-lowest p-6 transition-all duration-500 hover:-translate-y-1 hover:shadow-ambient">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center">
+            <span class="material-symbols-outlined text-secondary">check_circle</span>
+          </div>
+          <div>
+            <p class="kinetic-label text-on-surface-variant">Đã xác nhận</p>
+            <p class="text-3xl font-black text-on-surface"><%= stats.confirmed %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- Main Content: Edit Profile + Change Password -->
+<!-- ============================================ -->
+<section class="px-6 md:px-10 pb-10">
+  <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+    <!-- ====== Cập nhật thông tin ====== -->
+    <div class="rounded-[2rem] bg-surface-container-low p-6 md:p-8">
+      <div class="mb-6">
+        <p class="kinetic-label text-on-surface-variant">Quản lý tài khoản</p>
+        <h2 class="kinetic-headline text-2xl md:text-3xl text-on-surface">THÔNG TIN CÁ NHÂN</h2>
+      </div>
+
+      <form action="/profile/update" method="POST" class="space-y-5">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+        <!-- Họ tên -->
+        <div>
+          <label class="kinetic-label text-on-surface-variant block mb-2">Họ và tên</label>
+          <div class="flex items-center gap-3 rounded-xl bg-surface-container-lowest px-4 py-3">
+            <span class="material-symbols-outlined text-on-surface-variant">person</span>
+            <input
+              type="text"
+              name="name"
+              value="<%= profileUser.name %>"
+              required
+              minlength="2"
+              maxlength="50"
+              class="w-full bg-transparent border-none focus:ring-0 p-0 text-on-surface placeholder-on-surface-variant/50"
+              placeholder="Nhập họ tên"
+            />
+          </div>
+        </div>
+
+        <!-- Email (readonly) -->
+        <div>
+          <label class="kinetic-label text-on-surface-variant block mb-2">Email</label>
+          <div class="flex items-center gap-3 rounded-xl bg-surface-container px-4 py-3 opacity-60">
+            <span class="material-symbols-outlined text-on-surface-variant">mail</span>
+            <input
+              type="email"
+              value="<%= profileUser.email %>"
+              disabled
+              class="w-full bg-transparent border-none focus:ring-0 p-0 text-on-surface cursor-not-allowed"
+            />
+            <span class="material-symbols-outlined text-on-surface-variant text-sm" title="Email không thể thay đổi">lock</span>
+          </div>
+          <p class="text-xs text-on-surface-variant/60 mt-1 ml-1">Email là định danh tài khoản, không thể thay đổi</p>
+        </div>
+
+        <!-- Số điện thoại -->
+        <div>
+          <label class="kinetic-label text-on-surface-variant block mb-2">Số điện thoại</label>
+          <div class="flex items-center gap-3 rounded-xl bg-surface-container-lowest px-4 py-3">
+            <span class="material-symbols-outlined text-on-surface-variant">phone</span>
+            <input
+              type="tel"
+              name="phone"
+              value="<%= profileUser.phone %>"
+              required
+              pattern="^(0[3|5|7|8|9])+([0-9]{8})$"
+              class="w-full bg-transparent border-none focus:ring-0 p-0 text-on-surface placeholder-on-surface-variant/50"
+              placeholder="VD: 0912345678"
+            />
+          </div>
+        </div>
+
+        <!-- Vai trò (readonly) -->
+        <div>
+          <label class="kinetic-label text-on-surface-variant block mb-2">Vai trò</label>
+          <div class="flex items-center gap-3 rounded-xl bg-surface-container px-4 py-3 opacity-60">
+            <span class="material-symbols-outlined text-on-surface-variant">badge</span>
+            <input
+              type="text"
+              value="<%= profileUser.role === 'admin' ? 'Quản trị viên' : profileUser.role === 'field_owner' ? 'Chủ sân' : 'Người dùng' %>"
+              disabled
+              class="w-full bg-transparent border-none focus:ring-0 p-0 text-on-surface cursor-not-allowed"
+            />
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="w-full rounded-full bg-gradient-to-r from-primary to-primary-container text-white py-3.5 font-semibold transition-all duration-500 hover:-translate-y-0.5 hover:shadow-cta-glow flex items-center justify-center gap-2">
+          <span class="material-symbols-outlined text-lg">save</span>
+          Lưu thay đổi
+        </button>
+      </form>
+    </div>
+
+    <!-- ====== Đổi mật khẩu ====== -->
+    <div class="rounded-[2rem] bg-surface-container-low p-6 md:p-8">
+      <div class="mb-6">
+        <p class="kinetic-label text-on-surface-variant">Bảo mật tài khoản</p>
+        <h2 class="kinetic-headline text-2xl md:text-3xl text-on-surface">ĐỔI MẬT KHẨU</h2>
+      </div>
+
+      <form action="/profile/change-password" method="POST" class="space-y-5">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+        <!-- Mật khẩu hiện tại -->
+        <div>
+          <label class="kinetic-label text-on-surface-variant block mb-2">Mật khẩu hiện tại</label>
+          <div class="flex items-center gap-3 rounded-xl bg-surface-container-lowest px-4 py-3">
+            <span class="material-symbols-outlined text-on-surface-variant">lock</span>
+            <input
+              type="password"
+              name="currentPassword"
+              required
+              class="w-full bg-transparent border-none focus:ring-0 p-0 text-on-surface placeholder-on-surface-variant/50"
+              placeholder="Nhập mật khẩu hiện tại"
+            />
+          </div>
+        </div>
+
+        <!-- Mật khẩu mới -->
+        <div>
+          <label class="kinetic-label text-on-surface-variant block mb-2">Mật khẩu mới</label>
+          <div class="flex items-center gap-3 rounded-xl bg-surface-container-lowest px-4 py-3">
+            <span class="material-symbols-outlined text-on-surface-variant">key</span>
+            <input
+              type="password"
+              name="newPassword"
+              required
+              minlength="6"
+              class="w-full bg-transparent border-none focus:ring-0 p-0 text-on-surface placeholder-on-surface-variant/50"
+              placeholder="Ít nhất 6 ký tự"
+            />
+          </div>
+        </div>
+
+        <!-- Xác nhận mật khẩu mới -->
+        <div>
+          <label class="kinetic-label text-on-surface-variant block mb-2">Xác nhận mật khẩu mới</label>
+          <div class="flex items-center gap-3 rounded-xl bg-surface-container-lowest px-4 py-3">
+            <span class="material-symbols-outlined text-on-surface-variant">lock_reset</span>
+            <input
+              type="password"
+              name="confirmNewPassword"
+              required
+              minlength="6"
+              class="w-full bg-transparent border-none focus:ring-0 p-0 text-on-surface placeholder-on-surface-variant/50"
+              placeholder="Nhập lại mật khẩu mới"
+            />
+          </div>
+        </div>
+
+        <!-- Gợi ý bảo mật -->
+        <div class="rounded-xl bg-surface-container p-4">
+          <p class="kinetic-label text-on-surface-variant mb-2">Yêu cầu mật khẩu</p>
+          <ul class="space-y-1 text-sm text-on-surface-variant">
+            <li class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-sm text-secondary">check_small</span>
+              Ít nhất 6 ký tự
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-sm text-secondary">check_small</span>
+              Không trùng mật khẩu cũ
+            </li>
+          </ul>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="w-full rounded-full bg-on-surface text-white py-3.5 font-semibold transition-all duration-500 hover:-translate-y-0.5 hover:shadow-ambient flex items-center justify-center gap-2">
+          <span class="material-symbols-outlined text-lg">shield</span>
+          Cập nhật mật khẩu
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- Recent Bookings                              -->
+<!-- ============================================ -->
+<section class="px-6 md:px-10 pb-16">
+  <div class="max-w-5xl mx-auto">
+    <div class="rounded-[2rem] bg-surface-container-low p-6 md:p-8">
+      <div class="flex items-center justify-between gap-4 mb-6">
+        <div>
+          <p class="kinetic-label text-on-surface-variant">Hoạt động gần đây</p>
+          <h2 class="kinetic-headline text-2xl md:text-3xl text-on-surface">ĐƠN ĐẶT SÂN</h2>
+        </div>
+        <a href="/history" class="text-sm font-semibold text-primary hover:underline underline-offset-4 flex items-center gap-1">
+          Xem tất cả
+          <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </a>
+      </div>
+
+      <% if (recentBookings && recentBookings.length > 0) { %>
+        <div class="space-y-3">
+          <% recentBookings.forEach((booking) => { %>
+            <a href="/checkout/confirmation/<%= booking._id %>" class="group flex items-center gap-4 rounded-2xl bg-surface-container-lowest p-4 transition-all duration-500 hover:-translate-y-0.5 hover:shadow-ambient">
+              <!-- Icon trạng thái -->
+              <div class="w-11 h-11 rounded-xl flex-shrink-0 flex items-center justify-center
+                <% if (booking.status === 'confirmed') { %>
+                  bg-secondary/10
+                <% } else if (booking.status === 'pending') { %>
+                  bg-amber-500/10
+                <% } else if (booking.status === 'cancelled' || booking.status === 'rejected') { %>
+                  bg-red-500/10
+                <% } else { %>
+                  bg-surface-container
+                <% } %>
+              ">
+                <span class="material-symbols-outlined
+                  <% if (booking.status === 'confirmed') { %>
+                    text-secondary
+                  <% } else if (booking.status === 'pending') { %>
+                    text-amber-600
+                  <% } else if (booking.status === 'cancelled' || booking.status === 'rejected') { %>
+                    text-red-500
+                  <% } else { %>
+                    text-on-surface-variant
+                  <% } %>
+                ">
+                  <% if (booking.status === 'confirmed') { %>
+                    check_circle
+                  <% } else if (booking.status === 'pending') { %>
+                    hourglass_top
+                  <% } else if (booking.status === 'cancelled' || booking.status === 'rejected') { %>
+                    cancel
+                  <% } else { %>
+                    receipt_long
+                  <% } %>
+                </span>
+              </div>
+
+              <!-- Thông tin -->
+              <div class="flex-1 min-w-0">
+                <p class="font-semibold text-on-surface truncate"><%= booking.field ? booking.field.name : 'Sân đã xóa' %></p>
+                <p class="text-sm text-on-surface-variant">
+                  <%= new Date(booking.date).toLocaleDateString('vi-VN') %> · <%= booking.startTime %> - <%= booking.endTime %>
+                </p>
+              </div>
+
+              <!-- Giá + trạng thái -->
+              <div class="text-right flex-shrink-0">
+                <p class="font-semibold text-on-surface"><%= (booking.totalPrice || 0).toLocaleString('vi-VN') %>đ</p>
+                <p class="kinetic-label text-xs
+                  <% if (booking.status === 'confirmed') { %>
+                    text-secondary
+                  <% } else if (booking.status === 'pending') { %>
+                    text-amber-600
+                  <% } else if (booking.status === 'cancelled' || booking.status === 'rejected') { %>
+                    text-red-500
+                  <% } else { %>
+                    text-on-surface-variant
+                  <% } %>
+                ">
+                  <%= booking.status === 'confirmed' ? 'Đã xác nhận' : booking.status === 'pending' ? 'Chờ duyệt' : booking.status === 'cancelled' ? 'Đã hủy' : booking.status === 'rejected' ? 'Từ chối' : booking.status %>
+                </p>
+              </div>
+
+              <!-- Arrow -->
+              <span class="material-symbols-outlined text-on-surface-variant/40 group-hover:text-primary transition-colors duration-300">chevron_right</span>
+            </a>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <div class="rounded-2xl bg-surface-container-lowest p-10 text-center">
+          <span class="material-symbols-outlined text-5xl text-on-surface-variant/30 mb-3">sports_soccer</span>
+          <p class="text-on-surface-variant">Bạn chưa có đơn đặt sân nào</p>
+          <a href="/fields" class="inline-flex items-center gap-2 mt-4 rounded-full bg-gradient-to-r from-primary to-primary-container text-white px-6 py-2.5 font-semibold text-sm transition-all duration-500 hover:-translate-y-0.5 hover:shadow-cta-glow">
+            Khám phá sân
+            <span class="material-symbols-outlined text-sm">arrow_outward</span>
+          </a>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</section>
