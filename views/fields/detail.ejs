@@ -429,6 +429,12 @@
           style="display:none;" />
       </div>
 
+      <div class="mb-3 rounded-xl bg-surface-container-low p-3 text-xs text-on-surface-variant">
+        <span class="font-semibold text-on-surface">Nhanh:</span>
+        Co <span id="slot-available-count" class="font-bold text-primary"><%= slots.filter(s => s.status === 'available').length %></span>
+        khung gio trong cho ngay da chon.
+      </div>
+
       <!-- Legend -->
       <div class="flex gap-4 mb-4 flex-wrap">
         <div class="flex items-center gap-2 text-xs font-medium text-slate-500">
@@ -486,7 +492,7 @@
       </div>
 
       <!-- Book Button -->
-      <button type="button" id="btn-book" disabled
+      <button type="button" id="btn-book" disabled aria-label="Tiep tuc den trang thanh toan"
         class="w-full py-4 rounded-xl font-bold text-white text-base flex items-center justify-center gap-2
                bg-primary hover:bg-emerald-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed
                transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 active:scale-95
@@ -507,6 +513,10 @@
 </script>
 <script src="/public/js/timeslot.js"></script>
 <script>
+  if (window.DatSanAnalytics) {
+    window.DatSanAnalytics.track('field_detail_view', { fieldId: FIELD_ID });
+  }
+
   // ── Gallery ───────────────────────────────────
   function changeGallery(dotEl, src) {
     const img = document.getElementById('gallery-img');
@@ -628,6 +638,9 @@
 
     // Trigger slot reload (from timeslot.js listener)
     document.getElementById('slot-date').dispatchEvent(new Event('change'));
+    if (window.DatSanAnalytics) {
+      window.DatSanAnalytics.track('date_change', { fieldId: FIELD_ID, date: iso });
+    }
   }
 
   function updateCalDisplay(dateObj) {

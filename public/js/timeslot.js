@@ -92,6 +92,11 @@
   // ===============================
   function renderSlots(slots) {
     slotsGrid.innerHTML = '';
+    const availableCountEl = document.getElementById('slot-available-count');
+    if (availableCountEl) {
+      const availableCount = (slots || []).filter((s) => s.status === 'available').length;
+      availableCountEl.textContent = String(availableCount);
+    }
 
     if (!slots || slots.length === 0) {
       slotsGrid.innerHTML = `
@@ -110,6 +115,9 @@
       div.dataset.start = slot.startTime;
       div.dataset.end = slot.endTime;
       div.dataset.status = slot.status;
+      div.setAttribute('role', 'button');
+      div.setAttribute('tabindex', slot.status === 'available' ? '0' : '-1');
+      div.setAttribute('aria-label', `Khung gio ${slot.startTime} den ${slot.endTime}, trang thai ${slot.status}`);
 
       const statusText =
         slot.status === 'available'
@@ -126,6 +134,12 @@
       // Chỉ cho phép click vào slot available
       if (slot.status === 'available') {
         div.addEventListener('click', () => handleSlotClick(div, slot));
+        div.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleSlotClick(div, slot);
+          }
+        });
       }
 
       slotsGrid.appendChild(div);
@@ -147,6 +161,14 @@
     element.className = 'slot-item selected-slot slot-pop';
     selectedSlot = slot;
     updateSummary();
+    if (window.DatSanAnalytics) {
+      window.DatSanAnalytics.track('slot_select', {
+        fieldId: FIELD_ID,
+        slotId: slot._id,
+        start: slot.startTime,
+        end: slot.endTime,
+      });
+    }
   }
 
   // ===============================
@@ -187,7 +209,13 @@
         start: selectedSlot.startTime,
         end: selectedSlot.endTime,
       });
-
+      if (window.DatSanAnalytics) {
+        window.DatSanAnalytics.track('checkout_enter', {
+          fieldId: FIELD_ID,
+          slotId: selectedSlot._id,
+          date: dateInput.value,
+        });
+      }
       window.location.href = `/checkout?${params.toString()}`;
     });
   }

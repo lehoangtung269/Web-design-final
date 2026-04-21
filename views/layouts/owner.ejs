@@ -4,17 +4,15 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>
-        <%= title %> | Owner Portal
-    </title>
+    <title><%= title %> | Kinetic Owner</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,700;0,900;1,900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
         rel="stylesheet" />
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0A0E13;
+            background-color: #f4f6ff;
         }
 
         .material-symbols-outlined {
@@ -28,16 +26,16 @@
         }
 
         ::-webkit-scrollbar-track {
-            background: #0A0E13;
+            background: #f4f6ff;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #1C2025;
+            background: #cdd9f4;
             border-radius: 10px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #262A30;
+            background: #b7c5e4;
         }
     </style>
     <script id="tailwind-config">
@@ -46,26 +44,26 @@
             theme: {
                 extend: {
                     "colors": {
-                        "on-surface": "#e0e2ea",
-                        "primary": "#4edea3",
-                        "surface": "#101419",
-                        "surface-variant": "#31353b",
-                        "surface-container-low": "#181c21",
-                        "outline": "#86948a",
-                        "tertiary-container": "#fc7c78",
-                        "on-surface-variant": "#bbcabf",
-                        "secondary": "#adc6ff",
-                        "surface-container-high": "#262a30",
-                        "surface-container": "#1c2025",
-                        "secondary-container": "#0566d9",
-                        "error": "#ffb4ab",
-                        "surface-container-highest": "#31353b",
-                        "surface-container-lowest": "#0a0e13",
-                        "tertiary": "#ffb3af",
-                        "outline-variant": "#3c4a42",
-                        "on-primary": "#003824",
-                        "background": "#101419",
-                        "primary-container": "#10b981",
+                        "on-surface": "#0b1c30",
+                        "primary": "#6a37d3",
+                        "surface": "#f4f6ff",
+                        "surface-variant": "#dde9ff",
+                        "surface-container-low": "#ebf1ff",
+                        "outline": "#91a4c8",
+                        "tertiary-container": "#dbeafe",
+                        "on-surface-variant": "#334155",
+                        "secondary": "#00675c",
+                        "surface-container-high": "#dde9ff",
+                        "surface-container": "#dde9ff",
+                        "secondary-container": "#b9f0e6",
+                        "error": "#dc2626",
+                        "surface-container-highest": "#cfdcf8",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary": "#a78bfa",
+                        "outline-variant": "#a5b4cf",
+                        "on-primary": "#ffffff",
+                        "background": "#f4f6ff",
+                        "primary-container": "#ae8dff",
                     },
                     "borderRadius": {
                         "DEFAULT": "0.125rem",
@@ -84,24 +82,22 @@
     </script>
 </head>
 
-<body class="text-on-surface overflow-x-hidden">
+<body class="text-on-surface overflow-x-hidden bg-background">
     <!-- SideNavBar Anchor -->
     <%- include('../owner/partials/sidebar', { activeNav: typeof activeNav !=='undefined' ? activeNav : '' }) %>
 
         <!-- TopNavBar Anchor -->
-        <header
-            class="bg-[#101419]/80 backdrop-blur-md sticky top-0 z-40 lg:ml-64 w-full lg:w-[calc(100%-16rem)] flex justify-between items-center h-16 px-8 border-b border-[#1C2025]">
+        <header class="bg-white/80 backdrop-blur-md sticky top-0 z-40 lg:ml-64 w-full lg:w-[calc(100%-16rem)] flex justify-between items-center h-16 px-8">
             <div class="flex items-center w-full max-w-md">
                 <div class="relative w-full">
                     <span
                         class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">search</span>
-                    <input
-                        class="w-full bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-2 text-sm text-on-surface focus:ring-1 focus:ring-primary/30 placeholder-on-surface-variant/50 transition-all"
-                        placeholder="Search analytics, customers, or schedules..." type="text" />
+                    <input class="w-full bg-surface-container-low border-none rounded-full pl-10 pr-4 py-2 text-sm text-on-surface focus:ring-1 focus:ring-primary/40 placeholder-on-surface-variant/70 transition-all"
+                        placeholder="Tim analytics, users, bookings..." type="text" />
                 </div>
             </div>
             <div class="flex items-center gap-6">
-                <div class="flex items-center gap-4 text-[#BBCABF]">
+                <div class="flex items-center gap-4 text-on-surface-variant">
                     <button class="material-symbols-outlined hover:text-white transition-colors">notifications</button>
                     <div class="h-4 w-px bg-outline-variant/30"></div>
                     <button class="flex items-center gap-2 hover:text-white transition-colors">
