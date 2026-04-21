@@ -134,6 +134,7 @@ const postBooking = async (req, res) => {
       date: parseLocalDate(bookingDate),
       startTime,
       endTime,
+      totalPrice: totalPrice,
       basePrice: totalPrice,
       finalTotal: totalPrice,
       paymentImage: paymentImageUrl,
