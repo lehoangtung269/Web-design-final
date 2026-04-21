@@ -9,41 +9,35 @@
   </title>
   <meta name="description"
     content="Hệ thống đặt sân bóng đá online nhanh chóng, tiện lợi. Tìm sân, chọn giờ, đặt ngay!" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-    rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,500;1,900&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            "primary": "#006c49",
-            "primary-container": "#10b981",
-            "primary-fixed": "#6ffbbe",
+            "primary": "#6a37d3",
+            "primary-container": "#ae8dff",
             "on-primary": "#ffffff",
-            "on-primary-container": "#00422b",
-            "on-primary-fixed-variant": "#005236",
-            "secondary": "#545f73",
-            "secondary-container": "#d5e0f8",
-            "tertiary": "#855300",
-            "tertiary-container": "#e29100",
-            "on-tertiary-container": "#523200",
-            "surface": "#f7f9fb",
+            "secondary": "#00675c",
+            "background": "#f4f6ff",
+            "surface": "#f4f6ff",
+            "surface-container-low": "#ebf1ff",
+            "surface-container": "#dde9ff",
             "surface-container-lowest": "#ffffff",
-            "surface-container-low": "#f2f4f6",
-            "surface-container": "#eceef0",
-            "surface-container-high": "#e6e8ea",
-            "on-surface": "#191c1e",
-            "on-surface-variant": "#3c4a42",
-            "on-background": "#191c1e",
-            "outline": "#6c7a71",
-            "outline-variant": "#bbcabf",
-            "surface-variant": "#e0e3e5",
-            "error": "#ba1a1a",
+            "on-surface": "#0b1c30",
+            "outline-variant": "rgba(11, 28, 48, 0.15)"
           },
-          borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
-          fontFamily: { headline: ["Inter"], body: ["Inter"], label: ["Inter"] },
+          fontFamily: { 
+            headline: ["Inter", "sans-serif"], 
+            title: ["Inter", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+            display: ["Inter", "sans-serif"],
+            label: ["Space Grotesk", "sans-serif"] 
+          },
         },
       },
     }
@@ -93,44 +87,28 @@
 
 <body class="bg-surface text-on-surface min-h-screen flex flex-col">
 
-  <!-- ===== TOP NAVBAR ===== -->
-  <header class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md shadow-sm">
-    <nav class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto w-full">
-      <a href="/"
-        class="text-2xl font-black text-emerald-700 italic tracking-tight hover:scale-105 transition-transform">
-        ⚽ ĐặtSân.vn
+  <!-- ===== KINETIC NAVBAR ===== -->
+  <header class="fixed top-6 left-0 right-0 z-50 flex justify-center px-6 pointer-events-none">
+    <nav class="pointer-events-auto bg-white/80 backdrop-blur-md shadow-[0_10px_25px_-5px_rgba(0,0,0,0.05)] rounded-full flex justify-between items-center px-3 py-2 max-w-5xl w-full border border-gray-100/50">
+      <a href="/" class="pl-4 text-xl font-black italic tracking-tighter text-[#0b1c30]">
+        OBSIDIAN
       </a>
-      <div class="hidden md:flex items-center space-x-8">
-        <a class="<%= typeof activeNav !== 'undefined' && activeNav === 'home' ? 'text-emerald-700 border-b-2 border-emerald-600 pb-1' : 'text-slate-600 hover:text-emerald-600' %> font-bold tracking-tight transition-all duration-200"
-          href="/">Home</a>
-        <a class="<%= typeof activeNav !== 'undefined' && activeNav === 'fields' ? 'text-emerald-700 border-b-2 border-emerald-600 pb-1' : 'text-slate-600 hover:text-emerald-600' %> font-bold tracking-tight transition-all duration-200"
-          href="/fields">Sân bóng</a>
-        <a class="text-slate-600 hover:text-emerald-600 font-bold tracking-tight transition-all duration-200"
-          href="#">Giới thiệu</a>
+      <div class="hidden md:flex flex-row items-center space-x-1">
+        <a class="px-5 py-2 text-[10px] uppercase tracking-[0.15em] font-['Space_Grotesk'] font-bold text-[#6a37d3] border-b-2 border-[#6a37d3]" href="/">COLLECTIONS</a>
+        <a class="px-5 py-2 text-[10px] uppercase tracking-[0.15em] font-['Space_Grotesk'] text-[#0b1c30] hover:text-[#6a37d3] transition-colors" href="/fields">CURATED MATCHES</a>
+        <a class="px-5 py-2 text-[10px] uppercase tracking-[0.15em] font-['Space_Grotesk'] text-[#0b1c30] hover:text-[#6a37d3] transition-colors" href="#">MEMBERSHIP</a>
+        <a class="px-5 py-2 text-[10px] uppercase tracking-[0.15em] font-['Space_Grotesk'] text-[#0b1c30] hover:text-[#6a37d3] transition-colors" href="#">THE ARCHIVE</a>
       </div>
-      <div class="flex items-center gap-3">
-        <% if (typeof currentUser !=='undefined' && currentUser) { %>
-          <span class="text-slate-500 text-sm hidden md:inline">Xin chào, <strong class="text-slate-800">
-              <%= currentUser.name %>
-            </strong></span>
-          <% if (currentUser.role==='admin' ) { %>
-            <a href="/admin/dashboard"
-              class="text-emerald-600 font-bold px-4 py-2 transition-all hover:bg-emerald-50 rounded-lg text-sm">Admin</a>
-            <% } else if (currentUser.role==='field_owner' ) { %>
-              <a href="/owner/dashboard"
-                class="text-blue-600 font-bold px-4 py-2 transition-all hover:bg-blue-50 rounded-lg text-sm">Chủ sân</a>
-              <% } %>
-                <a href="/history"
-                  class="text-slate-600 hover:text-emerald-600 font-bold px-3 py-2 transition-all text-sm">Lịch sử</a>
-                <a href="/auth/logout"
-                  class="text-slate-600 hover:text-emerald-600 font-bold px-4 py-2 transition-all">Đăng xuất</a>
-                <% } else { %>
-                  <a href="/auth/login"
-                    class="text-slate-600 hover:text-emerald-600 font-bold px-4 py-2 transition-all">Đăng nhập</a>
-                  <a href="/auth/register"
-                    class="bg-emerald-600 text-white px-6 py-2.5 rounded-xl font-bold shadow-md hover:bg-emerald-700 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200">Đăng
-                    ký</a>
-                  <% } %>
+      <div class="flex items-center gap-4 pr-1">
+        <a href="#" class="text-[#0b1c30] flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors w-8 h-8">
+          <span class="material-symbols-outlined text-[18px]">shopping_bag</span>
+        </a>
+        <a href="/auth/login" class="text-[#0b1c30] flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors w-8 h-8">
+          <span class="material-symbols-outlined text-[18px]">account_circle</span>
+        </a>
+        <a href="/fields" class="bg-[#6a37d3] text-white px-5 py-2.5 rounded-full text-[10px] uppercase tracking-[0.15em] font-bold shadow-[0_10px_25px_-5px_rgba(107,56,212,0.4)] hover:bg-[#ae8dff] hover:-translate-y-0.5 transition-all">
+          BOOK NOW
+        </a>
       </div>
     </nav>
   </header>
@@ -163,25 +141,17 @@
             <%- body %>
   </main>
 
-  <!-- ===== FOOTER ===== -->
-  <footer class="w-full py-12 border-t border-slate-200 bg-slate-50">
-    <div class="flex flex-col md:flex-row justify-between items-center px-8 max-w-7xl mx-auto gap-8">
-      <div class="flex flex-col items-center md:items-start">
-        <div class="text-lg font-bold text-slate-900 mb-2">⚽ ĐặtSân.vn</div>
-        <p class="text-slate-500 text-xs uppercase tracking-widest text-center md:text-left">
-          © 2026 ĐặtSân.vn. Nền tảng đặt sân bóng hàng đầu Việt Nam.
-        </p>
-      </div>
-      <div class="flex flex-wrap justify-center gap-8">
-        <a class="text-slate-500 text-xs uppercase tracking-widest hover:text-emerald-500 transition-all underline-offset-4 hover:underline"
-          href="#">Điều khoản</a>
-        <a class="text-slate-500 text-xs uppercase tracking-widest hover:text-emerald-500 transition-all underline-offset-4 hover:underline"
-          href="#">Bảo mật</a>
-        <a class="text-slate-500 text-xs uppercase tracking-widest hover:text-emerald-500 transition-all underline-offset-4 hover:underline"
-          href="#">Liên hệ</a>
-        <a class="text-emerald-600 font-bold text-xs uppercase tracking-widest hover:text-emerald-500 transition-all underline-offset-4 hover:underline"
-          href="#">Hợp tác chủ sân</a>
-      </div>
+  <!-- ===== KINETIC FOOTER ===== -->
+  <footer class="w-full py-20 bg-slate-950 flex flex-col items-center justify-center mt-auto">
+    <div class="text-4xl font-black italic tracking-tighter text-white mb-8">OBSIDIAN</div>
+    <div class="flex flex-wrap justify-center gap-10 mb-12">
+      <a class="text-gray-400 text-[10px] uppercase tracking-[0.15em] hover:text-white transition-colors" href="#">PRIVACY</a>
+      <a class="text-gray-400 text-[10px] uppercase tracking-[0.15em] hover:text-white transition-colors" href="#">TERMS</a>
+      <a class="text-gray-400 text-[10px] uppercase tracking-[0.15em] hover:text-white transition-colors" href="#">CAREERS</a>
+      <a class="text-gray-400 text-[10px] uppercase tracking-[0.15em] hover:text-white transition-colors" href="#">CONTACT</a>
+    </div>
+    <div class="text-[9px] uppercase tracking-[0.2em] text-gray-500 font-['Space_Grotesk']">
+      © 2026 KINETIC OBSIDIAN ARCHIVE. ALL RIGHTS RESERVED.
     </div>
   </footer>
 

@@ -1,255 +1,136 @@
 <!-- ===== HERO SECTION ===== -->
-<section class="relative h-[600px] flex items-center justify-center overflow-hidden">
-  <div class="absolute inset-0 z-0">
-    <img class="w-full h-full object-cover"
-      src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMfgCMduiXkew4jpHMbApTL6fO8jeruasAFUId49kNgVzSJJsDWkaV2blSKyftwJnkBfcEW_xhZp3vVPNA9bkqUx3DX6Eo1yalFdwHD4qEMVO3xPGVa0OgJ7VPOYuZU6fGC-zowmw8ovE3EaccTHOqlk-Y-OxSZOvFaf0l4w5-Z_TjWhunHgsvzYP7VcAiUyQ4rQQaGYneBtllUiQhencaKNNPus2pB1_6vXae0y2FckEOWo0Hx3fCx6s9opAamgmPtf6fN9sX6cg"
-      alt="Football stadium" />
-    <div class="absolute inset-0 bg-gradient-to-r from-black/75 to-black/35"></div>
+<section class="relative min-h-[900px] bg-background flex flex-col items-center justify-center overflow-hidden pt-32 pb-40">
+  
+  <!-- Left floating image -->
+  <div class="absolute -left-[5%] top-[15%] w-[400px] h-[550px] shadow-2xl rounded-[3rem] overflow-hidden transform -rotate-6 z-0 hidden lg:block border-[6px] border-white/60">
+    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMfgCMduiXkew4jpHMbApTL6fO8jeruasAFUId49kNgVzSJJsDWkaV2blSKyftwJnkBfcEW_xhZp3vVPNA9bkqUx3DX6Eo1yalFdwHD4qEMVO3xPGVa0OgJ7VPOYuZU6fGC-zowmw8ovE3EaccTHOqlk-Y-OxSZOvFaf0l4w5-Z_TjWhunHgsvzYP7VcAiUyQ4rQQaGYneBtllUiQhencaKNNPus2pB1_6vXae0y2FckEOWo0Hx3fCx6s9opAamgmPtf6fN9sX6cg" 
+         alt="Turf Texture" 
+         class="w-full h-full object-cover">
   </div>
-  <div class="relative z-10 max-w-7xl mx-auto px-6 w-full text-center md:text-left">
-    <div class="max-w-2xl animate-fade-in">
-      <h1 class="text-5xl md:text-7xl font-extrabold text-white leading-tight tracking-tight mb-4">
-        Đặt sân bóng <span class="text-primary-fixed">dễ như đặt xe</span>
-      </h1>
-      <p class="text-xl text-gray-300 font-medium mb-10 opacity-90">
-        Hơn 500+ sân bóng chất lượng cao trên toàn quốc đang chờ bạn.
-      </p>
+  
+  <!-- Right floating image -->
+  <div class="absolute -right-[5%] top-[30%] w-[450px] h-[600px] shadow-2xl rounded-[3rem] overflow-hidden transform rotate-12 z-0 hidden lg:block border-[6px] border-white/60">
+    <img src="https://lh3.googleusercontent.com/aida-public/AInBwvA2GzXnS9iA57kHjL1jIf1xHkV4fX9L372nU5rE-J6o4Qv-0i70j6w4i6j2BkW0x7R9bZ9u4O9hL6nQeMv4dZ5-1M2c0hQ625o5B2f6qjV8dZ0T6bO4wA1mY4zJ8bKX0-N0hV1L420U9oN9-q-t9x0_d1b_iH7hZ_g-c1j-t5X5c_mO9G_w3j-K_O4J4hL9F0zH1qU3P1f_O-j-gI0_R3Qv_aL0m" 
+         alt="Stadium Architecture" 
+         class="w-full h-full object-cover">
+  </div>
 
-      <!-- Search Bar Bento -->
-      <form action="/search" method="GET"
-        class="bg-white p-2 rounded-2xl shadow-2xl flex flex-col md:flex-row gap-2 items-stretch max-w-4xl animate-fade-in animate-delay-2">
-        <div class="flex-1 flex items-center px-4 bg-gray-100 rounded-xl min-h-[56px]">
-          <span class="material-symbols-outlined text-gray-400 mr-3">search</span>
-          <input name="keyword"
-            class="bg-transparent border-none focus:ring-0 w-full text-gray-900 font-medium placeholder-gray-400"
-            placeholder="Tìm khu vực, tên sân..." type="text" />
-        </div>
-        <div class="flex-1 flex items-center px-4 bg-gray-100 rounded-xl min-h-[56px]">
-          <span class="material-symbols-outlined text-gray-400 mr-3">calendar_today</span>
-          <input name="date" class="bg-transparent border-none focus:ring-0 w-full text-gray-900 font-medium"
-            type="date" value="<%= (() => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); })() %>" />
-        </div>
-        <div class="flex-1 flex items-center px-4 bg-gray-100 rounded-xl min-h-[56px]">
-          <span class="material-symbols-outlined text-gray-400 mr-3">groups</span>
-          <select name="type"
-            class="bg-transparent border-none focus:ring-0 w-full text-gray-900 font-medium cursor-pointer">
-            <option value="all">Tất cả loại sân</option>
-            <option value="5-a-side">Sân 5 người</option>
-            <option value="7-a-side">Sân 7 người</option>
-            <option value="11-a-side">Sân 11 người</option>
-          </select>
-        </div>
-        <button type="submit"
-          class="bg-primary hover:bg-emerald-700 text-white px-8 py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 active:scale-95 group">
-          <span class="material-symbols-outlined group-hover:scale-110 transition-transform">search</span>
-          Tìm kiếm
-        </button>
-      </form>
+  <div class="relative z-10 max-w-4xl mx-auto px-6 w-full text-center flex flex-col items-center">
+    
+    <!-- Kinetic Label -->
+    <div class="mb-8 tracking-[0.2em] uppercase font-['Space_Grotesk'] text-[10px] sm:text-xs font-bold text-secondary animate-fade-in opacity-80 decoration-1">
+      T H E &nbsp; K I N E T I C &nbsp; A R C H I V E
     </div>
+    
+    <!-- Heavy Typography Display -->
+    <h1 class="text-7xl sm:text-[140px] leading-[0.85] font-black italic text-[#0b1c30] tracking-tighter mb-0 animate-fade-in animate-delay-1 drop-shadow-sm">
+      REDEFINE
+    </h1>
+    <h1 class="text-7xl sm:text-[140px] leading-[0.85] font-black italic text-[#ae8dff] tracking-tighter mb-12 animate-fade-in animate-delay-2 drop-shadow-sm">
+      THE MATCH
+    </h1>
+    
+    <!-- Editorial Body -->
+    <p class="text-sm sm:text-lg text-on-surface font-light leading-relaxed max-w-2xl mb-12 animate-fade-in animate-delay-3 px-4 mix-blend-multiply opacity-80">
+      Elevate your game. Obsidian curates premier athletic environments for the discerning competitor. Performance meets absolute luxury.
+    </p>
+    
+    <!-- Primary CTA -->
+    <a href="/fields" class="bg-[#ae8dff] hover:bg-[#6a37d3] text-white px-10 py-4 rounded-full text-[10px] sm:text-xs uppercase tracking-[0.2em] font-['Space_Grotesk'] font-bold shadow-[0_10px_25px_-5px_rgba(107,56,212,0.4)] hover:shadow-[0_15px_35px_-5px_rgba(107,56,212,0.6)] transform hover:-translate-y-1 transition-all duration-500 animate-fade-in animate-delay-4">
+      EXPLORE VENUES
+    </a>
   </div>
 </section>
 
-<!-- ===== STATS BAR ===== -->
-<section class="bg-primary py-8">
-  <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
-    <div class="flex flex-col items-center text-white">
-      <span class="text-4xl font-black mb-1">500+</span>
-      <span class="text-sm font-bold uppercase tracking-widest opacity-80">Sân bóng</span>
-    </div>
-    <div class="flex flex-col items-center text-white">
-      <span class="text-4xl font-black mb-1">10,000+</span>
-      <span class="text-sm font-bold uppercase tracking-widest opacity-80">Trận mỗi tháng</span>
-    </div>
-    <div class="flex flex-col items-center text-white">
-      <span class="text-4xl font-black mb-1">50,000+</span>
-      <span class="text-sm font-bold uppercase tracking-widest opacity-80">Người dùng</span>
-    </div>
-  </div>
-</section>
-
-<!-- ===== HOW IT WORKS ===== -->
-<section class="py-24 bg-surface">
-  <div class="max-w-7xl mx-auto px-6">
-    <div class="text-center mb-16">
-      <span class="text-primary font-bold text-sm uppercase tracking-widest mb-4 block">Quy trình đơn giản</span>
-      <h2 class="text-4xl font-extrabold text-on-surface tracking-tight">Bắt đầu trận đấu chỉ sau 3 bước</h2>
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-      <div class="flex flex-col items-center text-center group animate-fade-in animate-delay-1">
-        <div
-          class="w-20 h-20 bg-primary-container text-white rounded-3xl flex items-center justify-center mb-6 shadow-xl transition-all group-hover:-translate-y-2 group-hover:shadow-2xl">
-          <span class="material-symbols-outlined text-4xl">search</span>
+<!-- ===== SELECTED ARENAS ===== -->
+<section class="relative -mt-20 z-20 max-w-8xl mx-auto mb-20 px-4 sm:px-8">
+  <div class="bg-white rounded-[3rem] p-10 sm:p-20 shadow-[0_20px_50px_-10px_rgba(0,0,0,0.05)] w-full">
+    
+    <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+      <div class="w-full">
+        <h2 class="text-3xl sm:text-5xl font-black italic text-[#0b1c30] tracking-tighter mb-2">SELECTED ARENAS</h2>
+        <div class="flex justify-between items-center w-full mt-4">
+          <p class="text-[10px] uppercase font-['Space_Grotesk'] tracking-[0.15em] text-gray-400 font-bold">PREMIER ENVIRONMENTS FOR ELITE PLAY.</p>
+          <a href="/fields" class="text-[10px] uppercase font-['Space_Grotesk'] tracking-[0.15em] text-[#ae8dff] hover:text-[#6a37d3] font-bold transition-colors">VIEW ALL DIRECTORY <span class="ml-1">&rarr;</span></a>
         </div>
-        <h3 class="text-xl font-bold mb-3">Tìm kiếm</h3>
-        <p class="text-on-surface-variant leading-relaxed">Chọn khu vực gần bạn và sân bóng mong muốn với bộ lọc thông
-          minh.</p>
+        <hr class="mt-4 border-gray-100">
       </div>
-      <div class="flex flex-col items-center text-center group animate-fade-in animate-delay-2">
-        <div
-          class="w-20 h-20 bg-tertiary-container text-white rounded-3xl flex items-center justify-center mb-6 shadow-xl transition-all group-hover:-translate-y-2 group-hover:shadow-2xl">
-          <span class="material-symbols-outlined text-4xl">event_available</span>
-        </div>
-        <h3 class="text-xl font-bold mb-3">Chọn giờ</h3>
-        <p class="text-on-surface-variant leading-relaxed">Kiểm tra lịch trống thời gian thực và chọn khung giờ thi đấu
-          phù hợp.</p>
-      </div>
-      <div class="flex flex-col items-center text-center group animate-fade-in animate-delay-3">
-        <div
-          class="w-20 h-20 bg-primary text-white rounded-3xl flex items-center justify-center mb-6 shadow-xl transition-all group-hover:-translate-y-2 group-hover:shadow-2xl">
-          <span class="material-symbols-outlined text-4xl">verified</span>
-        </div>
-        <h3 class="text-xl font-bold mb-3">Xác nhận</h3>
-        <p class="text-on-surface-variant leading-relaxed">Nhận xác nhận tức thì qua ứng dụng và sẵn sàng ra sân tỏa
-          sáng.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===== FEATURED FIELDS (DYNAMIC) ===== -->
-<section class="py-24 bg-surface-container-low">
-  <div class="max-w-7xl mx-auto px-6">
-    <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
-      <div class="max-w-xl">
-        <h2 class="text-4xl font-extrabold text-on-surface tracking-tight mb-4">Sân bóng nổi bật</h2>
-        <p class="text-on-surface-variant">Danh sách các sân được cộng đồng đánh giá cao nhất về chất lượng cỏ và dịch
-          vụ.</p>
-      </div>
-      <a href="/fields"
-        class="flex items-center gap-2 font-bold text-primary hover:opacity-80 transition-all border-b-2 border-primary/20 pb-1 hover:gap-3">
-        Xem tất cả
-        <span class="material-symbols-outlined">arrow_forward</span>
-      </a>
     </div>
 
-    <% if (featuredFields && featuredFields.length> 0) { %>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <% featuredFields.forEach((field, idx)=> { %>
-          <a href="/fields/<%= field._id %>"
-            class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border-none block group animate-fade-in animate-delay-<%= idx + 1 %>">
-            <div class="relative h-64 overflow-hidden">
-              <% if (field.images && field.images.length> 0) { %>
-                <img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  src="<%= field.images[0] %>" alt="<%= field.name %>" />
-                <% } else { %>
-                  <div
-                    class="w-full h-full bg-gradient-to-br from-emerald-100 to-cyan-100 flex items-center justify-center">
-                    <span class="material-symbols-outlined text-7xl text-emerald-300">sports_soccer</span>
-                  </div>
-                  <% } %>
-                    <div
-                      class="absolute top-4 right-4 <%= field.type === '5-a-side' ? 'bg-emerald-500' : field.type === '7-a-side' ? 'bg-sky-500' : 'bg-orange-500' %> text-white px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest">
-                      <%= field.type==='5-a-side' ? 'Sân 5' : field.type==='7-a-side' ? 'Sân 7' : 'Sân 11' %>
-                    </div>
-            </div>
-            <div class="p-6">
-              <h4 class="text-xl font-bold text-on-surface mb-2">
-                <%= field.name %>
-              </h4>
-              <div class="flex items-center gap-2 text-on-surface-variant text-sm mb-6">
-                <span class="material-symbols-outlined text-sm">location_on</span>
-                <%= field.address %>
-              </div>
-              <div class="flex items-center justify-between">
-                <div class="flex flex-col">
-                  <span class="text-xs text-on-surface-variant font-bold uppercase">Giá từ</span>
-                  <span class="text-lg font-black text-primary">
-                    <%= field.pricePerSlot.toLocaleString('vi-VN') %>đ<span
-                        class="text-sm font-medium text-on-surface-variant">/slot</span>
-                  </span>
-                </div>
-                <span
-                  class="bg-gray-100 group-hover:bg-primary group-hover:text-white text-on-surface px-4 py-2 rounded-xl font-bold transition-all duration-200 text-sm">
-                  Đặt ngay →
-                </span>
-              </div>
-            </div>
-          </a>
-          <% }); %>
-      </div>
-      <% } else { %>
-        <div class="text-center py-16 text-on-surface-variant">
-          <span class="material-symbols-outlined text-6xl text-gray-300 mb-4 block">sports_soccer</span>
-          <p class="text-lg mb-2">Chưa có sân nào trong hệ thống.</p>
-          <p class="text-sm">Vui lòng quay lại sau hoặc liên hệ admin để thêm sân.</p>
-        </div>
-        <% } %>
-  </div>
-</section>
-
-<!-- ===== TESTIMONIALS ===== -->
-<section class="py-24 bg-white">
-  <div class="max-w-7xl mx-auto px-6">
-    <div class="text-center mb-16">
-      <h2 class="text-4xl font-extrabold text-on-surface tracking-tight mb-4">Người dùng nói gì về chúng tôi</h2>
-    </div>
+    <!-- Arena Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <div
-        class="bg-surface p-8 rounded-2xl relative hover:shadow-lg transition-all duration-300 group animate-fade-in animate-delay-1">
-        <span
-          class="material-symbols-outlined text-primary-container absolute top-6 right-6 text-4xl opacity-20">format_quote</span>
-        <div class="flex items-center gap-4 mb-6">
-          <img class="w-12 h-12 rounded-full object-cover ring-2 ring-emerald-100"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAf_u2TOmMlFaL0FMY3PxfAormrkSf7_SzZG5mu-GDa2t9yIwQnsyPfrODyKxPNUqi73bmjFEkikEK2q-lKrYqK0_HGfsIr-aXWlYpynZKPoO4GKuQeUr8PwZ0T-Xf8Ahqj76nqrpVb05gqgZBicRs6YnLi4tEvGeRCVVDLso5zpvAKS4aabl_AKW2bYRi0hZvXn8p13wBaZU7zVxiDbmbxOWl4GLfsMBpRZSOXL4LayXUzrS1WTnPC_539GYq55EkeKQ6mpaUXglE"
-            alt="Tuấn Anh" />
-          <div>
-            <h5 class="font-bold">Tuấn Anh</h5>
-            <div class="flex text-amber-500 gap-0.5">
-              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-            </div>
-          </div>
+      
+      <!-- Card 1 -->
+      <a href="/fields" class="group block h-[550px] relative overflow-hidden rounded-[2rem] transform hover:-translate-y-2 transition-all duration-700 shadow-sm hover:shadow-2xl">
+        <img class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
+             src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQqWzR-KqT86lDkTvY-7O8kH-_5C9A6_L5k4A8rE78q_yq3zT_3mO2_R_H3xG-L3O8_tT53g5iN93L-Q0R4qM19L1_6pY2-dC-Z8jN98R6xK0D-P_t8m-H7-16h_P8I94oA8d_I2aP6O0nF6-8Z3nS1pW6c_2X" 
+             alt="The Apex Pitch">
+        <div class="absolute inset-0 bg-gradient-to-t from-[#0b1c30]/90 via-[#0b1c30]/40 to-transparent"></div>
+        <div class="absolute bottom-0 left-0 right-0 p-8">
+          <p class="text-[9px] text-white/70 uppercase font-['Space_Grotesk'] tracking-[0.2em] font-bold mb-2">DOWNTOWN CORE</p>
+          <h3 class="text-white text-3xl font-black italic tracking-tighter mb-3">The Apex Pitch</h3>
+          <p class="text-white/80 text-sm font-light leading-relaxed">Elevated synthetic turf with panoramic city views and premium lighting.</p>
         </div>
-        <p class="text-on-surface-variant italic leading-relaxed">"Giao diện cực kỳ dễ dùng. Mình và team hay đặt sân
-          vào tối thứ 4 hàng tuần, chưa bao giờ gặp sự cố."</p>
-      </div>
-      <div
-        class="bg-surface p-8 rounded-2xl relative hover:shadow-lg transition-all duration-300 group animate-fade-in animate-delay-2">
-        <span
-          class="material-symbols-outlined text-primary-container absolute top-6 right-6 text-4xl opacity-20">format_quote</span>
-        <div class="flex items-center gap-4 mb-6">
-          <img class="w-12 h-12 rounded-full object-cover ring-2 ring-emerald-100"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5ILCsIZLIN9YK13VimiDBk47WJrcZK0TZvze9hkq0Wqyts5WdvccF4TnIdO4SYNU8xf3UfBw7xvR3PTlPzQqicdxoxpUUkuYb3cQwVKo8A8lbKE8kBOLzfdxhdMs0zUqlnAk-wOvufbgjuTh7wvP30Spezw8N1tMj-9zrExCxg1tLe5TwPgh1xwjFlBp_DPe_LBzWRcPYdfLCX5NrHdJmXhiM9EBQ2eMJLDCLTigukCFsIpvWhd3jXQxcoYf7oHvBj4NlDCq3YmA"
-            alt="Quốc Khánh" />
-          <div>
-            <h5 class="font-bold">Quốc Khánh</h5>
-            <div class="flex text-amber-500 gap-0.5">
-              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-            </div>
-          </div>
+      </a>
+
+      <!-- Card 2 -->
+      <a href="/fields" class="group block h-[550px] relative overflow-hidden rounded-[2rem] transform hover:-translate-y-2 transition-all duration-700 shadow-sm hover:shadow-2xl">
+        <img class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
+             src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3sQ9_T6W8P72J35-y190sZ9K4gK_0Q-c6N65W0M_lZ4X93M7d4H8r6_A-2tO6E8q4zW1B_A8F1z8s9kL89_T-L8bW2uT0kC6y8D-M6pL9G-c_xM99E90K1G8w65k0W_7sM_1B01Z0rU5mE9H09h_uL8" 
+             alt="Velocity Courts">
+        <div class="absolute inset-0 bg-gradient-to-t from-[#0b1c30]/90 via-[#0b1c30]/40 to-transparent"></div>
+        <div class="absolute bottom-0 left-0 right-0 p-8">
+          <p class="text-[9px] text-white/70 uppercase font-['Space_Grotesk'] tracking-[0.2em] font-bold mb-2">WEST END</p>
+          <h3 class="text-white text-3xl font-black italic tracking-tighter mb-3">Velocity Courts</h3>
+          <p class="text-white/80 text-sm font-light leading-relaxed">FIBA-grade maple hardwood designed for explosive athletic movement.</p>
         </div>
-        <p class="text-on-surface-variant italic leading-relaxed">"Thông tin sân rất minh bạch, giá cả cạnh tranh. Tính
-          năng chọn ngày giờ rất trực quan."</p>
-      </div>
-      <div
-        class="bg-surface p-8 rounded-2xl relative hover:shadow-lg transition-all duration-300 group animate-fade-in animate-delay-3">
-        <span
-          class="material-symbols-outlined text-primary-container absolute top-6 right-6 text-4xl opacity-20">format_quote</span>
-        <div class="flex items-center gap-4 mb-6">
-          <img class="w-12 h-12 rounded-full object-cover ring-2 ring-emerald-100"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDS4ynMjA2pFi2xCvwTdYRMNCr809XUfzTSxzSgno2yWt3ZUzlGhniz7EhTlMLUHhTJKsnkCPvdwBoNBd7RtNUstx3Wk1VOjWt1Pha9gYwrPSZi3-LrE2X2M7ieZ3-VrPmYFAS89UAb_WTA5FqXeL0bkANnkpBwoMtxVkMSbfiohViAAk7VZB0g966A90pSL087ofNuTSC0pdsDtl9m5zXjAVS8dFycgnPppjLT6a_SiVsMGrBxdnvYUL7cI-nxT1vSnAY9-RmjRmQ"
-            alt="Minh Thư" />
-          <div>
-            <h5 class="font-bold">Minh Thư</h5>
-            <div class="flex text-amber-500 gap-0.5">
-              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 0.5;">star</span>
-            </div>
-          </div>
+      </a>
+
+      <!-- Card 3 -->
+      <a href="/fields" class="group block h-[550px] relative overflow-hidden rounded-[2rem] transform hover:-translate-y-2 transition-all duration-700 shadow-sm hover:shadow-2xl">
+        <img class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
+             src="https://lh3.googleusercontent.com/aida-public/AB6AXuDz4T_45H1mP22F3rQ8bQZ-lYk6J5bC4l9z6B7D_p8G3G8d6V4qH3Z1-M9l9Q0C24m_yK9E143tY5z5O15qL8-I4M5j1iC7Y9o8O1J2V-m4m-vJ32_4P7D8cW1U6T-y2K0X2zJ4_I4R1S2W_rL7v6eX11i9M011jQ" 
+             alt="Azure Club">
+        <div class="absolute inset-0 bg-gradient-to-t from-[#0b1c30]/90 via-[#0b1c30]/40 to-transparent"></div>
+        <div class="absolute bottom-0 left-0 right-0 p-8">
+          <p class="text-[9px] text-white/70 uppercase font-['Space_Grotesk'] tracking-[0.2em] font-bold mb-2">SOUTH GROUNDS</p>
+          <h3 class="text-white text-3xl font-black italic tracking-tighter mb-3">Azure Club</h3>
+          <p class="text-white/80 text-sm font-light leading-relaxed">Championship-level hard courts providing consistent medium-fast pace.</p>
         </div>
-        <p class="text-on-surface-variant italic leading-relaxed">"Dịch vụ chăm sóc khách hàng cực tốt. Mình từng bị hủy
-          sân do mưa và được hỗ trợ đổi lịch ngay lập tức."</p>
-      </div>
+      </a>
+
     </div>
+  </div>
+</section>
+
+<!-- ===== FLOATING SEARCH BAR ===== -->
+<section class="relative z-30 -mt-24 mb-16 px-4">
+  <div class="max-w-4xl mx-auto">
+    <form action="/search" method="GET" class="bg-white/90 backdrop-blur-xl p-4 rounded-xl flex flex-col md:flex-row gap-4 items-center shadow-[0_15px_40px_-5px_rgba(0,0,0,0.1)] border border-gray-100">
+      
+      <!-- Location Input -->
+      <div class="flex-1 w-full pl-6 pr-4 py-2 flex gap-4 items-center border-b md:border-b-0 md:border-r border-gray-200">
+        <span class="material-symbols-outlined text-gray-400 text-[20px]">search</span>
+        <div class="flex flex-col w-full">
+          <label class="text-[8px] uppercase font-['Space_Grotesk'] tracking-[0.2em] font-bold text-gray-400">FIND LOCATION</label>
+          <input name="keyword" class="bg-transparent border-none focus:ring-0 p-0 text-[#0b1c30] text-lg font-medium placeholder-gray-300 w-full" placeholder="City, Zip, or Venue Name" type="text" />
+        </div>
+      </div>
+      
+      <!-- Date Input -->
+      <div class="flex-1 w-full pl-6 pr-4 py-2 flex gap-4 items-center">
+        <span class="material-symbols-outlined text-gray-400 text-[20px]">calendar_today</span>
+        <div class="flex flex-col w-full">
+          <label class="text-[8px] uppercase font-['Space_Grotesk'] tracking-[0.2em] font-bold text-gray-400">DATE</label>
+          <input name="date" class="bg-transparent border-none focus:ring-0 p-0 text-[#0b1c30] text-lg font-medium outline-none w-full" type="date" value="<%= (() => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); })() %>" />
+        </div>
+      </div>
+      
+      <!-- Search Button -->
+      <button type="submit" class="w-full md:w-auto h-16 w-16 bg-[#6a37d3] hover:bg-[#ae8dff] text-white rounded-xl shadow-[0_10px_25px_-5px_rgba(107,56,212,0.4)] hover:-translate-y-1 transition-all duration-300 flex items-center justify-center flex-shrink-0 group">
+        <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+      </button>
+
+    </form>
   </div>
 </section>

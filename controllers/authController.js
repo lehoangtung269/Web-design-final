@@ -4,7 +4,7 @@ const User = require('../models/User');
 // GET /auth/register — Hiển thị form đăng ký
 // ================================
 const showRegister = (req, res) => {
-  res.render('auth/register', { title: 'Đăng ký', layout: false });
+  res.render('auth/register', { title: 'Đăng ký' });
 };
 
 // ================================
@@ -51,7 +51,7 @@ const register = async (req, res) => {
 // GET /auth/login — Hiển thị form đăng nhập
 // ================================
 const showLogin = (req, res) => {
-  res.render('auth/login', { title: 'Đăng nhập', layout: false });
+  res.render('auth/login', { title: 'Đăng nhập' });
 };
 
 // ================================
