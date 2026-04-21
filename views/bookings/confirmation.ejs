@@ -13,15 +13,15 @@
       <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse block"></span> Đang chờ duyệt
     </div>
   <% } else if (booking.status === 'confirmed') { %>
-    <div class="w-24 h-24 mx-auto bg-emerald-50 rounded-full border-4 border-emerald-100 flex items-center justify-center mb-6">
-      <span class="material-symbols-outlined text-5xl text-emerald-500">check</span>
+    <div class="w-24 h-24 mx-auto bg-surface-container-low rounded-full border-4 border-outline-variant flex items-center justify-center mb-6">
+      <span class="material-symbols-outlined text-5xl text-primary">check</span>
     </div>
     <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight mb-3">Đặt sân thành công!</h1>
     <p class="text-slate-500 mb-8 max-w-lg mx-auto">
       Sân bóng đã được chuẩn bị sẵn sàng cho bạn.<br/>
       Vui lòng đến đúng giờ để trải nghiệm tốt nhất!
     </p>
-    <div class="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-600 px-4 py-2 rounded-full text-sm font-bold mb-10 shadow-sm">
+    <div class="inline-flex items-center gap-2 bg-surface-container-low border border-outline-variant text-primary px-4 py-2 rounded-full text-sm font-bold mb-10 shadow-sm">
       <span class="material-symbols-outlined text-base">verified</span> Đã duyệt thành công
     </div>
   <% } else { %>
@@ -38,23 +38,42 @@
     </div>
   <% } %>
 
-  <div class="bg-surface-container-low rounded-2xl p-5 mb-8 text-left">
-    <p class="text-xs uppercase tracking-widest text-on-surface-variant mb-3">Tien trinh xu ly</p>
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
-      <div class="rounded-xl bg-white p-3">
-        <p class="font-semibold text-on-surface">1. Da tiep nhan</p>
-        <p class="text-on-surface-variant mt-1">He thong da luu don va anh bill cua ban.</p>
+  <div class="bg-surface-container-low rounded-[2rem] p-8 mb-8 text-left shadow-ambient">
+    <p class="kinetic-label text-on-surface-variant mb-6 text-center">Tien trinh xu ly don hang</p>
+    
+    <div class="relative max-w-lg mx-auto">
+      <div class="absolute left-6 top-6 bottom-6 w-0.5 bg-outline-variant/30"></div>
+      
+      <div class="relative flex items-center gap-6 mb-8 group animate-fade-in">
+        <div class="w-12 h-12 rounded-full <%= booking.status === 'pending' || booking.status === 'confirmed' ? 'bg-primary text-white shadow-cta-glow' : 'bg-surface-container text-on-surface-variant' %> flex items-center justify-center shrink-0 z-10 transition-all duration-300">
+          <span class="material-symbols-outlined text-[20px]"><%= booking.status === 'pending' || booking.status === 'confirmed' ? 'check' : 'pending_actions' %></span>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-outline-variant/20 shadow-sm flex-1 group-hover:-translate-y-1 transition-transform duration-300">
+          <p class="kinetic-label text-primary mb-1">01. DA TIEP NHAN</p>
+          <p class="text-on-surface font-light text-sm">He thong da luu don va anh bill tren he thong cua ban.</p>
+        </div>
       </div>
-      <div class="rounded-xl bg-white p-3">
-        <p class="font-semibold text-on-surface">2. Dang doi duyet</p>
-        <p class="text-on-surface-variant mt-1">Admin kiem tra giao dich trong gio lam viec.</p>
+
+      <div class="relative flex items-center gap-6 mb-8 group animate-fade-in animate-delay-1">
+        <div class="w-12 h-12 rounded-full <%= booking.status === 'pending' ? 'bg-primary-container text-primary shadow-sm animate-pulse' : booking.status === 'confirmed' ? 'bg-primary text-white shadow-cta-glow' : 'bg-surface-container text-on-surface-variant' %> flex items-center justify-center shrink-0 z-10 transition-all duration-300">
+          <span class="material-symbols-outlined text-[20px]">admin_panel_settings</span>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-outline-variant/20 shadow-sm flex-1 group-hover:-translate-y-1 transition-transform duration-300">
+          <p class="kinetic-label text-on-surface-variant mb-1">02. DANG DOI DUYET</p>
+          <p class="text-on-surface font-light text-sm">Admin dang kiem tra giao dich (du kien 5-30 phut).</p>
+        </div>
       </div>
-      <div class="rounded-xl bg-white p-3">
-        <p class="font-semibold text-on-surface">3. Ket qua</p>
-        <p class="text-on-surface-variant mt-1">Ban nhan trang thai da duyet hoac tu choi.</p>
+
+      <div class="relative flex items-center gap-6 group animate-fade-in animate-delay-2">
+        <div class="w-12 h-12 rounded-full <%= booking.status === 'confirmed' ? 'bg-primary text-white shadow-cta-glow' : booking.status === 'rejected' ? 'bg-error text-white shadow-sm' : 'bg-surface-container text-on-surface-variant' %> flex items-center justify-center shrink-0 z-10 transition-all duration-300">
+          <span class="material-symbols-outlined text-[20px]"><%= booking.status === 'confirmed' ? 'check_circle' : booking.status === 'rejected' ? 'cancel' : 'where_to_vote' %></span>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-outline-variant/20 shadow-sm flex-1 group-hover:-translate-y-1 transition-transform duration-300">
+           <p class="kinetic-label text-on-surface-variant mb-1">03. KET QUA</p>
+           <p class="text-on-surface font-light text-sm">Thong bao xac nhan don hoac li do tu choi don san.</p>
+        </div>
       </div>
     </div>
-    <p class="text-xs text-on-surface-variant mt-3">Thoi gian duyet du kien: 5 - 30 phut.</p>
   </div>
 
   <!-- Booking Detail Card -->
@@ -80,14 +99,14 @@
       </div>
       <div class="flex justify-between items-center py-2 border-t border-slate-50">
         <span class="text-slate-500 text-sm">Khung giờ</span>
-        <span class="font-semibold text-primary bg-emerald-50 px-3 py-1 rounded-lg">
+        <span class="font-semibold text-primary bg-surface-container-low px-3 py-1 rounded-lg">
           <%= booking.startTime %> — <%= booking.endTime %>
         </span>
       </div>
       <div class="flex justify-between items-center py-2 border-t border-slate-50">
         <span class="text-slate-500 text-sm">Ảnh bill</span>
         <% if (booking.paymentImage) { %>
-          <a href="<%= booking.paymentImage %>" target="_blank" class="inline-flex items-center gap-1 text-sm font-bold text-sky-600 hover:text-sky-700">
+          <a href="<%= booking.paymentImage %>" target="_blank" class="inline-flex items-center gap-1 text-sm font-bold text-primary hover:text-sky-700">
             <span class="material-symbols-outlined text-[16px]">image</span> Xem ảnh
           </a>
         <% } else { %>
@@ -98,14 +117,14 @@
       </div>
       <div class="flex justify-between items-center py-4 mt-2 border-t-2 border-slate-100">
         <span class="text-slate-600 font-bold uppercase tracking-widest text-xs">Tổng thanh toán</span>
-        <span class="font-black text-2xl text-emerald-600"><%= booking.totalPrice.toLocaleString('vi-VN') %>đ</span>
+        <span class="font-black text-2xl text-primary"><%= booking.totalPrice.toLocaleString('vi-VN') %>đ</span>
       </div>
     </div>
   </div>
 
   <!-- Action Buttons -->
   <div class="flex flex-col sm:flex-row gap-4 justify-center">
-    <a href="/history" class="inline-flex items-center justify-center gap-2 bg-primary hover:bg-emerald-700 text-white px-6 py-3.5 rounded-xl font-bold transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 w-full sm:w-auto">
+    <a href="/history" class="inline-flex items-center justify-center gap-2 bg-primary hover:bg-on-surface text-white px-6 py-3.5 rounded-xl font-bold transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 w-full sm:w-auto">
       <span class="material-symbols-outlined text-xl">history</span>
       Xem lịch sử đặt sân
     </a>

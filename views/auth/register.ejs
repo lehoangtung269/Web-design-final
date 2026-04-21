@@ -1,247 +1,93 @@
-<!DOCTYPE html>
-<html class="light" lang="vi">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>
-    <%= title %> | ĐặtSân.vn
-  </title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,700;0,900;1,900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-    rel="stylesheet" />
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            "primary": "#6a37d3",
-            "primary-container": "#ae8dff",
-            "primary-fixed": "#dccdff",
-            "on-primary": "#ffffff",
-            "on-primary-container": "#00422b",
-            "surface": "#f4f6ff",
-            "surface-container-lowest": "#ffffff",
-            "surface-container-high": "#e6e8ea",
-            "surface-container-highest": "#e0e3e5",
-            "on-surface": "#0b1c30",
-            "on-surface-variant": "#3c4a42",
-            "outline": "#6c7a71",
-            "outline-variant": "#bbcabf",
-            "error": "#ba1a1a",
-          },
-          fontFamily: { headline: ["Inter"], body: ["Inter"] },
-        },
-      },
-    }
-  </script>
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-    }
-
-    .material-symbols-outlined {
-      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-    }
-
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(24px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes float {
-
-      0%,
-      100% {
-        transform: translateY(0);
-      }
-
-      50% {
-        transform: translateY(-8px);
-      }
-    }
-
-    .animate-fade-in {
-      animation: fadeInUp 0.6s ease-out both;
-    }
-
-    .animate-delay-1 {
-      animation-delay: 0.1s;
-    }
-
-    .animate-delay-2 {
-      animation-delay: 0.2s;
-    }
-  </style>
-</head>
-
-<body class="bg-surface text-on-surface min-h-screen flex flex-col">
-
-  <main class="flex-grow flex items-center justify-center px-4 py-12 relative overflow-hidden">
-    <!-- Background Blobs -->
-    <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
-      <div class="absolute -top-24 -left-24 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl"></div>
-      <div class="absolute bottom-0 right-0 w-[50vw] h-[50vw] bg-emerald-400/5 rounded-full blur-[120px]"></div>
-      <div
-        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-sky-400/3 rounded-full blur-[80px]">
-      </div>
+<div class="flex items-center justify-center min-h-[70vh] px-4 py-12 relative overflow-hidden">
+  
+  <div class="w-full max-w-lg z-10">
+    <!-- Brand -->
+    <div class="mb-8 text-center animate-fade-in">
+      <h2 class="kinetic-display text-4xl text-on-surface mb-2 tracking-tighter">ĐĂNG KÝ</h2>
+      <p class="kinetic-label text-on-surface-variant font-medium">BẮT ĐẦU VỚI OBSIDIAN ARCHIVE</p>
     </div>
 
-    <div class="w-full max-w-xl z-10">
-      <!-- Brand -->
-      <div class="mb-8 text-center animate-fade-in">
-        <a href="/"
-          class="inline-flex items-center gap-2 text-3xl font-black text-emerald-700 tracking-tighter mb-2 hover:scale-105 transition-transform">
-          ⚽ ĐặtSân.vn
-        </a>
-        <p class="text-on-surface-variant font-medium">Bắt đầu hành trình chinh phục sân cỏ của bạn</p>
-      </div>
+    <!-- Registration Card -->
+    <div class="bg-surface-container-lowest rounded-3xl shadow-ambient overflow-hidden animate-fade-in animate-delay-1 transition-shadow duration-300">
+      <div class="p-8 md:p-10">
 
-      <!-- Flash Messages -->
-      <% if (typeof error !=='undefined' && error && error.length> 0) { %>
-        <div class="mb-4 animate-fade-in">
-          <% error.forEach(msg=> { %>
-            <div
-              class="bg-red-50 border-l-4 border-red-500 text-red-800 px-5 py-3 rounded-xl mb-2 flex items-center gap-3 text-sm">
-              <span class="material-symbols-outlined text-red-600 text-lg">error</span>
-              <%= msg %>
+        <form action="/auth/register" method="POST" class="space-y-6">
+          <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>" />
+          
+          <div class="space-y-4">
+            <!-- Full Name -->
+            <div class="space-y-2">
+              <label class="kinetic-label text-on-surface-variant flex items-center gap-2" for="name">
+                Họ và Tên
+              </label>
+              <input id="name" name="name" type="text" required
+                class="w-full bg-surface-container-low border border-outline-variant rounded-2xl px-5 py-4 text-on-surface font-medium placeholder-gray-400 focus:border-primary focus:bg-white focus:ring-1 focus:ring-primary focus:outline-none transition-all"
+                placeholder="Nguyễn Văn A" />
             </div>
-            <% }); %>
+
+            <!-- Email -->
+            <div class="space-y-2">
+              <label class="kinetic-label text-on-surface-variant flex items-center gap-2" for="email">
+                Email
+              </label>
+              <input id="email" name="email" type="email" required
+                class="w-full bg-surface-container-low border border-outline-variant rounded-2xl px-5 py-4 text-on-surface font-medium placeholder-gray-400 focus:border-primary focus:bg-white focus:ring-1 focus:ring-primary focus:outline-none transition-all"
+                placeholder="ban@vidu.com" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Password -->
+            <div class="space-y-2">
+              <label class="kinetic-label text-on-surface-variant flex items-center gap-2" for="password">
+                Mật khẩu
+              </label>
+              <input id="password" name="password" type="password" required minlength="6"
+                class="w-full bg-surface-container-low border border-outline-variant rounded-2xl px-5 py-4 text-on-surface font-medium placeholder-gray-400 focus:border-primary focus:bg-white focus:ring-1 focus:ring-primary focus:outline-none transition-all"
+                placeholder="••••••••" />
+            </div>
+
+            <!-- Role Selector -->
+            <div class="space-y-2">
+              <label class="kinetic-label text-on-surface-variant flex items-center gap-2" for="role">
+                Vai trò
+              </label>
+              <div class="relative">
+                <select id="role" name="role" required
+                  class="w-full bg-surface-container-low border border-outline-variant rounded-2xl px-5 py-4 text-on-surface font-medium focus:border-primary focus:bg-white focus:ring-1 focus:ring-primary focus:outline-none transition-all appearance-none">
+                  <option value="user">Khách Đặt Sân</option>
+                  <option value="field_owner">Chủ Sân Bóng</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-on-surface-variant">
+                  <span class="material-symbols-outlined text-xl">expand_more</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Terms Checkbox -->
+          <div class="flex items-start gap-3 mt-2">
+            <input id="terms" type="checkbox" required class="mt-1 w-5 h-5 rounded text-primary focus:ring-primary border-outline-variant" />
+            <label for="terms" class="text-sm text-on-surface-variant leading-tight">
+              Tôi đồng ý với <a href="/terms" class="text-primary font-bold hover:underline">Điều khoản</a> và <a href="/privacy" class="text-primary font-bold hover:underline">Chính sách bảo mật</a>
+            </label>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit"
+            class="w-full bg-primary text-white font-semibold py-4 rounded-full shadow-cta-glow hover:-translate-y-1 hover:bg-primary-container hover:text-primary transition-all duration-300 flex items-center justify-center gap-2 group">
+            <span class="kinetic-label text-white group-hover:text-primary">TẠO TÀI KHOẢN</span>
+            <span class="material-symbols-outlined text-white group-hover:text-primary group-hover:translate-x-1 transition-transform">arrow_forward</span>
+          </button>
+        </form>
+
+        <div class="mt-8 text-center">
+          <p class="text-sm text-on-surface-variant antialiased border-t border-outline-variant pt-6">
+            Đã có tài khoản? 
+            <a href="/auth/login" class="text-primary font-bold hover:underline underline-offset-4 ml-1 transition-all">Đăng nhập ngay</a>
+          </p>
         </div>
-        <% } %>
-          <% if (typeof success !=='undefined' && success && success.length> 0) { %>
-            <div class="mb-4 animate-fade-in">
-              <% success.forEach(msg=> { %>
-                <div
-                  class="bg-emerald-50 border-l-4 border-emerald-500 text-emerald-800 px-5 py-3 rounded-xl mb-2 flex items-center gap-3 text-sm">
-                  <span class="material-symbols-outlined text-emerald-600 text-lg">check_circle</span>
-                  <%= msg %>
-                </div>
-                <% }); %>
-            </div>
-            <% } %>
-
-              <!-- Registration Card -->
-              <div
-                class="bg-white rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.06)] overflow-hidden animate-fade-in animate-delay-1 hover:shadow-[0_16px_50px_rgba(0,0,0,0.09)] transition-shadow duration-300">
-                <div class="p-8 md:p-12">
-                  <h2 class="text-2xl font-extrabold text-on-surface tracking-tight mb-1">Tạo tài khoản mới</h2>
-                  <p class="text-on-surface-variant text-sm mb-8">Đăng ký miễn phí để đặt sân nhanh chóng</p>
-
-                  <form action="/auth/register" method="POST" class="space-y-5">
-                    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-                    <div class="space-y-1.5">
-                      <label
-                        class="text-xs font-bold uppercase tracking-wider text-on-surface-variant flex items-center gap-2">
-                        <span class="material-symbols-outlined text-[18px] text-emerald-600">person</span>
-                        Họ và tên
-                      </label>
-                      <input name="name" type="text" required
-                        class="w-full bg-slate-50 border-2 border-transparent rounded-xl px-4 py-3.5 text-on-surface font-medium placeholder-slate-400 focus:border-emerald-500 focus:bg-white focus:ring-0 focus:shadow-[0_0_0_4px_rgba(16,185,129,0.1)] transition-all outline-none"
-                        placeholder="Nguyễn Văn A" />
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                      <!-- Email -->
-                      <div class="space-y-1.5">
-                        <label
-                          class="text-xs font-bold uppercase tracking-wider text-on-surface-variant flex items-center gap-2">
-                          <span class="material-symbols-outlined text-[18px] text-emerald-600">mail</span>
-                          Email
-                        </label>
-                        <input name="email" type="email" required
-                          class="w-full bg-slate-50 border-2 border-transparent rounded-xl px-4 py-3.5 text-on-surface font-medium placeholder-slate-400 focus:border-emerald-500 focus:bg-white focus:ring-0 focus:shadow-[0_0_0_4px_rgba(16,185,129,0.1)] transition-all outline-none"
-                          placeholder="email@vi-du.com" />
-                      </div>
-                      <!-- Phone -->
-                      <div class="space-y-1.5">
-                        <label
-                          class="text-xs font-bold uppercase tracking-wider text-on-surface-variant flex items-center gap-2">
-                          <span class="material-symbols-outlined text-[18px] text-emerald-600">call</span>
-                          Số điện thoại
-                        </label>
-                        <input name="phone" type="tel" required
-                          class="w-full bg-slate-50 border-2 border-transparent rounded-xl px-4 py-3.5 text-on-surface font-medium placeholder-slate-400 focus:border-emerald-500 focus:bg-white focus:ring-0 focus:shadow-[0_0_0_4px_rgba(16,185,129,0.1)] transition-all outline-none"
-                          placeholder="0912345678" />
-                      </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                      <!-- Password -->
-                      <div class="space-y-1.5">
-                        <label
-                          class="text-xs font-bold uppercase tracking-wider text-on-surface-variant flex items-center gap-2">
-                          <span class="material-symbols-outlined text-[18px] text-emerald-600">lock</span>
-                          Mật khẩu
-                        </label>
-                        <input name="password" type="password" required minlength="6"
-                          class="w-full bg-slate-50 border-2 border-transparent rounded-xl px-4 py-3.5 text-on-surface font-medium placeholder-slate-400 focus:border-emerald-500 focus:bg-white focus:ring-0 focus:shadow-[0_0_0_4px_rgba(16,185,129,0.1)] transition-all outline-none"
-                          placeholder="Ít nhất 6 ký tự" />
-                      </div>
-                      <!-- Confirm Password -->
-                      <div class="space-y-1.5">
-                        <label
-                          class="text-xs font-bold uppercase tracking-wider text-on-surface-variant flex items-center gap-2">
-                          <span class="material-symbols-outlined text-[18px] text-emerald-600">verified_user</span>
-                          Xác nhận mật khẩu
-                        </label>
-                        <input name="confirmPassword" type="password" required
-                          class="w-full bg-slate-50 border-2 border-transparent rounded-xl px-4 py-3.5 text-on-surface font-medium placeholder-slate-400 focus:border-emerald-500 focus:bg-white focus:ring-0 focus:shadow-[0_0_0_4px_rgba(16,185,129,0.1)] transition-all outline-none"
-                          placeholder="Nhập lại mật khẩu" />
-                      </div>
-                    </div>
-
-                    <!-- Terms -->
-                    <div class="flex items-start gap-3 pt-1">
-                      <input type="checkbox" id="terms" required
-                        class="w-5 h-5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 mt-0.5 cursor-pointer" />
-                      <label for="terms" class="text-sm text-on-surface-variant leading-snug cursor-pointer">
-                        Tôi đồng ý với <a href="#" class="text-emerald-600 font-semibold hover:underline">điều khoản sử
-                          dụng</a> và <a href="#" class="text-emerald-600 font-semibold hover:underline">chính sách bảo
-                          mật</a>.
-                      </label>
-                    </div>
-
-                    <!-- Submit -->
-                    <button type="submit"
-                      class="w-full bg-gradient-to-r from-primary to-primary-container text-white font-bold py-4 rounded-xl shadow-md shadow-emerald-200 hover:shadow-xl hover:shadow-emerald-200 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 mt-2 group text-base">
-                      Tạo tài khoản
-                      <span
-                        class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
-                    </button>
-                  </form>
-
-                  <!-- Switch to Login -->
-                  <div class="mt-8 pt-8 border-t border-slate-100 text-center">
-                    <p class="text-on-surface-variant text-sm">
-                      Đã có tài khoản?
-                      <a href="/auth/login"
-                        class="text-emerald-600 font-bold hover:text-emerald-700 transition-colors ml-1">Đăng nhập</a>
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Footer -->
-              <div class="mt-8 text-center text-slate-400 text-xs font-medium tracking-widest uppercase">
-                © 2026 ĐặtSân.vn · Premium Sports Booking
-              </div>
+      </div>
     </div>
-
-    <!-- Side accent image (desktop only) -->
-    <div class="hidden lg:block fixed top-0 right-0 w-1/4 h-full z-[-1] opacity-[0.07]">
-      <img alt="Sports" class="w-full h-full object-cover grayscale"
-        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDX0qn8JJDcoHJ1aWEt-K7TMOagvnH0QITYvQ42aNmw2cUmWFyn71u75Tkg4WEiltDbil_bpJKWORP487otd1dds8izgt2V0-nR7j4RRVc9RIE8WMguLAtRkewHPrd6n0gKM92ZXjrq4NY0TXCvqWomEyqzeHTQLIMOyTuZ4Lvgm_UeHmS97eTJJ_3gCI2Nkt4VDOOIhl5YXHE8c0e3NC99MGIA7RgDoJxKLe0reCFOULLnmWP-ho21wktCcE1QnQ-dmGBV-jaC97Y" />
-    </div>
-  </main>
-</body>
-
-</html>
+  </div>
+</div>

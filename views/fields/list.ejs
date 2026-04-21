@@ -1,137 +1,125 @@
 <!-- PAGE HEADER -->
-<div class="bg-gradient-to-br from-emerald-50 via-white to-sky-50 py-10 px-6">
-  <div class="max-w-7xl mx-auto">
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-      <div>
-        <h1 class="text-4xl font-extrabold text-on-surface tracking-tight mb-2 flex items-center gap-3">
-          <span class="material-symbols-outlined text-primary text-3xl">sports_soccer</span>
-          <%= title %>
-        </h1>
-        <p class="text-on-surface-variant">Tìm sân phù hợp, đặt lịch ngay hôm nay</p>
-      </div>
+<div class="bg-surface-container-low py-16 px-6">
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+    <div>
+      <p class="kinetic-label text-on-surface-variant mb-2">DIRECTORY OUTPOST</p>
+      <h1 class="kinetic-headline text-4xl md:text-5xl text-on-surface tracking-tighter mb-2">
+        <span class="kinetic-display text-primary">CURATED</span> MATCHES
+      </h1>
+      <p class="text-on-surface-variant font-light">Explore premier athletic environments.</p>
+    </div>
 
-      <!-- Filter Tabs -->
-      <div class="flex gap-2 flex-wrap">
-        <a href="/fields"
-          class="px-5 py-2.5 rounded-full font-bold text-sm transition-all duration-200 <%= (!searchParams || !searchParams.type || searchParams.type === 'all') ? 'bg-primary text-white shadow-lg shadow-emerald-200' : 'bg-white text-slate-600 border border-slate-200 hover:border-emerald-300 hover:text-emerald-600' %>">
-          Tất cả
-        </a>
-        <a href="/fields?type=5-a-side"
-          class="px-5 py-2.5 rounded-full font-bold text-sm transition-all duration-200 <%= searchParams && searchParams.type === '5-a-side' ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-200' : 'bg-white text-slate-600 border border-slate-200 hover:border-emerald-300 hover:text-emerald-600' %>">
-          ⚽ Sân 5
-        </a>
-        <a href="/fields?type=7-a-side"
-          class="px-5 py-2.5 rounded-full font-bold text-sm transition-all duration-200 <%= searchParams && searchParams.type === '7-a-side' ? 'bg-sky-500 text-white shadow-lg shadow-sky-200' : 'bg-white text-slate-600 border border-slate-200 hover:border-sky-300 hover:text-sky-600' %>">
-          ⚽ Sân 7
-        </a>
-        <a href="/fields?type=11-a-side"
-          class="px-5 py-2.5 rounded-full font-bold text-sm transition-all duration-200 <%= searchParams && searchParams.type === '11-a-side' ? 'bg-orange-500 text-white shadow-lg shadow-orange-200' : 'bg-white text-slate-600 border border-slate-200 hover:border-orange-300 hover:text-orange-600' %>">
-          ⚽ Sân 11
-        </a>
-      </div>
+    <!-- Filter Tabs -->
+    <div class="flex gap-2 flex-wrap">
+      <a href="/fields"
+        class="px-6 py-3 rounded-full font-bold text-xs uppercase tracking-[0.1em] font-['Space_Grotesk'] transition-all duration-300 <%= (!searchParams || !searchParams.type || searchParams.type === 'all') ? 'bg-primary text-white shadow-cta-glow' : 'bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-white' %>">
+        TẤT CẢ
+      </a>
+      <a href="/fields?type=5-a-side"
+        class="px-6 py-3 rounded-full font-bold text-xs uppercase tracking-[0.1em] font-['Space_Grotesk'] transition-all duration-300 <%= searchParams && searchParams.type === '5-a-side' ? 'bg-primary text-white shadow-cta-glow' : 'bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-white' %>">
+        SÂN 5
+      </a>
+      <a href="/fields?type=7-a-side"
+        class="px-6 py-3 rounded-full font-bold text-xs uppercase tracking-[0.1em] font-['Space_Grotesk'] transition-all duration-300 <%= searchParams && searchParams.type === '7-a-side' ? 'bg-primary text-white shadow-cta-glow' : 'bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-white' %>">
+        SÂN 7
+      </a>
+      <a href="/fields?type=11-a-side"
+        class="px-6 py-3 rounded-full font-bold text-xs uppercase tracking-[0.1em] font-['Space_Grotesk'] transition-all duration-300 <%= searchParams && searchParams.type === '11-a-side' ? 'bg-primary text-white shadow-cta-glow' : 'bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-white' %>">
+        SÂN 11
+      </a>
     </div>
   </div>
 </div>
 
-<div class="max-w-7xl mx-auto px-6 py-8">
+<div class="max-w-7xl mx-auto px-6 py-12">
   <!-- Active filters -->
   <% if (searchParams && (searchParams.date || searchParams.keyword || searchParams.time)) { %>
-    <div
-      class="bg-white border border-slate-100 rounded-2xl p-4 mb-6 flex items-center gap-3 flex-wrap shadow-sm animate-fade-in">
-      <span class="text-slate-500 text-sm flex items-center gap-1">
-        <span class="material-symbols-outlined text-sm">filter_alt</span> Bộ lọc:
+    <div class="bg-surface-container rounded-[2rem] p-4 mb-8 flex items-center gap-3 flex-wrap shadow-ambient animate-fade-in">
+      <span class="kinetic-label text-on-surface-variant flex items-center gap-2">
+        <span class="material-symbols-outlined text-sm">filter_alt</span> ĐANG LỌC:
       </span>
       <% if (searchParams.keyword) { %>
-        <span
-          class="bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full text-sm font-semibold flex items-center gap-1">
-          <span class="material-symbols-outlined text-xs">search</span> "<%= searchParams.keyword %>"
+        <span class="bg-white text-primary px-4 py-2 rounded-full text-xs font-['Space_Grotesk'] font-bold tracking-widest flex items-center gap-1 shadow-sm">
+          <span class="material-symbols-outlined text-[14px]">search</span> "<%= searchParams.keyword %>"
         </span>
-        <% } %>
-          <% if (searchParams.date) { %>
-            <span class="bg-sky-50 text-sky-700 px-3 py-1.5 rounded-full text-sm font-semibold flex items-center gap-1">
-              <span class="material-symbols-outlined text-xs">calendar_today</span>
-              <%= searchParams.date %>
-            </span>
-            <% } %>
-              <% if (searchParams.time) { %>
-                <span
-                  class="bg-orange-50 text-orange-700 px-3 py-1.5 rounded-full text-sm font-semibold flex items-center gap-1">
-                  <span class="material-symbols-outlined text-xs">schedule</span>
-                  <%= searchParams.time %>
-                </span>
-                <% } %>
-                  <a href="/fields"
-                    class="ml-auto text-slate-400 hover:text-red-500 text-sm font-medium flex items-center gap-1 transition-colors">
-                    <span class="material-symbols-outlined text-sm">close</span> Xóa lọc
-                  </a>
+      <% } %>
+      <% if (searchParams.date) { %>
+        <span class="bg-white text-primary px-4 py-2 rounded-full text-xs font-['Space_Grotesk'] font-bold tracking-widest flex items-center gap-1 shadow-sm">
+          <span class="material-symbols-outlined text-[14px]">calendar_today</span>
+          <%= searchParams.date %>
+        </span>
+      <% } %>
+      <% if (searchParams.time) { %>
+        <span class="bg-white text-primary px-4 py-2 rounded-full text-xs font-['Space_Grotesk'] font-bold tracking-widest flex items-center gap-1 shadow-sm">
+          <span class="material-symbols-outlined text-[14px]">schedule</span>
+          <%= searchParams.time %>
+        </span>
+      <% } %>
+      <a href="/fields" class="ml-auto kinetic-label text-on-surface-variant hover:text-error flex items-center gap-1 transition-colors pr-2">
+        <span class="material-symbols-outlined text-[16px]">close</span> XÓA LỌC
+      </a>
     </div>
-    <% } %>
+  <% } %>
 
-      <!-- Result count -->
-      <p class="text-slate-500 text-sm mb-6">
-        Tìm thấy <strong class="text-on-surface">
-          <%= fields.length %>
-        </strong> sân
-      </p>
-
-      <!-- Fields grid -->
-      <% if (fields && fields.length> 0) { %>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <% fields.forEach((field, idx)=> { %>
-            <a href="/fields/<%= field._id %><%= searchParams && searchParams.date ? '?date=' + searchParams.date : '' %>"
-              class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 block group animate-fade-in"
-              style="animation-delay: <%= Math.min(idx * 0.08, 0.5) %>s;">
-              <div class="relative h-56 overflow-hidden">
-                <% if (field.images && field.images.length> 0) { %>
-                  <img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    src="<%= field.images[0] %>" alt="<%= field.name %>" />
-                  <% } else { %>
-                    <div
-                      class="w-full h-full bg-gradient-to-br from-emerald-100 to-cyan-100 flex items-center justify-center">
-                      <span class="material-symbols-outlined text-7xl text-emerald-300">sports_soccer</span>
-                    </div>
-                    <% } %>
-                      <div
-                        class="absolute top-4 right-4 <%= field.type === '5-a-side' ? 'bg-emerald-500' : field.type === '7-a-side' ? 'bg-sky-500' : 'bg-orange-500' %> text-white px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest">
-                        <%= field.type==='5-a-side' ? 'Sân 5' : field.type==='7-a-side' ? 'Sân 7' : 'Sân 11' %>
-                      </div>
-              </div>
-              <div class="p-6">
-                <h4 class="text-lg font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">
-                  <%= field.name %>
-                </h4>
-                <div class="flex items-center gap-2 text-on-surface-variant text-sm mb-5">
-                  <span class="material-symbols-outlined text-sm text-orange-400">location_on</span>
-                  <%= field.address %>
-                </div>
-                <div class="flex items-center justify-between pt-4 border-t border-slate-100">
-                  <div>
-                    <span class="text-xs text-on-surface-variant font-bold uppercase">Giá từ</span>
-                    <div class="text-lg font-black text-primary">
-                      <%= field.pricePerSlot.toLocaleString('vi-VN') %>đ<span
-                          class="text-sm font-medium text-on-surface-variant">/slot</span>
-                    </div>
-                  </div>
-                  <span
-                    class="bg-slate-100 group-hover:bg-primary group-hover:text-white text-slate-600 px-4 py-2 rounded-xl font-bold transition-all duration-200 text-sm flex items-center gap-1">
-                    Đặt ngay <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                  </span>
-                </div>
-              </div>
-            </a>
-            <% }); %>
-        </div>
-        <% } else { %>
-          <div class="text-center py-20 animate-fade-in">
-            <div class="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <span class="material-symbols-outlined text-5xl text-slate-300">search_off</span>
+  <!-- Fields grid -->
+  <% if (fields && fields.length > 0) { %>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <% fields.forEach((field, idx) => { %>
+        <a href="/fields/<%= field._id %><%= searchParams && searchParams.date ? '?date=' + searchParams.date : '' %>"
+          class="group block h-[500px] relative overflow-hidden rounded-[2.5rem] transform hover:-translate-y-2 transition-all duration-700 shadow-sm hover:shadow-ambient animate-fade-in"
+          style="animation-delay: <%= Math.min(idx * 0.08, 0.5) %>s;">
+          
+          <!-- Image Layer -->
+          <% if (field.images && field.images.length > 0) { %>
+            <img class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+              src="<%= field.images[0] %>" alt="<%= field.name %>" />
+          <% } else { %>
+            <div class="w-full h-full bg-surface-container flex items-center justify-center transition-transform duration-1000 group-hover:scale-105">
+              <span class="material-symbols-outlined text-6xl text-on-surface-variant/30">sports_soccer</span>
             </div>
-            <p class="text-lg text-slate-500 mb-2">Không tìm thấy sân nào phù hợp.</p>
-            <a href="/fields"
-              class="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 px-6 py-3 rounded-full font-bold text-sm hover:bg-emerald-100 transition-all mt-4">
-              <span class="material-symbols-outlined text-sm">arrow_back</span>
-              Xem tất cả sân
-            </a>
-          </div>
           <% } %>
+
+          <!-- Gradient Overlay -->
+          <div class="absolute inset-0 bg-gradient-to-t from-[#0b1c30] via-[#0b1c30]/40 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-700"></div>
+
+          <!-- Top Badge -->
+          <div class="absolute top-6 right-6 bg-white/20 backdrop-blur-md border border-white/20 text-white px-4 py-1.5 rounded-full text-[10px] font-['Space_Grotesk'] font-bold uppercase tracking-[0.2em] shadow-sm">
+            <%= field.type === '5-a-side' ? 'Sân 5' : field.type === '7-a-side' ? 'Sân 7' : 'Sân 11' %>
+          </div>
+
+          <!-- Bottom Content -->
+          <div class="absolute bottom-0 left-0 right-0 p-8">
+            <p class="text-[9px] text-primary-container uppercase font-['Space_Grotesk'] tracking-[0.2em] font-bold mb-2">
+              <span class="material-symbols-outlined text-[10px] align-middle mr-1">location_on</span>
+              <span class="align-middle line-clamp-1 block sm:inline"><%= field.address %></span>
+            </p>
+            <h3 class="text-white text-3xl font-black italic tracking-tighter mb-4 leading-none"><%= field.name %></h3>
+            
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-[9px] text-white/60 uppercase font-['Space_Grotesk'] tracking-[0.2em] font-bold">GIÁ TỪ</p>
+                <p class="text-white font-medium text-lg leading-tight mt-1"><%= field.pricePerSlot.toLocaleString('vi-VN') %>đ <span class="text-white/60 text-xs">/ slot</span></p>
+              </div>
+              <div class="w-12 h-12 bg-white/10 backdrop-blur rounded-full flex items-center justify-center text-white group-hover:bg-primary group-hover:shadow-cta-glow transition-all duration-500">
+                <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+              </div>
+            </div>
+          </div>
+        </a>
+      <% }); %>
+    </div>
+  <% } else { %>
+    <div class="text-center py-32 bg-surface-container-lowest rounded-[3rem] animate-fade-in shadow-ambient">
+      <div class="w-24 h-24 bg-surface-container rounded-full flex items-center justify-center mx-auto mb-6">
+        <span class="material-symbols-outlined text-5xl text-on-surface-variant">search_off</span>
+      </div>
+      <h3 class="kinetic-headline text-2xl text-on-surface mb-2">KHÔNG TÌM THẤY SÂN</h3>
+      <p class="text-on-surface-variant mb-6 font-light">Thử điều chỉnh lại bộ lọc hoặc quay lại thư mục gốc.</p>
+      <a href="/fields"
+        class="inline-flex items-center gap-2 bg-primary text-white px-8 py-3 rounded-full font-bold text-xs font-['Space_Grotesk'] uppercase tracking-widest hover:bg-primary-container hover:text-primary transition-all shadow-cta-glow">
+        <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+        XEM TẤT CẢ SÂN
+      </a>
+    </div>
+  <% } %>
 </div>
