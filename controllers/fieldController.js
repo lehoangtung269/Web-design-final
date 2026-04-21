@@ -2,6 +2,36 @@ const Field = require('../models/Field');
 const TimeSlot = require('../models/TimeSlot');
 const { escapeRegex } = require('../utils/escapeRegex');
 
+const normalizeSearchParams = (query = {}) => ({
+  date: query.date || '',
+  time: query.time || '',
+  type: query.type || 'all',
+  keyword: query.keyword ? query.keyword.trim() : '',
+  city: query.city || 'all',
+  district: query.district || 'all',
+});
+
+const getResultMeta = (fields, searchParams) => {
+  const prices = fields.map((item) => item.pricePerSlot).filter((price) => Number.isFinite(price));
+  const cityCount = new Set(fields.map((item) => item.city).filter(Boolean)).size;
+  const activeFilterCount = [
+    searchParams.keyword,
+    searchParams.date,
+    searchParams.time,
+    searchParams.type !== 'all' ? searchParams.type : '',
+    searchParams.city !== 'all' ? searchParams.city : '',
+    searchParams.district !== 'all' ? searchParams.district : '',
+  ].filter(Boolean).length;
+
+  return {
+    total: fields.length,
+    cityCount,
+    minPrice: prices.length ? Math.min(...prices) : null,
+    maxPrice: prices.length ? Math.max(...prices) : null,
+    activeFilterCount,
+  };
+};
+
 // Helper: Parse 'YYYY-MM-DD' string as LOCAL midnight (not UTC)
 function parseLocalDate(dateStr) {
   const [y, m, d] = dateStr.split('-').map(Number);
@@ -21,7 +51,8 @@ function toLocalDateString(date) {
 // ================================
 const getFieldList = async (req, res) => {
   try {
-    const { type, city, district, keyword } = req.query;
+    const searchParams = normalizeSearchParams(req.query);
+    const { type, city, district, keyword } = searchParams;
     const filter = { status: 'active' };
 
     if (type && type !== 'all') {
@@ -33,8 +64,8 @@ const getFieldList = async (req, res) => {
     if (district && district !== 'all') {
       filter.district = district;
     }
-    if (keyword && keyword.trim()) {
-      const safeKeyword = escapeRegex(keyword.trim());
+    if (keyword) {
+      const safeKeyword = escapeRegex(keyword);
       filter.$or = [
         { name: { $regex: safeKeyword, $options: 'i' } },
         { address: { $regex: safeKeyword, $options: 'i' } },
@@ -47,24 +78,31 @@ const getFieldList = async (req, res) => {
       Field.distinct('district', { status: 'active' }),
     ]);
 
+    const resultMeta = getResultMeta(fields, searchParams);
+
     res.render('fields/list', {
       title: 'Danh sách sân bóng',
       activeNav: 'fields',
+      viewMode: 'directory',
       fields,
       cities: cityAgg.filter(Boolean).sort(),
       districts: districtAgg.filter(Boolean).sort(),
-      searchParams: { type: type || 'all', city: city || 'all', district: district || 'all', keyword: keyword || '' },
+      searchParams,
+      resultMeta,
     });
   } catch (error) {
     console.error('Field List Error:', error);
     req.flash('error', 'Lỗi khi tải danh sách sân!');
+    const searchParams = normalizeSearchParams(req.query);
     res.render('fields/list', {
       title: 'Danh sách sân bóng',
       activeNav: 'fields',
+      viewMode: 'directory',
       fields: [],
       cities: [],
       districts: [],
-      searchParams: {},
+      searchParams,
+      resultMeta: getResultMeta([], searchParams),
     });
   }
 };

@@ -1,6 +1,37 @@
 const Field = require('../models/Field');
 const { escapeRegex } = require('../utils/escapeRegex');
 
+const normalizeSearchParams = (query = {}) => ({
+  date: query.date || '',
+  time: query.time || '',
+  type: query.type || 'all',
+  keyword: query.keyword ? query.keyword.trim() : '',
+  city: query.city || 'all',
+  district: query.district || 'all',
+});
+
+const getResultMeta = (fields, searchParams) => {
+  const prices = fields.map((item) => item.pricePerSlot).filter((price) => Number.isFinite(price));
+  const cityCount = new Set(fields.map((item) => item.city).filter(Boolean)).size;
+
+  const activeFilterCount = [
+    searchParams.keyword,
+    searchParams.date,
+    searchParams.time,
+    searchParams.type !== 'all' ? searchParams.type : '',
+    searchParams.city !== 'all' ? searchParams.city : '',
+    searchParams.district !== 'all' ? searchParams.district : '',
+  ].filter(Boolean).length;
+
+  return {
+    total: fields.length,
+    cityCount,
+    minPrice: prices.length ? Math.min(...prices) : null,
+    maxPrice: prices.length ? Math.max(...prices) : null,
+    activeFilterCount,
+  };
+};
+
 // ================================
 // GET / — Trang chủ: hiển thị sân nổi bật + thanh tìm kiếm
 // ================================
@@ -33,7 +64,8 @@ const getHomePage = async (req, res) => {
 // ================================
 const searchFields = async (req, res) => {
   try {
-    const { date, time, type, keyword, city, district } = req.query;
+    const searchParams = normalizeSearchParams(req.query);
+    const { type, keyword, city, district } = searchParams;
 
     // Xây dựng filter
     const filter = { status: 'active' };
@@ -48,8 +80,8 @@ const searchFields = async (req, res) => {
       filter.district = district;
     }
 
-    if (keyword && keyword.trim()) {
-      const safeKeyword = escapeRegex(keyword.trim());
+    if (keyword) {
+      const safeKeyword = escapeRegex(keyword);
       filter.$or = [
         { name: { $regex: safeKeyword, $options: 'i' } },
         { address: { $regex: safeKeyword, $options: 'i' } },
@@ -62,24 +94,31 @@ const searchFields = async (req, res) => {
       Field.distinct('district', { status: 'active' }),
     ]);
 
+    const resultMeta = getResultMeta(fields, searchParams);
+
     res.render('fields/list', {
       title: 'Kết quả tìm kiếm',
       activeNav: 'fields',
+      viewMode: 'search',
       fields,
       cities: cityAgg.filter(Boolean).sort(),
       districts: districtAgg.filter(Boolean).sort(),
-      searchParams: { date, time, type, keyword, city, district },
+      searchParams,
+      resultMeta,
     });
   } catch (error) {
     console.error('Search Error:', error);
+    const searchParams = normalizeSearchParams(req.query);
     req.flash('error', 'Lỗi khi tìm kiếm sân!');
     res.render('fields/list', {
       title: 'Kết quả tìm kiếm',
       activeNav: 'fields',
+      viewMode: 'search',
       fields: [],
       cities: [],
       districts: [],
-      searchParams: req.query,
+      searchParams,
+      resultMeta: getResultMeta([], searchParams),
     });
   }
 };
