@@ -29,6 +29,33 @@
       </a>
     </div>
   </div>
+
+  <div class="max-w-7xl mx-auto mt-6">
+    <form action="<%= searchParams && (searchParams.keyword || searchParams.date || searchParams.time) ? '/search' : '/fields' %>" method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-3">
+      <% if (searchParams && searchParams.keyword) { %><input type="hidden" name="keyword" value="<%= searchParams.keyword %>"><% } %>
+      <% if (searchParams && searchParams.date) { %><input type="hidden" name="date" value="<%= searchParams.date %>"><% } %>
+      <% if (searchParams && searchParams.time) { %><input type="hidden" name="time" value="<%= searchParams.time %>"><% } %>
+      <select name="city" class="rounded-full bg-white border border-outline-variant px-4 py-3 text-sm">
+        <option value="all">Tất cả thành phố</option>
+        <% (cities || []).forEach((item) => { %>
+          <option value="<%= item %>" <%= searchParams && searchParams.city === item ? 'selected' : '' %>><%= item %></option>
+        <% }) %>
+      </select>
+      <select name="district" class="rounded-full bg-white border border-outline-variant px-4 py-3 text-sm">
+        <option value="all">Tất cả quận/huyện</option>
+        <% (districts || []).forEach((item) => { %>
+          <option value="<%= item %>" <%= searchParams && searchParams.district === item ? 'selected' : '' %>><%= item %></option>
+        <% }) %>
+      </select>
+      <select name="type" class="rounded-full bg-white border border-outline-variant px-4 py-3 text-sm">
+        <option value="all" <%= !searchParams || searchParams.type === 'all' ? 'selected' : '' %>>Tất cả loại sân</option>
+        <option value="5-a-side" <%= searchParams && searchParams.type === '5-a-side' ? 'selected' : '' %>>Sân 5</option>
+        <option value="7-a-side" <%= searchParams && searchParams.type === '7-a-side' ? 'selected' : '' %>>Sân 7</option>
+        <option value="11-a-side" <%= searchParams && searchParams.type === '11-a-side' ? 'selected' : '' %>>Sân 11</option>
+      </select>
+      <button type="submit" class="rounded-full bg-primary text-white font-semibold px-4 py-3">Lọc vị trí</button>
+    </form>
+  </div>
 </div>
 
 <div class="max-w-7xl mx-auto px-6 py-12">

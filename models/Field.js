@@ -13,6 +13,16 @@ const fieldSchema = new mongoose.Schema(
       required: [true, 'Vui lòng nhập địa chỉ sân'],
       trim: true,
     },
+    city: {
+      type: String,
+      required: [true, 'Vui lòng nhập thành phố'],
+      trim: true,
+    },
+    district: {
+      type: String,
+      required: [true, 'Vui lòng nhập quận/huyện'],
+      trim: true,
+    },
     type: {
       type: String,
       required: [true, 'Vui lòng chọn loại sân'],
@@ -67,6 +77,7 @@ const fieldSchema = new mongoose.Schema(
 
 // Index để tìm kiếm nhanh
 fieldSchema.index({ type: 1, status: 1 });
+fieldSchema.index({ city: 1, district: 1, status: 1 });
 fieldSchema.index({ name: 'text', address: 'text' });
 
 const Field = mongoose.model('Field', fieldSchema);

@@ -12,7 +12,9 @@ const showRegister = (req, res) => {
 // ================================
 const register = async (req, res) => {
   try {
-    const { name, email, password, confirmPassword, phone } = req.body;
+    const { name, email, password, confirmPassword, phone, role } = req.body;
+    const allowedRoles = ['user', 'field_owner'];
+    const safeRole = allowedRoles.includes(role) ? role : 'user';
 
     // Kiểm tra mật khẩu xác nhận
     if (password !== confirmPassword) {
@@ -28,7 +30,7 @@ const register = async (req, res) => {
     }
 
     // Tạo user mới (password sẽ tự động hash bởi pre-save hook)
-    await User.create({ name, email, password, phone });
+    await User.create({ name, email, password, phone, role: safeRole });
 
     // KHÔNG tự động đăng nhập — redirect về trang login
     req.flash('success', 'Đăng ký thành công! Vui lòng đăng nhập để tiếp tục.');

@@ -20,20 +20,32 @@ function toLocalDateString(date) {
 // ================================
 const getFieldList = async (req, res) => {
   try {
-    const { type } = req.query;
+    const { type, city, district } = req.query;
     const filter = { status: 'active' };
 
     if (type && type !== 'all') {
       filter.type = type;
     }
+    if (city && city !== 'all') {
+      filter.city = city;
+    }
+    if (district && district !== 'all') {
+      filter.district = district;
+    }
 
-    const fields = await Field.find(filter).sort({ createdAt: -1 });
+    const [fields, cityAgg, districtAgg] = await Promise.all([
+      Field.find(filter).sort({ createdAt: -1 }),
+      Field.distinct('city', { status: 'active' }),
+      Field.distinct('district', { status: 'active' }),
+    ]);
 
     res.render('fields/list', {
       title: 'Danh sách sân bóng',
       activeNav: 'fields',
       fields,
-      searchParams: { type: type || 'all' },
+      cities: cityAgg.filter(Boolean).sort(),
+      districts: districtAgg.filter(Boolean).sort(),
+      searchParams: { type: type || 'all', city: city || 'all', district: district || 'all' },
     });
   } catch (error) {
     console.error('Field List Error:', error);
@@ -42,6 +54,8 @@ const getFieldList = async (req, res) => {
       title: 'Danh sách sân bóng',
       activeNav: 'fields',
       fields: [],
+      cities: [],
+      districts: [],
       searchParams: {},
     });
   }

@@ -32,13 +32,19 @@ const getHomePage = async (req, res) => {
 // ================================
 const searchFields = async (req, res) => {
   try {
-    const { date, time, type, keyword } = req.query;
+    const { date, time, type, keyword, city, district } = req.query;
 
     // Xây dựng filter
     const filter = { status: 'active' };
 
     if (type && type !== 'all') {
       filter.type = type;
+    }
+    if (city && city !== 'all') {
+      filter.city = city;
+    }
+    if (district && district !== 'all') {
+      filter.district = district;
     }
 
     if (keyword && keyword.trim()) {
@@ -48,21 +54,29 @@ const searchFields = async (req, res) => {
       ];
     }
 
-    const fields = await Field.find(filter).sort({ createdAt: -1 });
+    const [fields, cityAgg, districtAgg] = await Promise.all([
+      Field.find(filter).sort({ createdAt: -1 }),
+      Field.distinct('city', { status: 'active' }),
+      Field.distinct('district', { status: 'active' }),
+    ]);
 
     res.render('fields/list', {
       title: 'Kết quả tìm kiếm',
-      layout: false,
+      activeNav: 'fields',
       fields,
-      searchParams: { date, time, type, keyword },
+      cities: cityAgg.filter(Boolean).sort(),
+      districts: districtAgg.filter(Boolean).sort(),
+      searchParams: { date, time, type, keyword, city, district },
     });
   } catch (error) {
     console.error('Search Error:', error);
     req.flash('error', 'Lỗi khi tìm kiếm sân!');
     res.render('fields/list', {
       title: 'Kết quả tìm kiếm',
-      layout: false,
+      activeNav: 'fields',
       fields: [],
+      cities: [],
+      districts: [],
       searchParams: req.query,
     });
   }

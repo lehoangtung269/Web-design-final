@@ -19,6 +19,13 @@ function toLocalDateString(date) {
 
 // Layout chung cho tất cả admin views
 const adminLayout = { layout: 'layouts/admin' };
+const OWNER_ROLE = 'field_owner';
+
+const getOwnerOptions = async () => {
+  return User.find({ role: OWNER_ROLE, isActive: true })
+    .select('_id name email')
+    .sort({ name: 1 });
+};
 
 // ================================
 // GET /admin/dashboard — Trang tổng quan
@@ -395,25 +402,39 @@ const getFields = async (req, res) => {
 };
 
 // GET /admin/fields/create — Form tạo sân mới
-const showCreateField = (req, res) => {
-  res.render('admin/fields/create', {
-    ...adminLayout,
-    title: 'Thêm sân mới',
-    activeNav: 'fields',
-    pageIcon: '➕',
-    pageTitle: 'Thêm sân bóng mới',
-    topbarRight: '<a href="/admin/fields" class="btn btn-sm btn-outline">← Quay lại</a>',
-  });
+const showCreateField = async (req, res) => {
+  try {
+    const owners = await getOwnerOptions();
+    res.render('admin/fields/create', {
+      ...adminLayout,
+      title: 'Thêm sân mới',
+      activeNav: 'fields',
+      pageIcon: '➕',
+      pageTitle: 'Thêm sân bóng mới',
+      topbarRight: '<a href="/admin/fields" class="btn btn-sm btn-outline">← Quay lại</a>',
+      owners,
+    });
+  } catch (error) {
+    console.error('Show Create Field Error:', error);
+    req.flash('error', 'Lỗi khi tải form tạo sân!');
+    res.redirect('/admin/fields');
+  }
 };
 
 // POST /admin/fields — Tạo sân mới
 const createField = async (req, res) => {
   try {
-    const { name, address, type, pricePerSlot, description, facilities } = req.body || {};
+    const { name, address, city, district, type, pricePerSlot, description, facilities, owner } = req.body || {};
 
-    if (!name || !address || !type || !pricePerSlot) {
+    if (!name || !address || !city || !district || !type || !pricePerSlot) {
       req.flash('error', 'Vui lòng điền đầy đủ thông tin bắt buộc!');
       return res.redirect('/admin/fields/create');
+    }
+
+    let ownerId = null;
+    if (owner) {
+      const ownerExists = await User.exists({ _id: owner, role: OWNER_ROLE });
+      ownerId = ownerExists ? owner : null;
     }
 
     const facilitiesArr = [];
@@ -428,10 +449,13 @@ const createField = async (req, res) => {
     await Field.create({
       name,
       address,
+      city,
+      district,
       type,
       pricePerSlot,
       description,
       facilities: facilitiesArr,
+      owner: ownerId,
       images: req.cloudinaryUrls || [],
     });
 
@@ -449,7 +473,10 @@ const showEditField = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const field = await Field.findById(id);
+    const [field, owners] = await Promise.all([
+      Field.findById(id),
+      getOwnerOptions(),
+    ]);
     if (!field) {
       req.flash('error', 'Không tìm thấy sân!');
       return res.redirect('/admin/fields');
@@ -463,6 +490,7 @@ const showEditField = async (req, res) => {
       pageTitle: 'Chỉnh sửa sân bóng',
       topbarRight: '<a href="/admin/fields" class="btn btn-sm btn-outline">← Quay lại</a>',
       field,
+      owners,
     });
   } catch (error) {
     console.error('Edit Field Error:', error);
@@ -475,11 +503,17 @@ const showEditField = async (req, res) => {
 const updateField = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, address, type, pricePerSlot, description, status, facilities } = req.body || {};
+    const { name, address, city, district, type, pricePerSlot, description, status, facilities, owner } = req.body || {};
 
-    if (!name || !address) {
+    if (!name || !address || !city || !district) {
       req.flash('error', 'Vui lòng điền đầy đủ thông tin!');
       return res.redirect(`/admin/fields/${id}/edit`);
+    }
+
+    let ownerId = null;
+    if (owner) {
+      const ownerExists = await User.exists({ _id: owner, role: OWNER_ROLE });
+      ownerId = ownerExists ? owner : null;
     }
 
     const facilitiesArr = [];
@@ -492,7 +526,7 @@ const updateField = async (req, res) => {
     }
 
     // Xây dựng object update
-    const updateData = { name, address, type, pricePerSlot, description, status, facilities: facilitiesArr };
+    const updateData = { name, address, city, district, type, pricePerSlot, description, status, facilities: facilitiesArr, owner: ownerId };
 
     // Nếu có ảnh mới được upload lên Cloudinary → thay thế ảnh cũ
     if (req.cloudinaryUrls && req.cloudinaryUrls.length > 0) {

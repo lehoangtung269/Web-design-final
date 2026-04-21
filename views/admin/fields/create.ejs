@@ -46,6 +46,17 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
+                        <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1.5 pl-1">City</label>
+                        <input type="text" name="city" required class="w-full bg-surface-container-lowest border-none rounded-lg px-4 py-3 text-sm font-medium text-on-surface focus:ring-1 focus:ring-primary/50 placeholder-on-surface-variant/50 transition-all" placeholder="e.g. Ho Chi Minh City">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1.5 pl-1">District</label>
+                        <input type="text" name="district" required class="w-full bg-surface-container-lowest border-none rounded-lg px-4 py-3 text-sm font-medium text-on-surface focus:ring-1 focus:ring-primary/50 placeholder-on-surface-variant/50 transition-all" placeholder="e.g. District 1">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
                         <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1.5 pl-1">Pitch Type</label>
                         <select name="type" required class="w-full bg-surface-container-lowest border-none rounded-lg px-4 py-3 text-sm font-medium text-on-surface focus:ring-1 focus:ring-primary/50 transition-all">
                             <option value="5-a-side">5-a-side</option>
@@ -113,6 +124,18 @@
     <div class="space-y-6">
         
         <!-- Status -->
+        <div class="bg-surface-container rounded-xl p-6 border border-outline-variant/10 shadow-sm">
+            <h2 class="text-sm font-bold text-on-surface flex items-center gap-2 mb-4">
+                <span class="material-symbols-outlined text-sm text-primary">person</span> Field Owner
+            </h2>
+            <select name="owner" class="w-full bg-surface-container-lowest border-none rounded-lg px-4 py-3 text-sm font-medium text-on-surface focus:ring-1 focus:ring-primary/50 transition-all">
+                <option value="">-- Chưa gán owner --</option>
+                <% (owners || []).forEach((ownerUser) => { %>
+                    <option value="<%= ownerUser._id %>"><%= ownerUser.name %> - <%= ownerUser.email %></option>
+                <% }) %>
+            </select>
+        </div>
+
         <div class="bg-surface-container rounded-xl p-6 border border-outline-variant/10 shadow-sm">
             <div class="flex items-center justify-between mb-4">
                 <h2 class="text-sm font-bold text-on-surface">Status</h2>

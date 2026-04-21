@@ -34,7 +34,7 @@
                         <tr class="group cursor-pointer hover:shadow-ambient" onclick="window.location='/admin/bookings/<%= booking._id %>'">
                             <td class="px-6 py-5">
                                 <div class="font-mono text-xs text-on-surface-variant mb-1">#<%= booking._id.toString().slice(-8).toUpperCase() %></div>
-                                <div class="text-sm text-white font-medium"><%= booking.date.toLocaleDateString('vi-VN') %></div>
+                                <div class="text-sm text-white font-medium"><%= new Date(booking.date).toLocaleDateString('vi-VN') %></div>
                                 <div class="text-xs text-primary bg-primary/10 inline-block px-2 py-0.5 rounded mt-1 font-mono"><%= booking.startTime %> - <%= booking.endTime %></div>
                             </td>
                             <td class="px-6 py-5">

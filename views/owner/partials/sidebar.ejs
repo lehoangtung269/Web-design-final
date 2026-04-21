@@ -1,13 +1,13 @@
 <!-- SideNavBar Anchor -->
 <aside
-    class="h-screen w-64 fixed left-0 top-0 border-r border-[#1C2025] bg-[#0A0E13] flex flex-col p-4 gap-2 z-50 overflow-y-auto hidden lg:flex">
+    class="h-screen w-64 fixed left-0 top-0 border-r border-outline-variant bg-white flex flex-col p-4 gap-2 z-50 overflow-y-auto hidden lg:flex">
     <div class="mb-8 px-2 flex items-center gap-3">
         <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
             <span class="material-symbols-outlined text-on-primary text-xl"
                 style="font-variation-settings: 'FILL' 1;">sports_soccer</span>
         </div>
         <div>
-            <h1 class="text-lg font-bold tracking-tighter text-[#4EDE63]">Owner Portal</h1>
+            <h1 class="text-lg font-bold tracking-tighter text-primary">Owner Portal</h1>
             <p class="text-[10px] font-medium tracking-widest text-on-surface-variant uppercase">Owner Panel</p>
         </div>
     </div>
@@ -15,7 +15,7 @@
     <nav class="flex-1 space-y-1">
         <!-- Overview -->
         <% const isDashboard=typeof activeNav !=='undefined' && activeNav==='owner-dashboard' ; %>
-            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 <%= isDashboard ? 'text-[#4EDE63] bg-[#1C2025]/50 font-semibold scale-[0.98]' : 'text-[#BBCABF] hover:text-white hover:bg-[#1C2025]' %>"
+            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 <%= isDashboard ? 'text-primary bg-primary/10 font-semibold scale-[0.98]' : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low' %>"
                 href="/owner/dashboard">
                 <span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
                 <span class="font-['Inter'] text-sm font-medium tracking-tight">Overview</span>
@@ -23,7 +23,7 @@
 
             <!-- Bookings -->
             <% const isBookings=typeof activeNav !=='undefined' && activeNav==='bookings' ; %>
-                <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 <%= isBookings ? 'text-[#4EDE63] bg-[#1C2025]/50 font-semibold scale-[0.98]' : 'text-[#BBCABF] hover:text-white hover:bg-[#1C2025]' %>"
+                <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 <%= isBookings ? 'text-primary bg-primary/10 font-semibold scale-[0.98]' : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low' %>"
                     href="/owner/bookings">
                     <span class="material-symbols-outlined" data-icon="confirmation_number">confirmation_number</span>
                     <span class="font-['Inter'] text-sm font-medium tracking-tight">Bookings</span>
@@ -31,26 +31,26 @@
 
                 <!-- Fields -->
                 <% const isFields=typeof activeNav !=='undefined' && activeNav==='fields' ; %>
-                    <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 <%= isFields ? 'text-[#4EDE63] bg-[#1C2025]/50 font-semibold scale-[0.98]' : 'text-[#BBCABF] hover:text-white hover:bg-[#1C2025]' %>"
+                    <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 <%= isFields ? 'text-primary bg-primary/10 font-semibold scale-[0.98]' : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low' %>"
                         href="/owner/fields">
                         <span class="material-symbols-outlined" data-icon="stadium">stadium</span>
                         <span class="font-['Inter'] text-sm font-medium tracking-tight">Your Pitches</span>
                     </a>
     </nav>
 
-    <div class="mt-auto pt-4 space-y-1 border-t border-[#1C2025]">
+    <div class="mt-auto pt-4 space-y-1 border-t border-outline-variant">
         <div class="px-3 py-2 mb-2">
             <div class="flex items-center gap-2">
                 <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
                 <span class="text-[10px] text-on-surface-variant font-medium">System Status: Active</span>
             </div>
         </div>
-        <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#BBCABF] hover:text-white hover:bg-[#1C2025] transition-all duration-150"
+        <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-all duration-150"
             href="/">
             <span class="material-symbols-outlined" data-icon="home">home</span>
             <span class="font-['Inter'] text-sm font-medium tracking-tight">Back to Web</span>
         </a>
-        <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-error/80 hover:text-error hover:bg-[#1C2025] transition-all duration-150"
+        <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-error/80 hover:text-error hover:bg-red-50 transition-all duration-150"
             href="/auth/logout">
             <span class="material-symbols-outlined" data-icon="logout">logout</span>
             <span class="font-['Inter'] text-sm font-medium tracking-tight">Logout</span>

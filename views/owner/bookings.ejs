@@ -85,6 +85,7 @@
                                     <% if (booking.status==='pending' ) { %>
                                         <form action="/owner/bookings/<%= booking._id %>/approve" method="POST"
                                             class="inline">
+                                            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
                                             <button type="submit"
                                                 class="p-2 rounded-lg bg-primary/80 hover:bg-primary text-[#003824] transition-all flex items-center gap-1 font-bold text-xs shadow-lg shadow-primary/20 hover:scale-105 active:scale-95"
                                                 onclick="return confirm('Duyệt đơn này?')">
@@ -94,6 +95,7 @@
                                         </form>
                                         <form action="/owner/bookings/<%= booking._id %>/reject" method="POST"
                                             class="inline">
+                                            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
                                             <button type="submit"
                                                 class="p-2 rounded-lg bg-error/80 hover:bg-error text-[#380000] transition-all flex items-center gap-1 font-bold text-xs shadow-lg shadow-error/20 hover:scale-105 active:scale-95"
                                                 onclick="return confirm('Từ chối đơn này?')">
