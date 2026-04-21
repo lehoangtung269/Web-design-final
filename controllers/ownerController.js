@@ -58,7 +58,7 @@ exports.getBookings = async (req, res) => {
             .sort({ createdAt: -1 })
             .limit(20);
 
-        res.render('owner/bookings', { ...ownerLayout, title: 'Đơn đặt sân', bookings });
+        res.render('owner/bookings', { ...ownerLayout, title: 'Đơn đặt sân', activeNav: 'bookings', bookings });
     } catch (err) {
         console.error(err);
         res.redirect('/owner/dashboard');
@@ -120,7 +120,7 @@ exports.rejectBooking = async (req, res) => {
 exports.getFields = async (req, res) => {
     try {
         const fields = await Field.find({ owner: req.session.user._id }).sort({ createdAt: -1 });
-        res.render('owner/fields', { ...ownerLayout, title: 'Sân của bạn', fields });
+        res.render('owner/fields', { ...ownerLayout, title: 'Sân của bạn', activeNav: 'fields', fields });
     } catch (err) {
         console.error(err);
         res.redirect('/owner/dashboard');
