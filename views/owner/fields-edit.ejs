@@ -1,0 +1,41 @@
+<div class="max-w-4xl space-y-6">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-bold text-on-surface">Chỉnh sửa sân</h1>
+    <a href="/owner/fields" class="px-4 py-2 rounded-lg bg-surface-container-low text-on-surface-variant hover:text-on-surface">Quay lại</a>
+  </div>
+
+  <form action="/owner/fields/<%= field._id %>" method="POST" enctype="multipart/form-data" class="bg-white rounded-xl p-6 space-y-5 shadow-sm">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <input name="name" value="<%= field.name %>" required placeholder="Tên sân" class="rounded-lg border border-outline-variant px-4 py-3" />
+      <input name="address" value="<%= field.address %>" required placeholder="Địa chỉ" class="rounded-lg border border-outline-variant px-4 py-3" />
+      <input name="city" value="<%= field.city || '' %>" required placeholder="Thành phố" class="rounded-lg border border-outline-variant px-4 py-3" />
+      <input name="district" value="<%= field.district || '' %>" required placeholder="Quận/Huyện" class="rounded-lg border border-outline-variant px-4 py-3" />
+      <select name="type" required class="rounded-lg border border-outline-variant px-4 py-3">
+        <option value="5-a-side" <%= field.type === '5-a-side' ? 'selected' : '' %>>Sân 5</option>
+        <option value="7-a-side" <%= field.type === '7-a-side' ? 'selected' : '' %>>Sân 7</option>
+        <option value="11-a-side" <%= field.type === '11-a-side' ? 'selected' : '' %>>Sân 11</option>
+      </select>
+      <input name="pricePerSlot" type="number" min="0" value="<%= field.pricePerSlot %>" required placeholder="Giá/slot" class="rounded-lg border border-outline-variant px-4 py-3" />
+    </div>
+
+    <select name="status" class="rounded-lg border border-outline-variant px-4 py-3">
+      <option value="active" <%= field.status === 'active' ? 'selected' : '' %>>Hoạt động</option>
+      <option value="maintenance" <%= field.status === 'maintenance' ? 'selected' : '' %>>Bảo trì</option>
+    </select>
+
+    <textarea name="description" rows="4" placeholder="Mô tả sân" class="w-full rounded-lg border border-outline-variant px-4 py-3"><%= field.description || '' %></textarea>
+    <input name="images" type="file" accept="image/*" multiple class="w-full rounded-lg border border-outline-variant px-4 py-3" />
+
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
+      <label class="flex items-center gap-2"><input type="checkbox" name="facilities" value="night_lights" <%= field.facilities && field.facilities.includes('night_lights') ? 'checked' : '' %> /> Night lights</label>
+      <label class="flex items-center gap-2"><input type="checkbox" name="facilities" value="spectator_stands" <%= field.facilities && field.facilities.includes('spectator_stands') ? 'checked' : '' %> /> Stands</label>
+      <label class="flex items-center gap-2"><input type="checkbox" name="facilities" value="restrooms" <%= field.facilities && field.facilities.includes('restrooms') ? 'checked' : '' %> /> Restrooms</label>
+      <label class="flex items-center gap-2"><input type="checkbox" name="facilities" value="showers" <%= field.facilities && field.facilities.includes('showers') ? 'checked' : '' %> /> Showers</label>
+      <label class="flex items-center gap-2"><input type="checkbox" name="facilities" value="lounge_ac" <%= field.facilities && field.facilities.includes('lounge_ac') ? 'checked' : '' %> /> Lounge AC</label>
+      <label class="flex items-center gap-2"><input type="checkbox" name="facilities" value="free_wifi" <%= field.facilities && field.facilities.includes('free_wifi') ? 'checked' : '' %> /> Wifi</label>
+    </div>
+
+    <button type="submit" class="px-6 py-3 rounded-lg bg-primary text-white font-semibold">Lưu thay đổi</button>
+  </form>
+</div>

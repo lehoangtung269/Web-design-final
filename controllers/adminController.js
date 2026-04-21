@@ -2,6 +2,7 @@ const User = require('../models/User');
 const Booking = require('../models/Booking');
 const Field = require('../models/Field');
 const TimeSlot = require('../models/TimeSlot');
+const { sendBookingConfirmationAsync } = require('../utils/emailService');
 
 // Helper: Parse 'YYYY-MM-DD' string as LOCAL midnight (not UTC)
 function parseLocalDate(dateStr) {
@@ -289,7 +290,7 @@ const approveBooking = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const booking = await Booking.findById(id);
+    const booking = await Booking.findById(id).populate('user', 'name email').populate('field', 'name');
     if (!booking) {
       req.flash('error', 'Không tìm thấy đơn!');
       return res.redirect('/admin/bookings');
@@ -317,6 +318,9 @@ const approveBooking = async (req, res) => {
       status: 'booked',
       bookedBy: booking.user,
     });
+    if (booking.user?.email) {
+      await sendBookingConfirmationAsync(booking.user.email, booking);
+    }
 
     req.flash('success', 'Đã duyệt đơn đặt sân thành công!');
     res.redirect(`/admin/bookings/${id}`);
@@ -333,7 +337,7 @@ const rejectBooking = async (req, res) => {
     const { id } = req.params;
     const { reason } = req.body;
 
-    const booking = await Booking.findById(id);
+    const booking = await Booking.findById(id).populate('user', 'name email').populate('field', 'name');
     if (!booking) {
       req.flash('error', 'Không tìm thấy đơn!');
       return res.redirect('/admin/bookings');
@@ -356,6 +360,9 @@ const rejectBooking = async (req, res) => {
       status: 'available',
       bookedBy: null,
     });
+    if (booking.user?.email) {
+      await sendBookingConfirmationAsync(booking.user.email, booking);
+    }
 
     req.flash('success', 'Đã từ chối đơn đặt sân.');
     res.redirect(`/admin/bookings/${id}`);

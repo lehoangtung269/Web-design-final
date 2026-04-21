@@ -229,14 +229,29 @@ const getConfirmation = async (req, res) => {
 // ================================
 const getHistory = async (req, res) => {
   try {
-    const bookings = await Booking.find({ user: req.session.user._id })
+    const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
+    const limit = 10;
+    const filter = { user: req.session.user._id };
+
+    const [bookings, total] = await Promise.all([
+      Booking.find(filter)
       .populate('field', 'name address type')
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit),
+      Booking.countDocuments(filter),
+    ]);
 
     res.render('bookings/history', {
       title: 'Lịch sử đặt sân',
       activeNav: 'history',
       bookings,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.max(Math.ceil(total / limit), 1),
+      },
     });
   } catch (error) {
     console.error('Get History Error:', error);
@@ -245,4 +260,40 @@ const getHistory = async (req, res) => {
   }
 };
 
-module.exports = { getCheckout, postBooking, getConfirmation, getHistory };
+// ================================
+// POST /history/:id/cancel — User hủy đơn pending của chính mình
+// ================================
+const cancelBooking = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const booking = await Booking.findOne({ _id: id, user: req.session.user._id });
+
+    if (!booking) {
+      req.flash('error', 'Không tìm thấy đơn đặt sân!');
+      return res.redirect('/history');
+    }
+
+    if (booking.status !== 'pending') {
+      req.flash('error', 'Chỉ có thể hủy đơn đang chờ duyệt.');
+      return res.redirect('/history');
+    }
+
+    booking.status = 'cancelled';
+    booking.rejectedReason = 'Người dùng tự hủy đơn';
+    await booking.save();
+
+    await TimeSlot.findByIdAndUpdate(booking.timeSlot, {
+      status: 'available',
+      bookedBy: null,
+    });
+
+    req.flash('success', 'Đã hủy đơn đặt sân thành công.');
+    res.redirect('/history');
+  } catch (error) {
+    console.error('Cancel Booking Error:', error);
+    req.flash('error', 'Không thể hủy đơn lúc này. Vui lòng thử lại.');
+    res.redirect('/history');
+  }
+};
+
+module.exports = { getCheckout, postBooking, getConfirmation, getHistory, cancelBooking };

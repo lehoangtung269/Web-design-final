@@ -1,4 +1,5 @@
 const Field = require('../models/Field');
+const { escapeRegex } = require('../utils/escapeRegex');
 
 // ================================
 // GET / — Trang chủ: hiển thị sân nổi bật + thanh tìm kiếm
@@ -48,9 +49,10 @@ const searchFields = async (req, res) => {
     }
 
     if (keyword && keyword.trim()) {
+      const safeKeyword = escapeRegex(keyword.trim());
       filter.$or = [
-        { name: { $regex: keyword.trim(), $options: 'i' } },
-        { address: { $regex: keyword.trim(), $options: 'i' } },
+        { name: { $regex: safeKeyword, $options: 'i' } },
+        { address: { $regex: safeKeyword, $options: 'i' } },
       ];
     }
 

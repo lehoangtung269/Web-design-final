@@ -35,5 +35,6 @@ router.get('/checkout/confirmation/:id', isAuthenticated, bookingController.getC
 // GET /history — Lịch sử đặt sân cá nhân
 // ================================
 router.get('/history', isAuthenticated, bookingController.getHistory);
+router.post('/history/:id/cancel', isAuthenticated, bookingController.cancelBooking);
 
 module.exports = router;

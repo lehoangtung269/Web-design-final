@@ -1,5 +1,6 @@
 const Field = require('../models/Field');
 const TimeSlot = require('../models/TimeSlot');
+const { escapeRegex } = require('../utils/escapeRegex');
 
 // Helper: Parse 'YYYY-MM-DD' string as LOCAL midnight (not UTC)
 function parseLocalDate(dateStr) {
@@ -20,7 +21,7 @@ function toLocalDateString(date) {
 // ================================
 const getFieldList = async (req, res) => {
   try {
-    const { type, city, district } = req.query;
+    const { type, city, district, keyword } = req.query;
     const filter = { status: 'active' };
 
     if (type && type !== 'all') {
@@ -31,6 +32,13 @@ const getFieldList = async (req, res) => {
     }
     if (district && district !== 'all') {
       filter.district = district;
+    }
+    if (keyword && keyword.trim()) {
+      const safeKeyword = escapeRegex(keyword.trim());
+      filter.$or = [
+        { name: { $regex: safeKeyword, $options: 'i' } },
+        { address: { $regex: safeKeyword, $options: 'i' } },
+      ];
     }
 
     const [fields, cityAgg, districtAgg] = await Promise.all([
@@ -45,7 +53,7 @@ const getFieldList = async (req, res) => {
       fields,
       cities: cityAgg.filter(Boolean).sort(),
       districts: districtAgg.filter(Boolean).sort(),
-      searchParams: { type: type || 'all', city: city || 'all', district: district || 'all' },
+      searchParams: { type: type || 'all', city: city || 'all', district: district || 'all', keyword: keyword || '' },
     });
   } catch (error) {
     console.error('Field List Error:', error);
