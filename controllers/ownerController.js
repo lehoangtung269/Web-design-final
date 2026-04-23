@@ -6,6 +6,10 @@ const { sendBookingConfirmationAsync } = require('../utils/emailService');
 
 const ownerLayout = { layout: 'layouts/owner' };
 
+function getBookingAmount(booking) {
+    return booking?.finalTotal ?? booking?.totalPrice ?? 0;
+}
+
 exports.getDashboard = async (req, res) => {
     try {
         const ownerId = req.session.user._id;
@@ -79,8 +83,10 @@ exports.approveBooking = async (req, res) => {
 
         const field = await Field.findById(booking.field).populate('owner');
         const rate = field.owner?.commissionRate || 5;
-        booking.commissionAmount = Math.round(booking.finalTotal * (rate / 100));
-        booking.ownerRevenue = booking.finalTotal - booking.commissionAmount;
+        const bookingAmount = getBookingAmount(booking);
+        booking.finalTotal = bookingAmount;
+        booking.commissionAmount = Math.round(bookingAmount * (rate / 100));
+        booking.ownerRevenue = bookingAmount - booking.commissionAmount;
         booking.isRevenueCalculated = true;
 
         await booking.save();

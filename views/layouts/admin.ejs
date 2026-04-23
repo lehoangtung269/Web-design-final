@@ -1,146 +1,283 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html class="dark" lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %> | Kinetic Pitch Admin</title>
-    
-    <!-- Google Fonts: Inter exclusively -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind CSS (CDN for setup, use build tool in production) -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
+                    colors: {
+                        background: '#101419',
+                        surface: '#1c2025',
+                        'surface-low': '#181c21',
+                        'surface-high': '#262a30',
+                        'surface-lowest': '#0a0e13',
+                        'surface-variant': '#31353b',
+                        'surface-container-lowest': '#0a0e13',
+                        'surface-container-low': '#181c21',
+                        'surface-container': '#1c2025',
+                        'surface-container-high': '#262a30',
+                        'surface-container-highest': '#31353b',
+                        primary: '#4EDE63',
+                        'primary-container': '#10B981',
+                        secondary: '#ADC6FF',
+                        outline: '#86948a',
+                        'outline-variant': '#3c4a42',
+                        'on-surface': '#e0e2ea',
+                        'on-surface-variant': '#bbcabf',
+                        'on-primary': '#003824',
+                        error: '#ffb4ab',
+                        danger: '#ffb4ab',
+                        warning: '#f6c75a',
+                    },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
                     },
-                    colors: {
-                        background: '#0A0D10', // Deepest atmospheric black
-                        'surface-lowest': '#101419', // Deep charcoal
-                        'surface-low': '#161B22',
-                        surface: '#1C2025', // Main component surface
-                        'surface-high': '#262A30', // Hover state surface
-                        primary: '#4EDE63', // Tactical Green
-                        'primary-glow': 'rgba(78, 222, 99, 0.15)',
-                        'on-surface': '#FFFFFF',
-                        'on-surface-variant': '#8B949E', // Gray text
-                        danger: '#FF4C4C',
-                        warning: '#FFD166'
-                    },
                     boxShadow: {
-                        'ambient': '0 12px 40px -10px rgba(0, 0, 0, 0.5)',
-                        'glow': '0 0 20px rgba(78, 222, 99, 0.2)',
-                    }
-                }
-            }
-        }
+                        ambient: '0 12px 40px -10px rgba(0, 0, 0, 0.5)',
+                        glow: '0 0 24px rgba(78, 222, 99, 0.16)',
+                    },
+                    transitionTimingFunction: {
+                        tactical: 'cubic-bezier(0.4, 0, 0.2, 1)',
+                    },
+                },
+            },
+        };
     </script>
-
     <style>
-        /* Typography Matrix */
-        body { font-family: 'Inter', sans-serif; background-color: #0A0D10; color: #FFFFFF; }
-        .headline-lg { font-weight: 800; letter-spacing: -0.04em; }
-        .headline-md { font-weight: 700; letter-spacing: -0.02em; }
-        .label-sm { font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; font-size: 0.75rem; }
-        
-        /* Tactical Scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #262A30; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #4EDE63; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #101419;
+        }
 
-        /* Structural Utilities */
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 450, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+
+        .label-sm {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .headline-lg {
+            font-weight: 800;
+            letter-spacing: -0.04em;
+        }
+
+        .headline-md {
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .headline-tight {
+            letter-spacing: -0.04em;
+        }
+
+        .ghost-border {
+            border: 1px solid rgba(134, 148, 138, 0.15);
+        }
+
         .glass-panel {
-            background: rgba(28, 32, 37, 0.7);
+            background: rgba(28, 32, 37, 0.8);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
         }
-        
-        .ghost-border {
-            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
-        }
-        
-        .ghost-border-focus:focus-within {
-            box-shadow: inset 0 0 0 1px #4EDE63, 0 0 20px rgba(78, 222, 99, 0.2);
-            outline: none;
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 700;
+            transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* No-Line Table/List Reset */
-        table { border-collapse: separate; border-spacing: 0 8px; }
-        tr { background-color: #1C2025; transition: all 0.3s ease; }
-        tr:hover { background-color: #262A30; transform: translateY(-1px); }
-        td:first-child, th:first-child { border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
-        td:last-child, th:last-child { border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
+        .btn-sm {
+            padding: 0.5rem 0.875rem;
+            font-size: 0.75rem;
+        }
+
+        .btn-outline {
+            background: #1c2025;
+            color: #e0e2ea;
+            border: 1px solid rgba(134, 148, 138, 0.15);
+        }
+
+        .btn-outline:hover {
+            background: #262a30;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4EDE63, #10B981);
+            color: #003824;
+        }
+
+        .btn-primary:hover {
+            filter: brightness(1.04);
+        }
+
+        .btn-blue {
+            background: #10B981;
+            color: #003824;
+        }
+
+        .card {
+            background: #1c2025;
+            border: 1px solid rgba(134, 148, 138, 0.15);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 12px 40px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            border-radius: 999px;
+            padding: 0.3rem 0.65rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .badge-pending {
+            background: rgba(173, 198, 255, 0.12);
+            color: #ADC6FF;
+            border: 1px solid rgba(173, 198, 255, 0.18);
+        }
+
+        .badge-confirmed {
+            background: rgba(78, 222, 99, 0.12);
+            color: #4EDE63;
+            border: 1px solid rgba(78, 222, 99, 0.18);
+        }
+
+        .badge-rejected {
+            background: rgba(255, 180, 171, 0.12);
+            color: #ffb4ab;
+            border: 1px solid rgba(255, 180, 171, 0.18);
+        }
+
+        .empty-state {
+            padding: 3rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(134, 148, 138, 0.15);
+            background: #1c2025;
+            text-align: center;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #101419;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #31353b;
+            border-radius: 999px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3b4149;
+        }
     </style>
 </head>
-<body class="bg-background text-on-surface antialiased h-screen overflow-hidden flex selection:bg-primary selection:text-black">
-
-    <!-- HUD Sidebar -->
+<body class="bg-background text-on-surface min-h-screen overflow-x-hidden">
     <%- include('../admin/partials/sidebar') %>
 
-    <!-- Main Content Area -->
-    <main class="flex-1 flex flex-col h-screen overflow-hidden relative z-0">
-        <!-- Top HUD Bar -->
-        <header class="h-20 px-8 flex justify-between items-center glass-panel ghost-border z-10 shrink-0">
-            <div>
-                <h1 class="text-2xl headline-md text-on-surface flex items-center gap-3">
-                    <% if (typeof pageIcon !== 'undefined') { %><span class="text-primary"><%- pageIcon %></span><% } %>
+    <div class="ml-64 min-h-screen">
+        <header class="sticky top-0 z-40 h-16 px-8 bg-background/80 backdrop-blur-xl border-b border-white/5 flex items-center justify-between">
+            <div class="min-w-0">
+                <p class="label-sm text-on-surface-variant mb-1">The Kinetic Pitch</p>
+                <h1 class="text-xl md:text-2xl font-extrabold headline-tight text-white truncate">
                     <%= typeof pageTitle !== 'undefined' ? pageTitle : title %>
                 </h1>
             </div>
-            <div class="flex items-center gap-6">
-                <% if (typeof topbarRight !== 'undefined') { %>
-                    <div class="text-on-surface-variant"><%- topbarRight %></div>
-                <% } %>
-                <div class="flex items-center gap-3 bg-surface-lowest py-2 px-4 rounded-full ghost-border">
-                    <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold shadow-glow">
-                        <%= currentUser.name.charAt(0) %>
+
+            <div class="flex items-center gap-4 pl-6">
+                <% if (typeof topbarRight !== 'undefined' && topbarRight) { %>
+                    <div class="hidden lg:flex items-center">
+                        <%- topbarRight %>
                     </div>
-                    <div class="flex flex-col">
-                        <span class="text-sm font-bold text-on-surface"><%= currentUser.name %></span>
-                        <span class="text-[10px] uppercase tracking-wider text-primary">System Admin</span>
+                <% } %>
+
+                <div class="hidden xl:flex items-center gap-2 rounded-full bg-surface-container px-4 py-2 ghost-border w-80">
+                    <span class="material-symbols-outlined text-on-surface-variant text-[18px]">search</span>
+                    <input type="text" placeholder="Search admin workspace..." class="w-full bg-transparent border-none p-0 text-sm text-on-surface placeholder:text-on-surface-variant/60 focus:ring-0" />
+                </div>
+
+                <button type="button" class="w-10 h-10 rounded-full bg-surface-container text-on-surface-variant hover:text-white hover:bg-surface-container-high transition-all ghost-border">
+                    <span class="material-symbols-outlined text-[18px]">notifications</span>
+                </button>
+
+                <button type="button" class="w-10 h-10 rounded-full bg-surface-container text-on-surface-variant hover:text-white hover:bg-surface-container-high transition-all ghost-border">
+                    <span class="material-symbols-outlined text-[18px]">help_outline</span>
+                </button>
+
+                <div class="flex items-center gap-3 pl-4 border-l border-white/10">
+                    <div class="text-right hidden md:block">
+                        <p class="text-sm font-semibold text-white"><%= currentUser.name %></p>
+                        <p class="text-[11px] text-on-surface-variant">Administrator</p>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold flex items-center justify-center shadow-glow">
+                        <%= currentUser.name.charAt(0).toUpperCase() %>
                     </div>
                 </div>
             </div>
         </header>
 
-        <!-- Flash Messages Overlay -->
-        <% if (success && success.length > 0) { %>
-            <div class="absolute top-24 right-8 z-50 bg-primary/10 border border-primary text-primary px-6 py-4 rounded-xl shadow-glow backdrop-blur-md animate-fade-in-down flex items-center gap-3">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                <span class="font-medium"><%= success %></span>
-            </div>
-        <% } %>
-        <% if (error && error.length > 0) { %>
-            <div class="absolute top-24 right-8 z-50 bg-danger/10 border border-danger text-danger px-6 py-4 rounded-xl shadow-ambient backdrop-blur-md animate-fade-in-down flex items-center gap-3">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <span class="font-medium"><%= error %></span>
-            </div>
-        <% } %>
+        <div class="px-8 pt-6">
+            <% if (typeof success !== 'undefined' && success && success.length > 0) { %>
+                <% success.forEach((msg) => { %>
+                    <div class="flash-banner mb-3 rounded-xl border border-primary/20 bg-primary/10 px-4 py-3 text-sm text-primary shadow-glow">
+                        <%= msg %>
+                    </div>
+                <% }) %>
+            <% } %>
+            <% if (typeof error !== 'undefined' && error && error.length > 0) { %>
+                <% error.forEach((msg) => { %>
+                    <div class="flash-banner mb-3 rounded-xl border border-error/20 bg-error/10 px-4 py-3 text-sm text-error shadow-ambient">
+                        <%= msg %>
+                    </div>
+                <% }) %>
+            <% } %>
+        </div>
 
-        <!-- Scrollable Canvas -->
-        <div class="flex-1 overflow-y-auto p-8 scroll-smooth">
-            <div class="max-w-7xl mx-auto space-y-8 pb-20">
+        <main class="px-8 pb-10">
+            <div class="space-y-8">
                 <%- body %>
             </div>
-        </div>
-    </main>
+        </main>
+    </div>
 
     <script>
-        // Auto-hide flash messages
-        setTimeout(() => {
-            const alerts = document.querySelectorAll('.animate-fade-in-down');
-            alerts.forEach(alert => {
-                alert.style.opacity = '0';
-                alert.style.transition = 'opacity 0.5s ease';
-                setTimeout(() => alert.remove(), 500);
+        setTimeout(function () {
+            document.querySelectorAll('.flash-banner').forEach(function (banner) {
+                banner.style.transition = 'opacity 200ms ease';
+                banner.style.opacity = '0';
+                setTimeout(function () {
+                    banner.remove();
+                }, 220);
             });
-        }, 4000);
+        }, 3500);
     </script>
 </body>
 </html>

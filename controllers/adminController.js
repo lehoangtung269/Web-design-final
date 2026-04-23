@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const User = require('../models/User');
 const Booking = require('../models/Booking');
 const Field = require('../models/Field');
@@ -18,6 +19,53 @@ function toLocalDateString(date) {
   return `${y}-${m}-${d}`;
 }
 
+function getDayBounds(date = new Date()) {
+  const start = new Date(date);
+  start.setHours(0, 0, 0, 0);
+
+  const end = new Date(start);
+  end.setHours(23, 59, 59, 999);
+
+  return { start, end };
+}
+
+function getStartOfWeek(date = new Date()) {
+  const target = new Date(date);
+  target.setHours(0, 0, 0, 0);
+
+  const dayOfWeek = target.getDay();
+  const diffToMonday = target.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+  target.setDate(diffToMonday);
+
+  return target;
+}
+
+function calculateChange(currentValue, previousValue) {
+  if (!previousValue && !currentValue) return 0;
+  if (!previousValue) return 100;
+  return Math.round(((currentValue - previousValue) / previousValue) * 100);
+}
+
+const SLOT_WINDOWS = [
+  { startTime: '06:00', endTime: '07:30' },
+  { startTime: '07:30', endTime: '09:00' },
+  { startTime: '09:00', endTime: '10:30' },
+  { startTime: '10:30', endTime: '12:00' },
+  { startTime: '12:00', endTime: '13:30' },
+  { startTime: '13:30', endTime: '15:00' },
+  { startTime: '15:00', endTime: '16:30' },
+  { startTime: '16:30', endTime: '18:00' },
+  { startTime: '18:00', endTime: '19:30' },
+  { startTime: '19:30', endTime: '21:00' },
+  { startTime: '21:00', endTime: '22:30' },
+];
+
+const BOOKING_AMOUNT_SUM_EXPR = { $ifNull: ['$finalTotal', '$totalPrice'] };
+
+function getBookingAmount(booking) {
+  return booking?.finalTotal ?? booking?.totalPrice ?? 0;
+}
+
 // Layout chung cho tất cả admin views
 const adminLayout = { layout: 'layouts/admin' };
 const OWNER_ROLE = 'field_owner';
@@ -33,74 +81,126 @@ const getOwnerOptions = async () => {
 // ================================
 const getDashboard = async (req, res) => {
   try {
-    const totalUsers = await User.countDocuments();
-    const totalBookings = await Booking.countDocuments();
-    const pendingBookings = await Booking.countDocuments({ status: 'pending' });
-    const totalFields = await Field.countDocuments();
-
-    // Fetch recent bookings for dashboard table
-    const recentBookings = await Booking.find()
-      .populate('user', 'name')
-      .populate('field', 'name')
-      .sort({ createdAt: -1 })
-      .limit(5);
-
-    // Handle ?range= parameter for dashboard chart (default 7 days)
     const range = parseInt(req.query.range) === 30 ? 30 : 7;
-    const startDate = new Date();
-    startDate.setDate(startDate.getDate() - range + 1); // +1 so if range=7, it's today + 6 previous days = 7 days total.
-    startDate.setHours(0, 0, 0, 0);
+    const todayBounds = getDayBounds();
+    const trendStartDate = new Date(todayBounds.start);
+    trendStartDate.setDate(trendStartDate.getDate() - range + 1);
 
-    const bookingTrendsObj = await Booking.aggregate([
-      { $match: { createdAt: { $gte: startDate } } },
-      {
-        $group: {
-          _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt", timezone: "Asia/Ho_Chi_Minh" } },
-          count: { $sum: 1 }
-        }
-      },
-      { $sort: { _id: 1 } }
+    const currentWeekStart = getStartOfWeek(new Date());
+    const previousWeekStart = new Date(currentWeekStart);
+    previousWeekStart.setDate(currentWeekStart.getDate() - 7);
+
+    const previousWeekEnd = new Date(currentWeekStart);
+    previousWeekEnd.setMilliseconds(-1);
+
+    const [
+      totalUsers,
+      totalFields,
+      activeFields,
+      pendingBookings,
+      todayBookings,
+      confirmedToday,
+      todayRevenueAgg,
+      recentBookings,
+      bookingTrendsObj,
+      currentWeekVolume,
+      previousWeekVolume,
+      currentWeekRevenueAgg,
+      previousWeekRevenueAgg,
+    ] = await Promise.all([
+      User.countDocuments(),
+      Field.countDocuments({ status: { $ne: 'deleted' } }),
+      Field.countDocuments({ status: 'active' }),
+      Booking.countDocuments({ status: 'pending' }),
+      Booking.countDocuments({ date: { $gte: todayBounds.start, $lte: todayBounds.end } }),
+      Booking.countDocuments({ status: 'confirmed', date: { $gte: todayBounds.start, $lte: todayBounds.end } }),
+      Booking.aggregate([
+        { $match: { status: 'confirmed', date: { $gte: todayBounds.start, $lte: todayBounds.end } } },
+        { $group: { _id: null, total: { $sum: BOOKING_AMOUNT_SUM_EXPR } } },
+      ]),
+      Booking.find()
+        .populate('user', 'name')
+        .populate('field', 'name')
+        .sort({ createdAt: -1 })
+        .limit(6),
+      Booking.aggregate([
+        { $match: { date: { $gte: trendStartDate, $lte: todayBounds.end } } },
+        {
+          $group: {
+            _id: { $dateToString: { format: '%Y-%m-%d', date: '$date', timezone: 'Asia/Ho_Chi_Minh' } },
+            count: { $sum: 1 },
+          },
+        },
+        { $sort: { _id: 1 } },
+      ]),
+      Booking.countDocuments({ createdAt: { $gte: currentWeekStart } }),
+      Booking.countDocuments({ createdAt: { $gte: previousWeekStart, $lte: previousWeekEnd } }),
+      Booking.aggregate([
+        { $match: { status: 'confirmed', createdAt: { $gte: currentWeekStart } } },
+        { $group: { _id: null, total: { $sum: BOOKING_AMOUNT_SUM_EXPR } } },
+      ]),
+      Booking.aggregate([
+        { $match: { status: 'confirmed', createdAt: { $gte: previousWeekStart, $lte: previousWeekEnd } } },
+        { $group: { _id: null, total: { $sum: BOOKING_AMOUNT_SUM_EXPR } } },
+      ]),
     ]);
+
+    const dailyRevenue = todayRevenueAgg.length > 0 ? todayRevenueAgg[0].total : 0;
+    const currentWeekRevenue = currentWeekRevenueAgg.length > 0 ? currentWeekRevenueAgg[0].total : 0;
+    const previousWeekRevenue = previousWeekRevenueAgg.length > 0 ? previousWeekRevenueAgg[0].total : 0;
+    const totalDailyCapacity = activeFields * SLOT_WINDOWS.length;
+    const occupancyRate = totalDailyCapacity > 0 ? Number(((todayBookings / totalDailyCapacity) * 100).toFixed(1)) : 0;
 
     const chartData = [];
     let maxBookings = 0;
 
-    // Generate dates including empty days
     for (let i = range - 1; i >= 0; i--) {
-      const d = new Date();
-      d.setDate(d.getDate() - i);
+      const date = new Date(todayBounds.start);
+      date.setDate(todayBounds.start.getDate() - i);
 
-      const dateStr = toLocalDateString(d);
-      const match = bookingTrendsObj.find(b => b._id === dateStr);
+      const dateStr = toLocalDateString(date);
+      const match = bookingTrendsObj.find((item) => item._id === dateStr);
       const count = match ? match.count : 0;
 
-      if (count > maxBookings) maxBookings = count;
+      maxBookings = Math.max(maxBookings, count);
 
       chartData.push({
         date: dateStr,
-        label: d.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' }),
-        count: count
+        shortLabel: date.toLocaleDateString('en-US', { weekday: 'short' }),
+        fullLabel: date.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' }),
+        count,
       });
     }
 
-    if (maxBookings === 0) maxBookings = 1; // Prevent division by zero
+    const peakDay = chartData.reduce(
+      (best, item) => (item.count > best.count ? item : best),
+      chartData[0] || { shortLabel: '--', count: 0 }
+    );
 
     res.render('admin/dashboard', {
       ...adminLayout,
       title: 'Admin Dashboard',
       activeNav: 'dashboard',
-      pageIcon: '📊',
-      pageTitle: 'Dashboard',
+      pageTitle: 'Tactical Dashboard',
       stats: {
         totalUsers,
-        totalBookings,
-        pendingBookings,
         totalFields,
+        activeFields,
+        pendingBookings,
+        todayBookings,
+        confirmedToday,
+        dailyRevenue,
+        occupancyRate,
+      },
+      trends: {
+        volumeChange: calculateChange(currentWeekVolume, previousWeekVolume),
+        revenueChange: calculateChange(currentWeekRevenue, previousWeekRevenue),
       },
       recentBookings,
       chartData,
-      maxBookings,
-      currentRange: range
+      maxBookings: maxBookings || 1,
+      currentRange: range,
+      peakDay,
     });
   } catch (error) {
     console.error('Dashboard Error:', error);
@@ -109,73 +209,88 @@ const getDashboard = async (req, res) => {
   }
 };
 
+
 // ================================
 // QUẢN LÝ LỊCH ĐẶT SÂN (SCHEDULE)
 // ================================
 const getSchedule = async (req, res) => {
   try {
-    // Determine the base date from query, or default to today
     const queryDateStr = req.query.date;
+    const requestedFieldId = req.query.fieldId || 'all';
     const baseDate = queryDateStr ? parseLocalDate(queryDateStr) : new Date();
-
-    // Set to 00:00:00 local time
-    baseDate.setHours(0, 0, 0, 0);
-
-    // Calculate Monday (1) to Sunday (0 -> 7 in logic) of the current base date's week
-    const dayOfWeek = baseDate.getDay();
-    const diffToMonday = baseDate.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
-
-    const startOfWeek = new Date(baseDate.setDate(diffToMonday));
-    startOfWeek.setHours(0, 0, 0, 0);
-
+    const startOfWeek = getStartOfWeek(baseDate);
     const endOfWeek = new Date(startOfWeek);
     endOfWeek.setDate(startOfWeek.getDate() + 6);
     endOfWeek.setHours(23, 59, 59, 999);
 
-    // Prepare navigation dates (prev week, next week, today)
     const prevWeek = new Date(startOfWeek);
     prevWeek.setDate(startOfWeek.getDate() - 7);
 
     const nextWeek = new Date(startOfWeek);
     nextWeek.setDate(startOfWeek.getDate() + 7);
 
-    // Format week title (e.g., "October 21 — 27")
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     let weekTitle = `${monthNames[startOfWeek.getMonth()]} ${startOfWeek.getDate()}`;
-    if (startOfWeek.getMonth() === endOfWeek.getMonth()) {
-      weekTitle += ` — ${endOfWeek.getDate()}`;
-    } else {
-      weekTitle += ` — ${monthNames[endOfWeek.getMonth()]} ${endOfWeek.getDate()}`;
+    weekTitle += startOfWeek.getMonth() === endOfWeek.getMonth()
+      ? ` — ${endOfWeek.getDate()}`
+      : ` — ${monthNames[endOfWeek.getMonth()]} ${endOfWeek.getDate()}`;
+
+    const fieldOptions = await Field.find({ status: { $ne: 'deleted' } })
+      .select('_id name status type')
+      .sort({ name: 1 });
+
+    const selectedField = requestedFieldId !== 'all'
+      ? fieldOptions.find((field) => field._id.toString() === requestedFieldId) || null
+      : null;
+    const selectedFieldId = selectedField ? selectedField._id.toString() : 'all';
+
+    const bookingFilter = { date: { $gte: startOfWeek, $lte: endOfWeek } };
+    if (selectedField) {
+      bookingFilter.field = selectedField._id;
     }
 
-    // Fetch all bookings within this week
-    const bookings = await Booking.find({
-      date: { $gte: startOfWeek, $lte: endOfWeek }
-    }).populate('field', 'name').populate('user', 'name');
+    const bookings = await Booking.find(bookingFilter)
+      .populate('field', 'name type status')
+      .populate('user', 'name')
+      .sort({ date: 1, startTime: 1 });
 
-    // Create a 7-day array structure
-    const daysName = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
-    const weekDays = [];
-
-    for (let i = 0; i < 7; i++) {
+    const dayLabels = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+    const todayKey = toLocalDateString(new Date());
+    const weekDays = Array.from({ length: 7 }, (_, index) => {
       const currentDate = new Date(startOfWeek);
-      currentDate.setDate(startOfWeek.getDate() + i);
+      currentDate.setDate(startOfWeek.getDate() + index);
 
-      // Find bookings exactly falling on this day
-      const dayBookings = bookings.filter(b => {
-        const bDate = new Date(b.date);
-        // Compare using local date components to avoid timezone shift
-        return bDate.getFullYear() === currentDate.getFullYear() && bDate.getMonth() === currentDate.getMonth() && bDate.getDate() === currentDate.getDate();
-      });
-
-      weekDays.push({
-        name: daysName[i],
+      return {
+        name: dayLabels[index],
         dateNum: currentDate.getDate(),
         fullDateStr: toLocalDateString(currentDate),
-        isToday: (currentDate.toDateString() === new Date().toDateString()),
-        bookings: dayBookings
-      });
-    }
+        isToday: toLocalDateString(currentDate) === todayKey,
+      };
+    });
+
+    const bookingMap = new Map();
+    bookings.forEach((booking) => {
+      const key = `${toLocalDateString(new Date(booking.date))}_${booking.startTime}`;
+      if (!bookingMap.has(key)) {
+        bookingMap.set(key, []);
+      }
+      bookingMap.get(key).push(booking);
+    });
+
+    const scheduleRows = SLOT_WINDOWS.map((slot) => ({
+      ...slot,
+      cells: weekDays.map((day) => ({
+        date: day.fullDateStr,
+        bookings: bookingMap.get(`${day.fullDateStr}_${slot.startTime}`) || [],
+      })),
+    }));
+
+    const weekStats = {
+      total: bookings.length,
+      confirmed: bookings.filter((booking) => booking.status === 'confirmed').length,
+      pending: bookings.filter((booking) => booking.status === 'pending').length,
+      rejected: bookings.filter((booking) => ['rejected', 'cancelled'].includes(booking.status)).length,
+    };
 
     res.render('admin/schedule', {
       ...adminLayout,
@@ -184,9 +299,15 @@ const getSchedule = async (req, res) => {
       pageTitle: 'Pitch Schedule',
       weekTitle,
       weekDays,
+      scheduleRows,
+      fieldOptions,
+      selectedField,
+      selectedFieldId,
+      weekStats,
+      currentDateStr: toLocalDateString(baseDate),
       prevWeekStr: toLocalDateString(prevWeek),
       nextWeekStr: toLocalDateString(nextWeek),
-      todayStr: toLocalDateString(new Date())
+      todayStr: toLocalDateString(new Date()),
     });
   } catch (error) {
     console.error('Schedule Error:', error);
@@ -202,51 +323,97 @@ const getSchedule = async (req, res) => {
 // GET /admin/bookings — Danh sách đơn đặt sân
 const getBookings = async (req, res) => {
   try {
-    const { status, page = 1 } = req.query;
+    const { status, fieldId = 'all', page = 1 } = req.query;
     const limit = 10;
+    const safeFieldId = fieldId !== 'all' && mongoose.Types.ObjectId.isValid(fieldId) ? fieldId : 'all';
 
     const filter = {};
     if (status && status !== 'all') filter.status = status;
+    if (safeFieldId !== 'all') filter.field = safeFieldId;
 
-    const bookings = await Booking.find(filter)
-      .populate('user', 'name email phone')
-      .populate('field', 'name')
-      .sort({ createdAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(limit);
+    const scopeFilter = {};
+    if (safeFieldId !== 'all') scopeFilter.field = safeFieldId;
 
-    const total = await Booking.countDocuments(filter);
+    const currentPage = parseInt(page, 10) || 1;
 
-    // KPI Calculations
-    const totalVolume = await Booking.countDocuments();
-    const pendingConf = await Booking.countDocuments({ status: 'pending' });
-    const confirmedConf = await Booking.countDocuments({ status: 'confirmed' });
+    const currentWeekStart = getStartOfWeek(new Date());
+    const previousWeekStart = new Date(currentWeekStart);
+    previousWeekStart.setDate(currentWeekStart.getDate() - 7);
 
-    const revenueAgg = await Booking.aggregate([
-      { $match: { status: 'confirmed' } },
-      { $group: { _id: null, total: { $sum: '$totalPrice' } } }
+    const previousWeekEnd = new Date(currentWeekStart);
+    previousWeekEnd.setMilliseconds(-1);
+
+    const [
+      bookings,
+      total,
+      fieldOptions,
+      totalVolume,
+      pendingConf,
+      confirmedConf,
+      totalRevenueAgg,
+      currentWeekVolume,
+      previousWeekVolume,
+      currentWeekRevenueAgg,
+      previousWeekRevenueAgg,
+    ] = await Promise.all([
+      Booking.find(filter)
+        .populate('user', 'name email phone')
+        .populate('field', 'name')
+        .sort({ createdAt: -1 })
+        .skip((currentPage - 1) * limit)
+        .limit(limit),
+      Booking.countDocuments(filter),
+      Field.find({ status: { $ne: 'deleted' } }).select('_id name').sort({ name: 1 }),
+      Booking.countDocuments(scopeFilter),
+      Booking.countDocuments({ ...scopeFilter, status: 'pending' }),
+      Booking.countDocuments({ ...scopeFilter, status: 'confirmed' }),
+      Booking.aggregate([
+        { $match: { ...scopeFilter, status: 'confirmed' } },
+        { $group: { _id: null, total: { $sum: BOOKING_AMOUNT_SUM_EXPR } } },
+      ]),
+      Booking.countDocuments({ ...scopeFilter, createdAt: { $gte: currentWeekStart } }),
+      Booking.countDocuments({ ...scopeFilter, createdAt: { $gte: previousWeekStart, $lte: previousWeekEnd } }),
+      Booking.aggregate([
+        { $match: { ...scopeFilter, status: 'confirmed', createdAt: { $gte: currentWeekStart } } },
+        { $group: { _id: null, total: { $sum: BOOKING_AMOUNT_SUM_EXPR } } },
+      ]),
+      Booking.aggregate([
+        { $match: { ...scopeFilter, status: 'confirmed', createdAt: { $gte: previousWeekStart, $lte: previousWeekEnd } } },
+        { $group: { _id: null, total: { $sum: BOOKING_AMOUNT_SUM_EXPR } } },
+      ]),
     ]);
-    const totalRevenue = revenueAgg.length > 0 ? revenueAgg[0].total : 0;
 
-    // Utilization logic (Confirmed vs Total possible, or just Confirmed vs All Bookings)
+    const totalRevenue = totalRevenueAgg.length > 0 ? totalRevenueAgg[0].total : 0;
+    const currentWeekRevenue = currentWeekRevenueAgg.length > 0 ? currentWeekRevenueAgg[0].total : 0;
+    const previousWeekRevenue = previousWeekRevenueAgg.length > 0 ? previousWeekRevenueAgg[0].total : 0;
     const utilization = totalVolume > 0 ? Math.round((confirmedConf / totalVolume) * 100) : 0;
+    const startItem = total === 0 ? 0 : ((currentPage - 1) * limit) + 1;
+    const endItem = Math.min(currentPage * limit, total);
 
     res.render('admin/bookings/index', {
       ...adminLayout,
       title: 'Quản lý đơn đặt sân',
       activeNav: 'bookings',
-      pageIcon: '📋',
-      pageTitle: 'Quản lý đơn đặt sân',
+      pageTitle: 'Booking Ledger',
       bookings,
       currentStatus: status || 'all',
-      currentPage: parseInt(page),
+      currentFieldId: safeFieldId,
+      fieldOptions,
+      currentPage,
       totalPages: Math.ceil(total / limit) || 1,
+      totalItems: total,
+      startItem,
+      endItem,
       stats: {
         totalVolume,
         pendingConf,
         totalRevenue,
-        utilization
-      }
+        utilization,
+      },
+      trends: {
+        volumeChange: calculateChange(currentWeekVolume, previousWeekVolume),
+        revenueChange: calculateChange(currentWeekRevenue, previousWeekRevenue),
+      },
     });
   } catch (error) {
     console.error('Get Bookings Error:', error);
@@ -309,8 +476,10 @@ const approveBooking = async (req, res) => {
 
     const field = await Field.findById(booking.field).populate('owner', 'commissionRate');
     const rate = field.owner?.commissionRate || 5;
-    booking.commissionAmount = Math.round(booking.finalTotal * (rate / 100));
-    booking.ownerRevenue = booking.finalTotal - booking.commissionAmount;
+    const bookingAmount = getBookingAmount(booking);
+    booking.finalTotal = bookingAmount;
+    booking.commissionAmount = Math.round(bookingAmount * (rate / 100));
+    booking.ownerRevenue = bookingAmount - booking.commissionAmount;
     booking.isRevenueCalculated = true;
 
     await booking.save();
