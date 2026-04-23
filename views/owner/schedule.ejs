@@ -1,0 +1,149 @@
+<%
+  const fieldSuffix = selectedFieldId !== 'all' ? '&fieldId=' + selectedFieldId : '';
+  const selectedApprovalStatus = selectedField ? (selectedField.approvalStatus || 'approved') : null;
+%>
+
+<section class="rounded-[2rem] bg-surface-container-low p-6 md:p-10 mb-8 shadow-ambient">
+  <div class="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-6">
+    <div>
+      <p class="kinetic-label text-on-surface-variant mb-3">Operational Calendar</p>
+      <h2 class="kinetic-display text-5xl md:text-6xl leading-none">PITCH</h2>
+      <h2 class="kinetic-display text-5xl md:text-6xl text-primary leading-none -mt-2">SCHEDULE</h2>
+      <p class="mt-4 text-on-surface-variant max-w-2xl">
+        <%= selectedField ? selectedField.name : 'Tất cả sân của bạn' %> · lịch tuần được dựng từ booking thật trong hệ thống.
+      </p>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-3">
+      <div class="rounded-full bg-white px-2 py-2 shadow-ambient flex items-center">
+        <a href="?date=<%= prevWeekStr %><%= fieldSuffix %>" class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors">
+          <span class="material-symbols-outlined">chevron_left</span>
+        </a>
+        <div class="px-4 min-w-[170px] text-center">
+          <p class="text-sm font-bold text-on-surface"><%= weekTitle %></p>
+        </div>
+        <a href="?date=<%= nextWeekStr %><%= fieldSuffix %>" class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors">
+          <span class="material-symbols-outlined">chevron_right</span>
+        </a>
+      </div>
+      <a href="?date=<%= todayStr %><%= fieldSuffix %>" class="rounded-full bg-white px-5 py-3 text-sm font-semibold text-on-surface shadow-ambient hover:-translate-y-1 transition-all duration-300">
+        Today
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="grid grid-cols-1 xl:grid-cols-[1.3fr_1fr] gap-6 mb-8">
+  <form action="/owner/schedule" method="GET" class="rounded-[2rem] bg-white p-6 shadow-ambient">
+    <input type="hidden" name="date" value="<%= currentDateStr %>">
+    <div class="flex flex-col md:flex-row md:items-end gap-4">
+      <div class="flex-1">
+        <p class="kinetic-label text-on-surface-variant mb-2">Field Scope</p>
+        <select name="fieldId" class="w-full rounded-2xl border-none bg-surface-container-low px-4 py-3 text-sm text-on-surface focus:ring-1 focus:ring-primary/30">
+          <option value="all" <%= selectedFieldId === 'all' ? 'selected' : '' %>>Tất cả sân</option>
+          <% fieldOptions.forEach((field) => { %>
+            <option value="<%= field._id %>" <%= selectedFieldId === field._id.toString() ? 'selected' : '' %>>
+              <%= field.name %> · <%= field.type %>
+            </option>
+          <% }) %>
+        </select>
+      </div>
+      <button type="submit" class="rounded-full bg-gradient-to-r from-primary to-primary-container text-white px-6 py-3 text-sm font-semibold shadow-cta hover:-translate-y-1 transition-all duration-300">
+        Apply Filter
+      </button>
+    </div>
+
+    <% if (selectedField && selectedApprovalStatus !== 'approved') { %>
+      <div class="mt-4 rounded-2xl <%= selectedApprovalStatus === 'pending' ? 'bg-primary/10 text-primary' : 'bg-red-50 text-error' %> px-4 py-3 text-sm font-medium">
+        <%= selectedApprovalStatus === 'pending' ? 'Sân này đang chờ admin duyệt nên chưa thể mở booking công khai.' : 'Sân này đang bị từ chối. Hãy cập nhật hồ sơ rồi gửi lại để admin duyệt.' %>
+        <% if (selectedField.approvalNote) { %>
+          <span class="block mt-2 font-normal"><%= selectedField.approvalNote %></span>
+        <% } %>
+      </div>
+    <% } %>
+  </form>
+
+  <div class="grid grid-cols-3 gap-4">
+    <div class="rounded-[2rem] bg-white p-5 shadow-ambient">
+      <p class="kinetic-label text-on-surface-variant mb-2">Total</p>
+      <p class="text-3xl font-black text-on-surface"><%= weekStats.total %></p>
+    </div>
+    <div class="rounded-[2rem] bg-white p-5 shadow-ambient">
+      <p class="kinetic-label text-on-surface-variant mb-2">Confirmed</p>
+      <p class="text-3xl font-black text-secondary"><%= weekStats.confirmed %></p>
+    </div>
+    <div class="rounded-[2rem] bg-white p-5 shadow-ambient">
+      <p class="kinetic-label text-on-surface-variant mb-2">Pending</p>
+      <p class="text-3xl font-black text-primary"><%= weekStats.pending %></p>
+    </div>
+  </div>
+</section>
+
+<section class="mb-6 flex flex-wrap items-center gap-6">
+  <div class="flex items-center gap-2">
+    <span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+    <span class="kinetic-label text-on-surface-variant">Confirmed</span>
+  </div>
+  <div class="flex items-center gap-2">
+    <span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
+    <span class="kinetic-label text-on-surface-variant">Pending</span>
+  </div>
+  <div class="flex items-center gap-2">
+    <span class="w-2.5 h-2.5 rounded-full bg-surface-container-highest"></span>
+    <span class="kinetic-label text-on-surface-variant">Open</span>
+  </div>
+</section>
+
+<section class="overflow-auto rounded-[2rem] bg-white shadow-ambient">
+  <div class="min-w-[1120px]">
+    <div class="grid grid-cols-[100px_repeat(7,minmax(0,1fr))] bg-surface-container-low">
+      <div class="px-4 py-4 text-[10px] font-bold uppercase tracking-[0.14em] text-on-surface-variant">Time</div>
+      <% weekDays.forEach((day) => { %>
+        <div class="px-4 py-4 text-center <%= day.isToday ? 'bg-primary/10' : '' %>">
+          <p class="text-[10px] font-bold uppercase tracking-[0.12em] <%= day.isToday ? 'text-primary' : 'text-on-surface-variant' %>"><%= day.name %></p>
+          <p class="text-2xl font-bold mt-1 <%= day.isToday ? 'text-primary' : 'text-on-surface' %>"><%= day.dateNum %></p>
+        </div>
+      <% }) %>
+    </div>
+
+    <% scheduleRows.forEach((row) => { %>
+      <div class="grid grid-cols-[100px_repeat(7,minmax(0,1fr))] border-t border-surface-variant/40">
+        <div class="px-4 py-5 text-[11px] font-bold uppercase tracking-[0.12em] text-on-surface-variant bg-surface-container-low">
+          <div><%= row.startTime %></div>
+          <div class="text-[10px] text-on-surface-variant/60 mt-1"><%= row.endTime %></div>
+        </div>
+
+        <% row.cells.forEach((cell, index) => { %>
+          <div class="min-h-[112px] p-2 border-l border-surface-variant/40 <%= weekDays[index].isToday ? 'bg-primary/5' : 'bg-white' %> hover:bg-surface-container-low transition-colors">
+            <% if (cell.bookings.length > 0) { %>
+              <div class="space-y-2">
+                <% cell.bookings.forEach((booking) => { %>
+                  <%
+                    const statusClass = booking.status === 'confirmed'
+                      ? 'bg-secondary-container text-secondary'
+                      : booking.status === 'pending'
+                        ? 'bg-primary/10 text-primary'
+                        : 'bg-surface-container-low text-on-surface-variant';
+                  %>
+                  <article class="rounded-2xl p-3 <%= statusClass %>">
+                    <p class="text-[10px] font-bold uppercase tracking-[0.12em] opacity-80"><%= booking.startTime %> - <%= booking.endTime %></p>
+                    <p class="text-sm font-bold mt-1 truncate">
+                      <%= selectedFieldId === 'all' ? (booking.field ? booking.field.name : 'Unknown Field') : (booking.user ? booking.user.name : 'Unknown User') %>
+                    </p>
+                    <p class="text-[11px] mt-1 truncate opacity-80">
+                      <%= selectedFieldId === 'all' ? (booking.user ? booking.user.name : 'Unknown User') : (booking.user ? booking.user.phone : booking.status) %>
+                    </p>
+                  </article>
+                <% }) %>
+              </div>
+            <% } else { %>
+              <div class="h-full min-h-[96px] rounded-2xl border border-dashed border-surface-variant/60 flex items-center justify-center">
+                <span class="text-[10px] font-bold uppercase tracking-[0.14em] text-on-surface-variant/40">Open</span>
+              </div>
+            <% } %>
+          </div>
+        <% }) %>
+      </div>
+    <% }) %>
+  </div>
+</section>

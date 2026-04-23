@@ -4,6 +4,11 @@ const Booking = require('../models/Booking');
 const Field = require('../models/Field');
 const TimeSlot = require('../models/TimeSlot');
 const { sendBookingConfirmationAsync } = require('../utils/emailService');
+const {
+  APPROVAL_STATUS,
+  APPROVED_OR_LEGACY_CLAUSE,
+  getEffectiveApprovalStatus,
+} = require('../utils/fieldApproval');
 
 // Helper: Parse 'YYYY-MM-DD' string as LOCAL midnight (not UTC)
 function parseLocalDate(dateStr) {
@@ -69,11 +74,43 @@ function getBookingAmount(booking) {
 // Layout chung cho tất cả admin views
 const adminLayout = { layout: 'layouts/admin' };
 const OWNER_ROLE = 'field_owner';
+const APPROVAL_STATUS_VALUES = Object.values(APPROVAL_STATUS);
 
 const getOwnerOptions = async () => {
   return User.find({ role: OWNER_ROLE, isActive: true })
     .select('_id name email')
     .sort({ name: 1 });
+};
+
+const normalizeApprovalStatus = (value, fallback = APPROVAL_STATUS.APPROVED) => (
+  APPROVAL_STATUS_VALUES.includes(value) ? value : fallback
+);
+
+const getApprovalPriority = (status) => {
+  if (status === APPROVAL_STATUS.PENDING) return 0;
+  if (status === APPROVAL_STATUS.REJECTED) return 1;
+  return 2;
+};
+
+const applyFieldApprovalDecision = async ({ field, approvalStatus, approvalNote, reviewerId }) => {
+  const safeApprovalStatus = normalizeApprovalStatus(approvalStatus, getEffectiveApprovalStatus(field));
+  const note = typeof approvalNote === 'string' ? approvalNote.trim() : '';
+
+  field.approvalStatus = safeApprovalStatus;
+  field.approvalNote = note;
+
+  if (safeApprovalStatus === APPROVAL_STATUS.APPROVED) {
+    field.approvedBy = reviewerId || null;
+    field.approvedAt = new Date();
+  } else if (safeApprovalStatus === APPROVAL_STATUS.REJECTED) {
+    field.approvedBy = reviewerId || null;
+    field.approvedAt = new Date();
+  } else {
+    field.approvedBy = null;
+    field.approvedAt = null;
+  }
+
+  return field;
 };
 
 // ================================
@@ -110,7 +147,7 @@ const getDashboard = async (req, res) => {
     ] = await Promise.all([
       User.countDocuments(),
       Field.countDocuments({ status: { $ne: 'deleted' } }),
-      Field.countDocuments({ status: 'active' }),
+      Field.countDocuments({ status: 'active', ...APPROVED_OR_LEGACY_CLAUSE }),
       Booking.countDocuments({ status: 'pending' }),
       Booking.countDocuments({ date: { $gte: todayBounds.start, $lte: todayBounds.end } }),
       Booking.countDocuments({ status: 'confirmed', date: { $gte: todayBounds.start, $lte: todayBounds.end } }),
@@ -549,12 +586,22 @@ const rejectBooking = async (req, res) => {
 // GET /admin/fields — Danh sách sân
 const getFields = async (req, res) => {
   try {
-    const fields = await Field.find().sort({ createdAt: -1 });
+    const fields = await Field.find({ status: { $ne: 'deleted' } })
+      .populate('owner', 'name email')
+      .sort({ createdAt: -1 });
+
+    fields.sort((a, b) => {
+      const approvalDiff = getApprovalPriority(getEffectiveApprovalStatus(a)) - getApprovalPriority(getEffectiveApprovalStatus(b));
+      if (approvalDiff !== 0) return approvalDiff;
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
 
     // KPI Calculations
     const totalFields = fields.length;
     const activeFields = fields.filter(f => f.status === 'active').length;
     const maintenanceFields = fields.filter(f => f.status === 'maintenance').length;
+    const pendingApprovalFields = fields.filter((field) => getEffectiveApprovalStatus(field) === APPROVAL_STATUS.PENDING).length;
+    const rejectedApprovalFields = fields.filter((field) => getEffectiveApprovalStatus(field) === APPROVAL_STATUS.REJECTED).length;
 
     res.render('admin/fields/index', {
       ...adminLayout,
@@ -567,7 +614,9 @@ const getFields = async (req, res) => {
       stats: {
         totalFields,
         activeFields,
-        maintenanceFields
+        maintenanceFields,
+        pendingApprovalFields,
+        rejectedApprovalFields,
       }
     });
   } catch (error) {
@@ -633,6 +682,11 @@ const createField = async (req, res) => {
       facilities: facilitiesArr,
       owner: ownerId,
       images: req.cloudinaryUrls || [],
+      approvalStatus: APPROVAL_STATUS.APPROVED,
+      approvalNote: 'Tạo trực tiếp từ admin portal.',
+      approvedBy: req.session.user._id,
+      approvedAt: new Date(),
+      submittedByOwner: false,
     });
 
     req.flash('success', 'Thêm sân mới thành công!');
@@ -679,11 +733,30 @@ const showEditField = async (req, res) => {
 const updateField = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, address, city, district, type, pricePerSlot, description, status, facilities, owner } = req.body || {};
+    const {
+      name,
+      address,
+      city,
+      district,
+      type,
+      pricePerSlot,
+      description,
+      status,
+      facilities,
+      owner,
+      approvalStatus,
+      approvalNote,
+    } = req.body || {};
 
     if (!name || !address || !city || !district) {
       req.flash('error', 'Vui lòng điền đầy đủ thông tin!');
       return res.redirect(`/admin/fields/${id}/edit`);
+    }
+
+    const field = await Field.findById(id);
+    if (!field) {
+      req.flash('error', 'Không tìm thấy sân!');
+      return res.redirect('/admin/fields');
     }
 
     let ownerId = null;
@@ -701,15 +774,33 @@ const updateField = async (req, res) => {
       }
     }
 
-    // Xây dựng object update
-    const updateData = { name, address, city, district, type, pricePerSlot, description, status, facilities: facilitiesArr, owner: ownerId };
+    const safeStatus = ['active', 'maintenance', 'deleted'].includes(status) ? status : field.status;
 
-    // Nếu có ảnh mới được upload lên Cloudinary → thay thế ảnh cũ
+    field.name = name;
+    field.address = address;
+    field.city = city;
+    field.district = district;
+    field.type = type;
+    field.pricePerSlot = pricePerSlot;
+    field.description = description;
+    field.status = safeStatus;
+    field.facilities = facilitiesArr;
+    field.owner = ownerId;
+
     if (req.cloudinaryUrls && req.cloudinaryUrls.length > 0) {
-      updateData.images = req.cloudinaryUrls;
+      field.images = req.cloudinaryUrls;
     }
 
-    await Field.findByIdAndUpdate(id, updateData, { new: true, runValidators: true });
+    if (req.session.user?.role === 'admin') {
+      await applyFieldApprovalDecision({
+        field,
+        approvalStatus,
+        approvalNote,
+        reviewerId: req.session.user._id,
+      });
+    }
+
+    await field.save();
 
     req.flash('success', 'Cập nhật sân thành công!');
     res.redirect('/admin/fields');
@@ -717,6 +808,42 @@ const updateField = async (req, res) => {
     console.error('Update Field Error:', error);
     req.flash('error', 'Lỗi khi cập nhật sân!');
     res.redirect(`/admin/fields/${req.params.id}/edit`);
+  }
+};
+
+// POST /admin/fields/:id/approval — Duyệt hoặc từ chối sân do owner gửi lên
+const updateFieldApproval = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { approvalStatus, approvalNote } = req.body || {};
+
+    const field = await Field.findById(id);
+    if (!field) {
+      req.flash('error', 'Không tìm thấy sân!');
+      return res.redirect('/admin/fields');
+    }
+
+    const safeApprovalStatus = normalizeApprovalStatus(approvalStatus, getEffectiveApprovalStatus(field));
+    await applyFieldApprovalDecision({
+      field,
+      approvalStatus: safeApprovalStatus,
+      approvalNote,
+      reviewerId: req.session.user._id,
+    });
+    await field.save();
+
+    const message = safeApprovalStatus === APPROVAL_STATUS.APPROVED
+      ? `Đã duyệt sân ${field.name}.`
+      : safeApprovalStatus === APPROVAL_STATUS.REJECTED
+        ? `Đã từ chối sân ${field.name}.`
+        : `Đã chuyển sân ${field.name} về trạng thái chờ duyệt.`;
+
+    req.flash('success', message);
+    return res.redirect('/admin/fields');
+  } catch (error) {
+    console.error('Update Field Approval Error:', error);
+    req.flash('error', 'Lỗi khi cập nhật trạng thái duyệt sân!');
+    return res.redirect('/admin/fields');
   }
 };
 
@@ -761,11 +888,37 @@ const getUsers = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = 20;
 
-    const total = await User.countDocuments();
-    const users = await User.find()
-      .sort({ createdAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(limit);
+    const [total, users, fieldOptions] = await Promise.all([
+      User.countDocuments(),
+      User.find()
+        .sort({ createdAt: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit),
+      Field.find({ status: { $ne: 'deleted' } })
+        .select('_id name owner type')
+        .populate('owner', 'name')
+        .sort({ name: 1 }),
+    ]);
+
+    const userIds = users.map((user) => user._id);
+    const ownedFields = await Field.find({
+      owner: { $in: userIds },
+      status: { $ne: 'deleted' },
+    })
+      .select('_id name owner type status')
+      .sort({ name: 1 });
+
+    const ownedFieldsMap = {};
+    ownedFields.forEach((field) => {
+      const ownerKey = field.owner ? field.owner.toString() : null;
+      if (!ownerKey) return;
+
+      if (!ownedFieldsMap[ownerKey]) {
+        ownedFieldsMap[ownerKey] = [];
+      }
+
+      ownedFieldsMap[ownerKey].push(field);
+    });
 
     res.render('admin/users/index', {
       ...adminLayout,
@@ -775,6 +928,8 @@ const getUsers = async (req, res) => {
       pageTitle: 'Quản lý người dùng',
       topbarRight: `<span>Tổng: <strong>${total}</strong> người dùng</span>`,
       users,
+      fieldOptions,
+      ownedFieldsMap,
       currentPage: page,
       totalPages: Math.ceil(total / limit) || 1,
     });
@@ -782,6 +937,106 @@ const getUsers = async (req, res) => {
     console.error('Get Users Error:', error);
     req.flash('error', 'Lỗi khi tải danh sách người dùng!');
     res.redirect('/admin/dashboard');
+  }
+};
+
+// POST /admin/users/:id/permissions — Cập nhật role + gán sân cho owner
+const updateUserPermissions = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { role, commissionRate, assignedFieldId } = req.body || {};
+
+    const user = await User.findById(id);
+    if (!user) {
+      req.flash('error', 'Không tìm thấy người dùng!');
+      return res.redirect('/admin/users');
+    }
+
+    if (user._id.toString() === req.session.user._id.toString()) {
+      req.flash('error', 'Không thể tự thay đổi quyền của chính mình tại màn này!');
+      return res.redirect('/admin/users');
+    }
+
+    if (user.role === 'admin') {
+      req.flash('error', 'Tài khoản admin được bảo vệ. Hãy dùng luồng riêng nếu muốn thay đổi.');
+      return res.redirect('/admin/users');
+    }
+
+    const safeRole = ['user', 'field_owner'].includes(role) ? role : null;
+    if (!safeRole) {
+      req.flash('error', 'Vai trò không hợp lệ!');
+      return res.redirect('/admin/users');
+    }
+
+    const parsedRate = Number(commissionRate);
+    const safeCommissionRate = Number.isFinite(parsedRate) ? Math.min(10, Math.max(2, parsedRate)) : (user.commissionRate || 5);
+    const currentlyOwnedFields = await Field.find({ owner: user._id }).select('_id name');
+
+    let assignedField = null;
+    if (assignedFieldId) {
+      if (!mongoose.Types.ObjectId.isValid(assignedFieldId)) {
+        req.flash('error', 'Sân được chọn không hợp lệ!');
+        return res.redirect('/admin/users');
+      }
+
+      assignedField = await Field.findOne({
+        _id: assignedFieldId,
+        status: { $ne: 'deleted' },
+      }).populate('owner', 'name');
+
+      if (!assignedField) {
+        req.flash('error', 'Không tìm thấy sân để gán owner!');
+        return res.redirect('/admin/users');
+      }
+    }
+
+    if (safeRole === 'user') {
+      await Field.updateMany({ owner: user._id }, { $set: { owner: null } });
+    }
+
+    user.role = safeRole;
+    user.commissionRate = safeCommissionRate;
+    await user.save();
+
+    let transferMessage = '';
+    if (safeRole === 'field_owner' && assignedField) {
+      const previousOwnerName = assignedField.owner && assignedField.owner._id.toString() !== user._id.toString()
+        ? assignedField.owner.name
+        : null;
+
+      await Field.updateOne(
+        { _id: assignedField._id },
+        { $set: { owner: user._id } }
+      );
+
+      if (previousOwnerName) {
+        transferMessage = ` Quyền sở hữu sân ${assignedField.name} đã được chuyển từ ${previousOwnerName} sang ${user.name}.`;
+      } else {
+        transferMessage = ` Đã gán ${user.name} làm owner của sân ${assignedField.name}.`;
+      }
+    }
+
+    if (safeRole === 'user') {
+      req.flash('success', `Đã chuyển ${user.name} về vai trò user và gỡ ${currentlyOwnedFields.length} sân đang sở hữu.`);
+      return res.redirect('/admin/users');
+    }
+
+    if (!assignedField && currentlyOwnedFields.length === 0) {
+      req.flash('success', `Đã cấp quyền owner cho ${user.name}. Bạn có thể gán sân ngay tại màn này hoặc từ trang Pitch Assets.`);
+      return res.redirect('/admin/users');
+    }
+
+    req.flash('success', `Đã cập nhật quyền cho ${user.name}.${transferMessage}`);
+    return res.redirect('/admin/users');
+  } catch (error) {
+    console.error('Update User Permissions Error:', error);
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map((item) => item.message);
+      req.flash('error', messages.join(', '));
+      return res.redirect('/admin/users');
+    }
+    req.flash('error', 'Lỗi khi cập nhật quyền người dùng!');
+    return res.redirect('/admin/users');
   }
 };
 
@@ -826,7 +1081,9 @@ module.exports = {
   createField,
   showEditField,
   updateField,
+  updateFieldApproval,
   deleteField,
   getUsers,
   toggleUserStatus,
+  updateUserPermissions,
 };

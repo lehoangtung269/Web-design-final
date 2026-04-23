@@ -51,6 +51,29 @@ const fieldSchema = new mongoose.Schema(
       enum: ['active', 'maintenance', 'deleted'],
       default: 'active',
     },
+    approvalStatus: {
+      type: String,
+      enum: ['pending', 'approved', 'rejected'],
+      default: 'approved',
+    },
+    approvalNote: {
+      type: String,
+      trim: true,
+      default: '',
+    },
+    approvedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      default: null,
+    },
+    approvedAt: {
+      type: Date,
+      default: null,
+    },
+    submittedByOwner: {
+      type: Boolean,
+      default: false,
+    },
     facilities: {
       type: [String],
       default: [],
@@ -78,6 +101,7 @@ const fieldSchema = new mongoose.Schema(
 // Index để tìm kiếm nhanh
 fieldSchema.index({ type: 1, status: 1 });
 fieldSchema.index({ city: 1, district: 1, status: 1 });
+fieldSchema.index({ owner: 1, approvalStatus: 1, status: 1 });
 fieldSchema.index({ name: 'text', address: 'text' });
 
 const Field = mongoose.model('Field', fieldSchema);

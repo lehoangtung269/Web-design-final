@@ -21,6 +21,8 @@
               <span class="rounded-full px-3 py-1 text-xs font-semibold bg-secondary-container text-secondary">CONFIRMED</span>
             <% } else if (booking.status === 'pending') { %>
               <span class="rounded-full px-3 py-1 text-xs font-semibold bg-primary/10 text-primary">PENDING</span>
+            <% } else if (booking.status === 'cancelled') { %>
+              <span class="rounded-full px-3 py-1 text-xs font-semibold bg-surface-container text-on-surface-variant">CANCELLED</span>
             <% } else { %>
               <span class="rounded-full px-3 py-1 text-xs font-semibold bg-red-50 text-error">REJECTED</span>
             <% } %>
@@ -30,18 +32,20 @@
           </div>
         </div>
 
-        <% if (booking.status === 'pending') { %>
-          <div class="mt-4 flex flex-wrap gap-2">
-            <form action="/owner/bookings/<%= booking._id %>/approve" method="POST">
-              <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-              <button type="submit" onclick="return confirm('Duyệt đơn này?')" class="rounded-full bg-gradient-to-r from-primary to-primary-container text-white px-5 py-2 text-sm font-semibold shadow-cta hover:-translate-y-0.5 transition-all duration-300">Duyệt đơn</button>
-            </form>
-            <form action="/owner/bookings/<%= booking._id %>/reject" method="POST">
-              <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-              <button type="submit" onclick="return confirm('Từ chối đơn này?')" class="rounded-full bg-red-50 text-error px-5 py-2 text-sm font-semibold hover:bg-error hover:text-white transition-all duration-300">Từ chối</button>
-            </form>
+        <% if (booking.rejectedReason) { %>
+          <div class="mt-4 rounded-2xl bg-red-50 px-4 py-3 text-sm text-error">
+            Lý do từ chối: <span class="font-medium"><%= booking.rejectedReason %></span>
           </div>
         <% } %>
+
+        <div class="mt-4 flex flex-wrap items-center gap-3">
+          <a href="/owner/bookings/<%= booking._id %>" class="rounded-full bg-gradient-to-r from-primary to-primary-container text-white px-5 py-2 text-sm font-semibold shadow-cta hover:-translate-y-0.5 transition-all duration-300">
+            <%= booking.status === 'pending' ? 'Xem chi tiết để xử lý' : 'Xem chi tiết' %>
+          </a>
+          <% if (booking.status === 'pending') { %>
+            <span class="text-sm text-on-surface-variant">Duyệt hoặc từ chối ngay trong màn chi tiết, không còn popup xác nhận.</span>
+          <% } %>
+        </div>
       </article>
     <% }) %>
   <% } else { %>

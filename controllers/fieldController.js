@@ -1,6 +1,7 @@
 const Field = require('../models/Field');
 const TimeSlot = require('../models/TimeSlot');
 const { escapeRegex } = require('../utils/escapeRegex');
+const { buildApprovedFieldFilter } = require('../utils/fieldApproval');
 
 const normalizeSearchParams = (query = {}) => ({
   date: query.date || '',
@@ -72,10 +73,12 @@ const getFieldList = async (req, res) => {
       ];
     }
 
+    const approvedFilter = buildApprovedFieldFilter(filter);
+
     const [fields, cityAgg, districtAgg] = await Promise.all([
-      Field.find(filter).sort({ createdAt: -1 }),
-      Field.distinct('city', { status: 'active' }),
-      Field.distinct('district', { status: 'active' }),
+      Field.find(approvedFilter).sort({ createdAt: -1 }),
+      Field.distinct('city', buildApprovedFieldFilter({ status: 'active' })),
+      Field.distinct('district', buildApprovedFieldFilter({ status: 'active' })),
     ]);
 
     const resultMeta = getResultMeta(fields, searchParams);
@@ -115,7 +118,7 @@ const getFieldDetail = async (req, res) => {
     const { id } = req.params;
     const { date } = req.query;
 
-    const field = await Field.findById(id);
+    const field = await Field.findOne(buildApprovedFieldFilter({ _id: id, status: { $ne: 'deleted' } }));
     if (!field) {
       req.flash('error', 'Không tìm thấy sân!');
       return res.redirect('/fields');
@@ -165,7 +168,7 @@ const getSlotsByDate = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Thiếu tham số ngày!' });
     }
 
-    const field = await Field.findById(id);
+    const field = await Field.findOne(buildApprovedFieldFilter({ _id: id, status: { $ne: 'deleted' } }));
     if (!field) {
       return res.status(404).json({ success: false, message: 'Không tìm thấy sân!' });
     }

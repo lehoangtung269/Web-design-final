@@ -5,6 +5,7 @@ const Service = require('../models/Service');
 const BookingService = require('../models/BookingService');
 const cloudinary = require('../config/cloudinary');
 const fs = require('fs');
+const { buildApprovedFieldFilter } = require('../utils/fieldApproval');
 
 // Helper: Parse 'YYYY-MM-DD' string as LOCAL midnight (not UTC)
 function parseLocalDate(dateStr) {
@@ -35,7 +36,7 @@ const getCheckout = async (req, res) => {
     }
 
     // Lấy thông tin sân
-    const field = await Field.findById(fieldId);
+    const field = await Field.findOne(buildApprovedFieldFilter({ _id: fieldId, status: 'active' }));
     if (!field) {
       req.flash('error', 'Không tìm thấy sân bóng!');
       return res.redirect('/fields');
@@ -45,6 +46,10 @@ const getCheckout = async (req, res) => {
     const slot = await TimeSlot.findById(slotId);
     if (!slot) {
       req.flash('error', 'Không tìm thấy khung giờ!');
+      return res.redirect(`/fields/${fieldId}`);
+    }
+    if (slot.field.toString() !== fieldId.toString()) {
+      req.flash('error', 'Khung giờ không thuộc sân đã chọn!');
       return res.redirect(`/fields/${fieldId}`);
     }
 
@@ -84,7 +89,7 @@ const postBooking = async (req, res) => {
     const slot = req.bookedSlot; // Từ middleware preventDoubleBooking
 
     // Lấy giá từ DB — KHÔNG tin client gửi lên (chống hack giá)
-    const field = await Field.findById(fieldId);
+    const field = await Field.findOne(buildApprovedFieldFilter({ _id: fieldId, status: 'active' }));
     if (!field) {
       req.flash('error', 'Không tìm thấy sân bóng!');
       return res.redirect('/fields');

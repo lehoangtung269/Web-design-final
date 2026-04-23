@@ -1,6 +1,21 @@
 <section class="rounded-[2rem] bg-surface-container-low p-6 md:p-10 mb-8 shadow-ambient">
   <p class="kinetic-label text-on-surface-variant mb-3">Pitch maintenance</p>
   <h2 class="kinetic-display text-5xl md:text-6xl">EDIT FIELD PROFILE</h2>
+  <%
+    const approvalStatus = field.approvalStatus || 'approved';
+    const approvalText = approvalStatus === 'approved'
+      ? 'Sân đã được admin duyệt và đang ở trạng thái live.'
+      : approvalStatus === 'pending'
+        ? 'Sân đang chờ admin duyệt. Bạn vẫn có thể chỉnh sửa trước khi được mở công khai.'
+        : 'Sân đang bị từ chối. Sau khi chỉnh sửa và lưu lại, hệ thống sẽ gửi lại cho admin duyệt.';
+  %>
+  <p class="mt-4 text-on-surface-variant max-w-2xl"><%= approvalText %></p>
+  <% if (field.approvalNote) { %>
+    <div class="mt-4 inline-flex max-w-2xl rounded-2xl bg-white px-4 py-3 text-sm text-on-surface shadow-ambient">
+      <span class="material-symbols-outlined mr-2 text-primary">info</span>
+      <%= field.approvalNote %>
+    </div>
+  <% } %>
 </section>
 
 <form action="/owner/fields/<%= field._id %>" method="POST" enctype="multipart/form-data" class="max-w-5xl rounded-[2rem] bg-white p-6 md:p-8 space-y-6 shadow-ambient">

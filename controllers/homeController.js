@@ -1,5 +1,6 @@
 const Field = require('../models/Field');
 const { escapeRegex } = require('../utils/escapeRegex');
+const { buildApprovedFieldFilter } = require('../utils/fieldApproval');
 
 const normalizeSearchParams = (query = {}) => ({
   date: query.date || '',
@@ -38,7 +39,7 @@ const getResultMeta = (fields, searchParams) => {
 const getHomePage = async (req, res) => {
   try {
     // Lấy các sân đang hoạt động
-    const featuredFields = await Field.find({ status: 'active' })
+    const featuredFields = await Field.find(buildApprovedFieldFilter({ status: 'active' }))
       .sort({ createdAt: -1 })
       .limit(6);
 
@@ -88,10 +89,12 @@ const searchFields = async (req, res) => {
       ];
     }
 
+    const approvedFilter = buildApprovedFieldFilter(filter);
+
     const [fields, cityAgg, districtAgg] = await Promise.all([
-      Field.find(filter).sort({ createdAt: -1 }),
-      Field.distinct('city', { status: 'active' }),
-      Field.distinct('district', { status: 'active' }),
+      Field.find(approvedFilter).sort({ createdAt: -1 }),
+      Field.distinct('city', buildApprovedFieldFilter({ status: 'active' })),
+      Field.distinct('district', buildApprovedFieldFilter({ status: 'active' })),
     ]);
 
     const resultMeta = getResultMeta(fields, searchParams);

@@ -3,240 +3,561 @@ const Field = require('../models/Field');
 const TimeSlot = require('../models/TimeSlot');
 const User = require('../models/User');
 const { sendBookingConfirmationAsync } = require('../utils/emailService');
+const { APPROVAL_STATUS, getEffectiveApprovalStatus } = require('../utils/fieldApproval');
 
 const ownerLayout = { layout: 'layouts/owner' };
 
+const SLOT_WINDOWS = [
+  { startTime: '06:00', endTime: '07:30' },
+  { startTime: '07:30', endTime: '09:00' },
+  { startTime: '09:00', endTime: '10:30' },
+  { startTime: '10:30', endTime: '12:00' },
+  { startTime: '12:00', endTime: '13:30' },
+  { startTime: '13:30', endTime: '15:00' },
+  { startTime: '15:00', endTime: '16:30' },
+  { startTime: '16:30', endTime: '18:00' },
+  { startTime: '18:00', endTime: '19:30' },
+  { startTime: '19:30', endTime: '21:00' },
+  { startTime: '21:00', endTime: '22:30' },
+];
+
 function getBookingAmount(booking) {
-    return booking?.finalTotal ?? booking?.totalPrice ?? 0;
+  return booking?.finalTotal ?? booking?.totalPrice ?? 0;
+}
+
+function parseLocalDate(dateStr) {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+
+function toLocalDateString(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
+function getStartOfWeek(date = new Date()) {
+  const target = new Date(date);
+  target.setHours(0, 0, 0, 0);
+
+  const dayOfWeek = target.getDay();
+  const diffToMonday = target.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+  target.setDate(diffToMonday);
+
+  return target;
+}
+
+function getOwnerManagedFieldScope(ownerId) {
+  return {
+    owner: ownerId,
+    status: { $ne: 'deleted' },
+  };
+}
+
+function getOwnerVisibleFieldScope(ownerId) {
+  return {
+    ...getOwnerManagedFieldScope(ownerId),
+    approvalStatus: { $ne: APPROVAL_STATUS.REJECTED },
+  };
+}
+
+function summarizeFieldApprovals(fields) {
+  return fields.reduce(
+    (acc, field) => {
+      const approvalStatus = getEffectiveApprovalStatus(field);
+      acc.total += 1;
+
+      if (field.status === 'active' && approvalStatus === APPROVAL_STATUS.APPROVED) {
+        acc.live += 1;
+      }
+      if (approvalStatus === APPROVAL_STATUS.PENDING) {
+        acc.pending += 1;
+      }
+      if (approvalStatus === APPROVAL_STATUS.REJECTED) {
+        acc.rejected += 1;
+      }
+
+      return acc;
+    },
+    { total: 0, live: 0, pending: 0, rejected: 0 }
+  );
+}
+
+async function getFreshOwnerName(ownerId, fallbackName) {
+  const freshOwner = await User.findById(ownerId).select('name').lean();
+  return freshOwner?.name || fallbackName || 'Owner';
 }
 
 exports.getDashboard = async (req, res) => {
-    try {
-        const ownerId = req.session.user._id;
-        const fields = await Field.find({ owner: ownerId }).select('_id');
-        const fieldIds = fields.map(f => f._id);
+  try {
+    const ownerId = req.session.user._id;
+    const [fields, allOwnerFields] = await Promise.all([
+      Field.find(getOwnerVisibleFieldScope(ownerId))
+        .sort({ createdAt: -1 })
+        .limit(6),
+      Field.find(getOwnerManagedFieldScope(ownerId)).select('_id status approvalStatus'),
+    ]);
 
-        const [totalFields, pendingBookings, confirmedBookings, totalRevenue] = await Promise.all([
-            Field.countDocuments({ owner: ownerId }),
-            Booking.countDocuments({ field: { $in: fieldIds }, status: 'pending' }),
-            Booking.countDocuments({ field: { $in: fieldIds }, status: 'confirmed' }),
-            Booking.aggregate([
-                { $match: { field: { $in: fieldIds }, status: 'confirmed' } },
-                { $group: { _id: null, sum: { $sum: '$ownerRevenue' } } }
-            ])
-        ]);
+    const visibleOwnerFields = allOwnerFields.filter(
+      (field) => getEffectiveApprovalStatus(field) !== APPROVAL_STATUS.REJECTED
+    );
+    const rejectedNotificationCount = allOwnerFields.length - visibleOwnerFields.length;
+    const allFieldIds = allOwnerFields.map((field) => field._id);
 
-        const recentBookings = await Booking.find({ field: { $in: fieldIds } })
-            .populate('user', 'name phone')
-            .populate('field', 'name')
-            .sort({ createdAt: -1 })
-            .limit(5);
+    const [pendingBookings, confirmedBookings, totalRevenue, recentBookings, ownerName] = await Promise.all([
+      Booking.countDocuments({ field: { $in: allFieldIds }, status: 'pending' }),
+      Booking.countDocuments({ field: { $in: allFieldIds }, status: 'confirmed' }),
+      Booking.aggregate([
+        { $match: { field: { $in: allFieldIds }, status: 'confirmed' } },
+        { $group: { _id: null, sum: { $sum: '$ownerRevenue' } } },
+      ]),
+      Booking.find({ field: { $in: allFieldIds } })
+        .populate('user', 'name phone')
+        .populate('field', 'name')
+        .sort({ createdAt: -1 })
+        .limit(6),
+      getFreshOwnerName(ownerId, req.session.user?.name),
+    ]);
 
-        res.render('owner/dashboard', {
-            ...ownerLayout,
-            title: 'Chủ sân Dashboard',
-            activeNav: 'owner-dashboard',
-            stats: {
-                totalFields,
-                pendingBookings,
-                confirmedBookings,
-                revenue: totalRevenue[0]?.sum || 0
-            },
-            recentBookings
-        });
-    } catch (err) {
-        console.error(err);
-        res.redirect('/');
-    }
+    const fieldSummary = summarizeFieldApprovals(visibleOwnerFields);
+
+    res.render('owner/dashboard', {
+      ...ownerLayout,
+      title: 'Owner Dashboard',
+      activeNav: 'owner-dashboard',
+      ownerName,
+      stats: {
+        totalFields: fieldSummary.total,
+        liveFields: fieldSummary.live,
+        pendingFieldApprovals: fieldSummary.pending,
+        pendingBookings,
+        confirmedBookings,
+        revenue: totalRevenue[0]?.sum || 0,
+        notificationCount: rejectedNotificationCount,
+        rejectedFieldApprovals: rejectedNotificationCount,
+      },
+      ownedFields: fields,
+      recentBookings,
+    });
+  } catch (err) {
+    console.error(err);
+    res.redirect('/');
+  }
 };
 
 exports.getBookings = async (req, res) => {
-    try {
-        const ownerId = req.session.user._id;
-        const fields = await Field.find({ owner: ownerId }).select('_id');
-        const fieldIds = fields.map(f => f._id);
+  try {
+    const ownerId = req.session.user._id;
+    const fields = await Field.find(getOwnerManagedFieldScope(ownerId)).select('_id');
+    const fieldIds = fields.map((field) => field._id);
 
-        const bookings = await Booking.find({ field: { $in: fieldIds } })
-            .populate('user', 'name phone')
-            .populate('field', 'name')
-            .sort({ createdAt: -1 })
-            .limit(20);
+    const bookings = await Booking.find({ field: { $in: fieldIds } })
+      .populate('user', 'name phone')
+      .populate('field', 'name')
+      .sort({ createdAt: -1 })
+      .limit(20);
 
-        res.render('owner/bookings', { ...ownerLayout, title: 'Đơn đặt sân', activeNav: 'bookings', bookings });
-    } catch (err) {
-        console.error(err);
-        res.redirect('/owner/dashboard');
+    res.render('owner/bookings', {
+      ...ownerLayout,
+      title: 'Đơn đặt sân',
+      activeNav: 'bookings',
+      bookings,
+    });
+  } catch (err) {
+    console.error(err);
+    res.redirect('/owner/dashboard');
+  }
+};
+
+exports.getBookingDetail = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const booking = await Booking.findById(id)
+      .populate('user', 'name email phone')
+      .populate('field', 'name address city district type pricePerSlot images owner');
+
+    if (!booking || booking.field?.owner?.toString() !== req.session.user._id.toString()) {
+      req.flash('error', 'Không tìm thấy đơn đặt sân của bạn.');
+      return res.redirect('/owner/bookings');
     }
+
+    return res.render('owner/booking-detail', {
+      ...ownerLayout,
+      title: 'Chi tiết đơn đặt sân',
+      activeNav: 'bookings',
+      booking,
+    });
+  } catch (err) {
+    console.error(err);
+    req.flash('error', 'Không thể tải chi tiết đơn lúc này.');
+    return res.redirect('/owner/bookings');
+  }
+};
+
+exports.getSchedule = async (req, res) => {
+  try {
+    const ownerId = req.session.user._id;
+    const requestedFieldId = req.query.fieldId || 'all';
+    const baseDate = req.query.date ? parseLocalDate(req.query.date) : new Date();
+    const startOfWeek = getStartOfWeek(baseDate);
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
+    endOfWeek.setHours(23, 59, 59, 999);
+
+    const prevWeek = new Date(startOfWeek);
+    prevWeek.setDate(startOfWeek.getDate() - 7);
+
+    const nextWeek = new Date(startOfWeek);
+    nextWeek.setDate(startOfWeek.getDate() + 7);
+
+    const ownerFields = await Field.find(getOwnerVisibleFieldScope(ownerId))
+      .select('_id name status type approvalStatus approvalNote')
+      .sort({ name: 1 });
+
+    const selectedField = requestedFieldId !== 'all'
+      ? ownerFields.find((field) => field._id.toString() === requestedFieldId) || null
+      : null;
+    const selectedFieldId = selectedField ? selectedField._id.toString() : 'all';
+
+    const bookingFilter = {
+      field: { $in: ownerFields.map((field) => field._id) },
+      date: { $gte: startOfWeek, $lte: endOfWeek },
+    };
+    if (selectedField) {
+      bookingFilter.field = selectedField._id;
+    }
+
+    const bookings = await Booking.find(bookingFilter)
+      .populate('field', 'name type')
+      .populate('user', 'name phone')
+      .sort({ date: 1, startTime: 1 });
+
+    const dayLabels = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+    const todayKey = toLocalDateString(new Date());
+    const weekDays = Array.from({ length: 7 }, (_, index) => {
+      const currentDate = new Date(startOfWeek);
+      currentDate.setDate(startOfWeek.getDate() + index);
+
+      return {
+        name: dayLabels[index],
+        dateNum: currentDate.getDate(),
+        fullDateStr: toLocalDateString(currentDate),
+        isToday: toLocalDateString(currentDate) === todayKey,
+      };
+    });
+
+    const bookingMap = new Map();
+    bookings.forEach((booking) => {
+      const key = `${toLocalDateString(new Date(booking.date))}_${booking.startTime}`;
+      if (!bookingMap.has(key)) {
+        bookingMap.set(key, []);
+      }
+      bookingMap.get(key).push(booking);
+    });
+
+    const scheduleRows = SLOT_WINDOWS.map((slot) => ({
+      ...slot,
+      cells: weekDays.map((day) => ({
+        date: day.fullDateStr,
+        bookings: bookingMap.get(`${day.fullDateStr}_${slot.startTime}`) || [],
+      })),
+    }));
+
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    let weekTitle = `${monthNames[startOfWeek.getMonth()]} ${startOfWeek.getDate()}`;
+    weekTitle += startOfWeek.getMonth() === endOfWeek.getMonth()
+      ? ` — ${endOfWeek.getDate()}`
+      : ` — ${monthNames[endOfWeek.getMonth()]} ${endOfWeek.getDate()}`;
+
+    res.render('owner/schedule', {
+      ...ownerLayout,
+      title: 'Pitch Schedule',
+      activeNav: 'schedule',
+      fieldOptions: ownerFields,
+      selectedField,
+      selectedFieldId,
+      weekTitle,
+      weekDays,
+      scheduleRows,
+      currentDateStr: toLocalDateString(baseDate),
+      prevWeekStr: toLocalDateString(prevWeek),
+      nextWeekStr: toLocalDateString(nextWeek),
+      todayStr: toLocalDateString(new Date()),
+      weekStats: {
+        total: bookings.length,
+        confirmed: bookings.filter((booking) => booking.status === 'confirmed').length,
+        pending: bookings.filter((booking) => booking.status === 'pending').length,
+        rejected: bookings.filter((booking) => ['rejected', 'cancelled'].includes(booking.status)).length,
+      },
+    });
+  } catch (err) {
+    console.error(err);
+    res.redirect('/owner/dashboard');
+  }
 };
 
 exports.approveBooking = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const booking = await Booking.findById(id).populate('field').populate('user', 'name email');
-        if (!booking || booking.field.owner?.toString() !== req.session.user._id.toString()) {
-            return res.redirect('/owner/dashboard');
-        }
-        if (booking.status !== 'pending') return res.redirect('/owner/bookings');
+  try {
+    const { id } = req.params;
+    const booking = await Booking.findById(id)
+      .populate('field')
+      .populate('user', 'name email');
 
-        booking.status = 'confirmed';
-        await TimeSlot.findByIdAndUpdate(booking.timeSlot, { status: 'booked' });
-
-        const field = await Field.findById(booking.field).populate('owner');
-        const rate = field.owner?.commissionRate || 5;
-        const bookingAmount = getBookingAmount(booking);
-        booking.finalTotal = bookingAmount;
-        booking.commissionAmount = Math.round(bookingAmount * (rate / 100));
-        booking.ownerRevenue = bookingAmount - booking.commissionAmount;
-        booking.isRevenueCalculated = true;
-
-        await booking.save();
-        if (booking.user?.email) {
-            await sendBookingConfirmationAsync(booking.user.email, booking);
-        }
-        req.flash('success', 'Đã duyệt đơn!');
-        res.redirect('/owner/bookings');
-    } catch (e) {
-        console.error(e);
-        res.redirect('/owner/bookings');
+    if (!booking || booking.field.owner?.toString() !== req.session.user._id.toString()) {
+      req.flash('error', 'Không tìm thấy đơn đặt sân của bạn.');
+      return res.redirect('/owner/bookings');
     }
+    if (booking.status !== 'pending') {
+      req.flash('error', 'Đơn này đã được xử lý rồi.');
+      return res.redirect(`/owner/bookings/${id}`);
+    }
+
+    booking.status = 'confirmed';
+    booking.approvedBy = req.session.user._id;
+    booking.approvedAt = new Date();
+    await TimeSlot.findByIdAndUpdate(booking.timeSlot, {
+      status: 'booked',
+      bookedBy: booking.user,
+    });
+
+    const field = await Field.findById(booking.field._id).populate('owner');
+    const rate = field.owner?.commissionRate || 5;
+    const bookingAmount = getBookingAmount(booking);
+    booking.finalTotal = bookingAmount;
+    booking.commissionAmount = Math.round(bookingAmount * (rate / 100));
+    booking.ownerRevenue = bookingAmount - booking.commissionAmount;
+    booking.isRevenueCalculated = true;
+
+    await booking.save();
+    if (booking.user?.email) {
+      await sendBookingConfirmationAsync(booking.user.email, booking);
+    }
+
+    req.flash('success', 'Đã duyệt đơn!');
+    res.redirect(`/owner/bookings/${id}`);
+  } catch (e) {
+    console.error(e);
+    req.flash('error', 'Không thể duyệt đơn lúc này.');
+    res.redirect(`/owner/bookings/${req.params.id}`);
+  }
 };
 
 exports.rejectBooking = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const booking = await Booking.findById(id).populate('field').populate('user', 'name email');
-        if (!booking || booking.field.owner?.toString() !== req.session.user._id.toString() || booking.status !== 'pending') {
-            return res.redirect('/owner/bookings');
-        }
-        booking.status = 'rejected';
-        booking.rejectedReason = req.body.reason || 'Không đạt yêu cầu';
-        await TimeSlot.findByIdAndUpdate(booking.timeSlot, { status: 'available', bookedBy: null });
-        await booking.save();
-        if (booking.user?.email) {
-            await sendBookingConfirmationAsync(booking.user.email, booking);
-        }
-        req.flash('warning', 'Đã từ chối đơn!');
-        res.redirect('/owner/bookings');
-    } catch (e) {
-        console.error(e);
-        res.redirect('/owner/bookings');
+  try {
+    const { id } = req.params;
+    const booking = await Booking.findById(id)
+      .populate('field')
+      .populate('user', 'name email');
+
+    if (!booking || booking.field.owner?.toString() !== req.session.user._id.toString()) {
+      req.flash('error', 'Không tìm thấy đơn đặt sân của bạn.');
+      return res.redirect('/owner/bookings');
     }
+
+    if (booking.status !== 'pending') {
+      req.flash('error', 'Đơn này đã được xử lý rồi.');
+      return res.redirect(`/owner/bookings/${id}`);
+    }
+
+    booking.status = 'rejected';
+    booking.rejectedReason = req.body.reason?.trim() || 'Không đạt yêu cầu';
+    booking.approvedBy = req.session.user._id;
+    booking.approvedAt = new Date();
+    await TimeSlot.findByIdAndUpdate(booking.timeSlot, {
+      status: 'available',
+      bookedBy: null,
+    });
+    await booking.save();
+
+    if (booking.user?.email) {
+      await sendBookingConfirmationAsync(booking.user.email, booking);
+    }
+
+    req.flash('success', 'Đã từ chối đơn!');
+    res.redirect(`/owner/bookings/${id}`);
+  } catch (e) {
+    console.error(e);
+    req.flash('error', 'Không thể từ chối đơn lúc này.');
+    res.redirect(`/owner/bookings/${req.params.id}`);
+  }
 };
 
 exports.getFields = async (req, res) => {
-    try {
-        const fields = await Field.find({ owner: req.session.user._id }).sort({ createdAt: -1 });
-        res.render('owner/fields', { ...ownerLayout, title: 'Sân của bạn', activeNav: 'fields', fields });
-    } catch (err) {
-        console.error(err);
-        res.redirect('/owner/dashboard');
-    }
+  try {
+    const [fields, notificationCount] = await Promise.all([
+      Field.find(getOwnerVisibleFieldScope(req.session.user._id)).sort({ createdAt: -1 }),
+      Field.countDocuments({
+        ...getOwnerManagedFieldScope(req.session.user._id),
+        approvalStatus: APPROVAL_STATUS.REJECTED,
+      }),
+    ]);
+    const stats = summarizeFieldApprovals(fields);
+
+    res.render('owner/fields', {
+      ...ownerLayout,
+      title: 'Sân của bạn',
+      activeNav: 'fields',
+      fields,
+      stats,
+      notificationCount,
+    });
+  } catch (err) {
+    console.error(err);
+    res.redirect('/owner/dashboard');
+  }
+};
+
+exports.getNotifications = async (req, res) => {
+  try {
+    const notifications = await Field.find({
+      ...getOwnerManagedFieldScope(req.session.user._id),
+      approvalStatus: APPROVAL_STATUS.REJECTED,
+    })
+      .select('_id name address city district type approvalNote approvedAt updatedAt')
+      .sort({ approvedAt: -1, updatedAt: -1 });
+
+    res.render('owner/notifications', {
+      ...ownerLayout,
+      title: 'Thông báo',
+      activeNav: 'notifications',
+      notifications,
+    });
+  } catch (err) {
+    console.error(err);
+    req.flash('error', 'Không thể tải thông báo lúc này.');
+    res.redirect('/owner/dashboard');
+  }
 };
 
 exports.showCreateField = async (req, res) => {
-    try {
-        res.render('owner/fields-create', {
-            ...ownerLayout,
-            title: 'Thêm sân mới',
-            activeNav: 'fields',
-        });
-    } catch (err) {
-        console.error(err);
-        res.redirect('/owner/fields');
-    }
+  try {
+    res.render('owner/fields-create', {
+      ...ownerLayout,
+      title: 'Thêm sân mới',
+      activeNav: 'fields',
+    });
+  } catch (err) {
+    console.error(err);
+    res.redirect('/owner/fields');
+  }
 };
 
 exports.createField = async (req, res) => {
-    try {
-        const { name, address, city, district, type, pricePerSlot, description, facilities } = req.body || {};
-        if (!name || !address || !city || !district || !type || !pricePerSlot) {
-            req.flash('error', 'Vui lòng điền đầy đủ thông tin bắt buộc.');
-            return res.redirect('/owner/fields/create');
-        }
-
-        const facilitiesArr = Array.isArray(facilities) ? facilities : facilities ? [facilities] : [];
-        await Field.create({
-            name,
-            address,
-            city,
-            district,
-            type,
-            pricePerSlot,
-            description,
-            facilities: facilitiesArr,
-            owner: req.session.user._id,
-            images: req.cloudinaryUrls || [],
-            status: 'active',
-        });
-
-        req.flash('success', 'Đã tạo sân mới thành công!');
-        res.redirect('/owner/fields');
-    } catch (err) {
-        console.error(err);
-        req.flash('error', 'Không thể tạo sân lúc này.');
-        res.redirect('/owner/fields/create');
+  try {
+    const { name, address, city, district, type, pricePerSlot, description, facilities } = req.body || {};
+    if (!name || !address || !city || !district || !type || !pricePerSlot) {
+      req.flash('error', 'Vui lòng điền đầy đủ thông tin bắt buộc.');
+      return res.redirect('/owner/fields/create');
     }
+
+    const facilitiesArr = Array.isArray(facilities) ? facilities : facilities ? [facilities] : [];
+    await Field.create({
+      name,
+      address,
+      city,
+      district,
+      type,
+      pricePerSlot,
+      description,
+      facilities: facilitiesArr,
+      owner: req.session.user._id,
+      images: req.cloudinaryUrls || [],
+      status: 'active',
+      approvalStatus: APPROVAL_STATUS.PENDING,
+      approvalNote: 'Chờ admin duyệt sân mới từ owner portal.',
+      approvedBy: null,
+      approvedAt: null,
+      submittedByOwner: true,
+    });
+
+    req.flash('success', 'Đã gửi sân mới lên hệ thống. Sân sẽ hiển thị công khai sau khi admin duyệt.');
+    res.redirect('/owner/fields');
+  } catch (err) {
+    console.error(err);
+    req.flash('error', 'Không thể tạo sân lúc này.');
+    res.redirect('/owner/fields/create');
+  }
 };
 
 exports.showEditField = async (req, res) => {
-    try {
-        const field = await Field.findOne({ _id: req.params.id, owner: req.session.user._id });
-        if (!field) {
-            req.flash('error', 'Không tìm thấy sân của bạn.');
-            return res.redirect('/owner/fields');
-        }
+  try {
+    const field = await Field.findOne({
+      _id: req.params.id,
+      ...getOwnerManagedFieldScope(req.session.user._id),
+    });
 
-        res.render('owner/fields-edit', {
-            ...ownerLayout,
-            title: 'Sửa sân',
-            activeNav: 'fields',
-            field,
-        });
-    } catch (err) {
-        console.error(err);
-        res.redirect('/owner/fields');
+    if (!field) {
+      req.flash('error', 'Không tìm thấy sân của bạn.');
+      return res.redirect('/owner/fields');
     }
+
+    res.render('owner/fields-edit', {
+      ...ownerLayout,
+      title: 'Sửa sân',
+      activeNav: 'fields',
+      field,
+    });
+  } catch (err) {
+    console.error(err);
+    res.redirect('/owner/fields');
+  }
 };
 
 exports.updateField = async (req, res) => {
-    try {
-        const { name, address, city, district, type, pricePerSlot, description, status, facilities } = req.body || {};
-        if (!name || !address || !city || !district || !type || !pricePerSlot) {
-            req.flash('error', 'Vui lòng điền đầy đủ thông tin.');
-            return res.redirect(`/owner/fields/${req.params.id}/edit`);
-        }
-
-        const facilitiesArr = Array.isArray(facilities) ? facilities : facilities ? [facilities] : [];
-        const updateData = {
-            name,
-            address,
-            city,
-            district,
-            type,
-            pricePerSlot,
-            description,
-            status,
-            facilities: facilitiesArr,
-        };
-        if (req.cloudinaryUrls && req.cloudinaryUrls.length > 0) {
-            updateData.images = req.cloudinaryUrls;
-        }
-
-        const updated = await Field.findOneAndUpdate(
-            { _id: req.params.id, owner: req.session.user._id },
-            updateData,
-            { new: true, runValidators: true }
-        );
-        if (!updated) {
-            req.flash('error', 'Không tìm thấy sân của bạn.');
-            return res.redirect('/owner/fields');
-        }
-
-        req.flash('success', 'Cập nhật sân thành công!');
-        res.redirect('/owner/fields');
-    } catch (err) {
-        console.error(err);
-        req.flash('error', 'Không thể cập nhật sân lúc này.');
-        res.redirect(`/owner/fields/${req.params.id}/edit`);
+  try {
+    const { name, address, city, district, type, pricePerSlot, description, status, facilities } = req.body || {};
+    if (!name || !address || !city || !district || !type || !pricePerSlot) {
+      req.flash('error', 'Vui lòng điền đầy đủ thông tin.');
+      return res.redirect(`/owner/fields/${req.params.id}/edit`);
     }
+
+    const field = await Field.findOne({
+      _id: req.params.id,
+      ...getOwnerManagedFieldScope(req.session.user._id),
+    });
+
+    if (!field) {
+      req.flash('error', 'Không tìm thấy sân của bạn.');
+      return res.redirect('/owner/fields');
+    }
+
+    const facilitiesArr = Array.isArray(facilities) ? facilities : facilities ? [facilities] : [];
+    field.name = name;
+    field.address = address;
+    field.city = city;
+    field.district = district;
+    field.type = type;
+    field.pricePerSlot = pricePerSlot;
+    field.description = description;
+    field.status = ['active', 'maintenance'].includes(status) ? status : field.status;
+    field.facilities = facilitiesArr;
+
+    if (req.cloudinaryUrls && req.cloudinaryUrls.length > 0) {
+      field.images = req.cloudinaryUrls;
+    }
+
+    if (getEffectiveApprovalStatus(field) !== APPROVAL_STATUS.APPROVED) {
+      field.approvalStatus = APPROVAL_STATUS.PENDING;
+      field.approvalNote = 'Chủ sân đã cập nhật hồ sơ và gửi lại để admin duyệt.';
+      field.approvedBy = null;
+      field.approvedAt = null;
+      field.submittedByOwner = true;
+    }
+
+    await field.save();
+
+    req.flash(
+      'success',
+      getEffectiveApprovalStatus(field) === APPROVAL_STATUS.PENDING
+        ? 'Đã cập nhật sân và gửi lại để admin duyệt.'
+        : 'Cập nhật sân thành công!'
+    );
+    res.redirect('/owner/fields');
+  } catch (err) {
+    console.error(err);
+    req.flash('error', 'Không thể cập nhật sân lúc này.');
+    res.redirect(`/owner/fields/${req.params.id}/edit`);
+  }
 };

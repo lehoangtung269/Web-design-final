@@ -32,6 +32,7 @@ router.get('/fields/create', adminController.showCreateField);
 router.post('/fields', uploadFieldImages, adminController.createField);
 router.get('/fields/:id/edit', isAuthenticated, authorizeRole('admin', 'field_owner'), checkFieldOwnership, adminController.showEditField);
 router.post('/fields/:id', isAuthenticated, authorizeRole('admin', 'field_owner'), uploadFieldImages, checkFieldOwnership, adminController.updateField);
+router.post('/fields/:id/approval', adminController.updateFieldApproval);
 router.post('/fields/:id/delete', adminController.deleteField);
 
 // ================================
@@ -39,5 +40,6 @@ router.post('/fields/:id/delete', adminController.deleteField);
 // ================================
 router.get('/users', adminController.getUsers);
 router.post('/users/:id/toggle', adminController.toggleUserStatus);
+router.post('/users/:id/permissions', adminController.updateUserPermissions);
 
 module.exports = router;

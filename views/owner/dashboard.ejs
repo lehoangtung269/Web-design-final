@@ -3,12 +3,20 @@
   <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
     <div>
       <h2 class="kinetic-display text-5xl md:text-6xl text-on-surface leading-none">KINETIC</h2>
-      <h2 class="kinetic-display text-5xl md:text-6xl text-primary leading-none -mt-2">CONTROL ROOM</h2>
-      <p class="mt-4 text-on-surface-variant max-w-xl">Theo dõi booking, điều phối sân và tối ưu doanh thu với trải nghiệm quản trị kiểu editorial.</p>
+      <h2 class="kinetic-display text-5xl md:text-6xl text-primary leading-none -mt-2">OWNER GRID</h2>
+      <p class="mt-4 text-on-surface-variant max-w-2xl">
+        <%= ownerName || (currentUser ? currentUser.name : 'Owner') %> đang quản lý <span class="font-semibold text-on-surface"><%= stats.totalFields %></span> sân.
+        Các sân mới do chủ sân tạo sẽ chỉ xuất hiện công khai sau khi admin duyệt. Nếu có sân bị từ chối, chi tiết sẽ nằm ở mục `Notifications`.
+      </p>
     </div>
-    <a href="/owner/fields/create" class="rounded-full bg-gradient-to-r from-primary to-primary-container text-white px-7 py-3 text-sm font-semibold shadow-cta hover:-translate-y-1 transition-all duration-300">
-      + Thêm sân mới
-    </a>
+    <div class="flex flex-wrap gap-3">
+      <a href="/owner/schedule" class="rounded-full bg-white px-6 py-3 text-sm font-semibold text-on-surface shadow-ambient hover:-translate-y-1 transition-all duration-300">
+        Xem Pitch Schedule
+      </a>
+      <a href="/owner/fields/create" class="rounded-full bg-gradient-to-r from-primary to-primary-container text-white px-7 py-3 text-sm font-semibold shadow-cta hover:-translate-y-1 transition-all duration-300">
+        + Gửi sân mới
+      </a>
+    </div>
   </div>
 </section>
 
@@ -18,16 +26,107 @@
     <h3 class="kinetic-headline text-4xl"><%= stats.totalFields %></h3>
   </div>
   <div class="rounded-3xl bg-white p-6 shadow-ambient">
-    <p class="kinetic-label text-on-surface-variant mb-3">Chờ duyệt</p>
-    <h3 class="kinetic-headline text-4xl text-primary"><%= stats.pendingBookings %></h3>
+    <p class="kinetic-label text-on-surface-variant mb-3">Sân đang live</p>
+    <h3 class="kinetic-headline text-4xl text-secondary"><%= stats.liveFields %></h3>
   </div>
   <div class="rounded-3xl bg-white p-6 shadow-ambient">
-    <p class="kinetic-label text-on-surface-variant mb-3">Đã duyệt</p>
-    <h3 class="kinetic-headline text-4xl"><%= stats.confirmedBookings %></h3>
+    <p class="kinetic-label text-on-surface-variant mb-3">Chờ admin duyệt</p>
+    <h3 class="kinetic-headline text-4xl text-primary"><%= stats.pendingFieldApprovals %></h3>
   </div>
   <div class="rounded-3xl bg-white p-6 shadow-ambient">
     <p class="kinetic-label text-on-surface-variant mb-3">Doanh thu dự kiến</p>
     <h3 class="kinetic-headline text-3xl text-secondary"><%= stats.revenue.toLocaleString('vi-VN') %>đ</h3>
+  </div>
+</section>
+
+<% if (stats.notificationCount > 0) { %>
+  <section class="mb-8 rounded-[2rem] bg-red-50 px-6 py-5 shadow-ambient">
+    <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+      <div>
+        <p class="kinetic-label text-error mb-2">Notifications</p>
+        <p class="text-sm text-error">
+          Bạn có <span class="font-semibold"><%= stats.notificationCount %></span> thông báo từ admin về sân bị từ chối.
+        </p>
+      </div>
+      <a href="/owner/notifications" class="inline-flex items-center justify-center rounded-full bg-error px-5 py-2.5 text-sm font-semibold text-white hover:opacity-90 transition-opacity">
+        Mở thông báo
+      </a>
+    </div>
+  </section>
+<% } %>
+
+<section class="grid grid-cols-1 xl:grid-cols-[1.2fr_1fr] gap-6 mb-8">
+  <div class="rounded-[2rem] bg-white p-6 md:p-8 shadow-ambient">
+    <div class="flex items-center justify-between mb-5">
+      <div>
+        <p class="kinetic-label text-on-surface-variant">Owned assets</p>
+        <h3 class="kinetic-headline text-3xl">Your fields</h3>
+      </div>
+      <a href="/owner/fields" class="text-primary text-sm font-semibold hover:underline">Quản lý sân</a>
+    </div>
+
+    <% if (ownedFields && ownedFields.length > 0) { %>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <% ownedFields.forEach((field) => { %>
+          <%
+            const approvalStatus = field.approvalStatus || 'approved';
+            const approvalBadgeClass = approvalStatus === 'approved'
+              ? 'bg-secondary-container text-secondary'
+              : approvalStatus === 'pending'
+                ? 'bg-primary/10 text-primary'
+                : 'bg-red-50 text-error';
+          %>
+          <article class="rounded-3xl bg-surface-container-low p-5 border border-white/60">
+            <div class="flex items-start justify-between gap-4">
+              <div class="min-w-0">
+                <p class="kinetic-label text-on-surface-variant mb-1"><%= field.city || '' %> - <%= field.district || '' %></p>
+                <h4 class="text-xl font-bold text-on-surface truncate"><%= field.name %></h4>
+              </div>
+              <span class="rounded-full px-3 py-1 text-[11px] font-semibold capitalize <%= approvalBadgeClass %>">
+                <%= approvalStatus %>
+              </span>
+            </div>
+            <p class="text-sm text-on-surface-variant mt-3 line-clamp-2"><%= field.address %></p>
+            <div class="mt-4 flex items-center justify-between gap-3">
+              <span class="rounded-full bg-white px-3 py-1 text-xs font-semibold text-on-surface"><%= field.type %></span>
+              <span class="text-sm font-semibold text-on-surface"><%= Number(field.pricePerSlot || 0).toLocaleString('vi-VN') %>đ / slot</span>
+            </div>
+            <% if (field.approvalNote) { %>
+              <p class="mt-4 rounded-2xl bg-white px-4 py-3 text-xs text-on-surface-variant"><%= field.approvalNote %></p>
+            <% } %>
+          </article>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <div class="rounded-3xl bg-surface-container-low p-10 text-center text-on-surface-variant">
+        Bạn chưa có sân nào được gán. Nếu admin đã vừa setup owner cho tài khoản này thì refresh lại và kiểm tra ở mục `Your Pitches`.
+      </div>
+    <% } %>
+  </div>
+
+  <div class="rounded-[2rem] bg-white p-6 md:p-8 shadow-ambient">
+    <div class="flex items-center justify-between mb-5">
+      <div>
+        <p class="kinetic-label text-on-surface-variant">Booking pulse</p>
+        <h3 class="kinetic-headline text-3xl">Ops snapshot</h3>
+      </div>
+      <a href="/owner/bookings" class="text-primary text-sm font-semibold hover:underline">Xem booking</a>
+    </div>
+
+    <div class="space-y-3">
+      <div class="rounded-3xl bg-surface-container-low p-5">
+        <p class="kinetic-label text-on-surface-variant mb-2">Booking chờ duyệt</p>
+        <p class="text-3xl font-black text-primary"><%= stats.pendingBookings %></p>
+      </div>
+      <div class="rounded-3xl bg-surface-container-low p-5">
+        <p class="kinetic-label text-on-surface-variant mb-2">Booking đã xác nhận</p>
+        <p class="text-3xl font-black text-secondary"><%= stats.confirmedBookings %></p>
+      </div>
+      <div class="rounded-3xl bg-surface-container-low p-5">
+        <p class="kinetic-label text-on-surface-variant mb-2">Thông báo cần xử lý</p>
+        <p class="text-3xl font-black text-error"><%= stats.notificationCount %></p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -62,6 +161,7 @@
               <span class="rounded-full px-3 py-1 text-xs font-semibold bg-red-50 text-error">REJECTED</span>
             <% } %>
           </div>
+          <a href="/owner/bookings/<%= booking._id %>" class="text-sm font-semibold text-primary hover:underline">Chi tiết</a>
         </article>
       <% }) %>
     </div>

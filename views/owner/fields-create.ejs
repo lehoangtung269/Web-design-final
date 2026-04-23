@@ -1,6 +1,10 @@
 <section class="rounded-[2rem] bg-surface-container-low p-6 md:p-10 mb-8 shadow-ambient">
   <p class="kinetic-label text-on-surface-variant mb-3">Pitch onboarding</p>
   <h2 class="kinetic-display text-5xl md:text-6xl">CREATE NEW FIELD</h2>
+  <p class="mt-4 text-on-surface-variant max-w-2xl">
+    Sân mới do chủ sân tạo sẽ vào trạng thái <span class="font-semibold text-on-surface">chờ admin duyệt</span>.
+    Chỉ sau khi được duyệt, sân mới xuất hiện ở trang công khai và nhận booking.
+  </p>
 </section>
 
 <form action="/owner/fields" method="POST" enctype="multipart/form-data" class="max-w-5xl rounded-[2rem] bg-white p-6 md:p-8 space-y-6 shadow-ambient">
@@ -31,7 +35,7 @@
   </div>
 
   <div class="flex gap-3">
-    <button type="submit" class="rounded-full bg-gradient-to-r from-primary to-primary-container text-white px-7 py-3 text-sm font-semibold shadow-cta hover:-translate-y-1 transition-all duration-300">Lưu sân</button>
+    <button type="submit" class="rounded-full bg-gradient-to-r from-primary to-primary-container text-white px-7 py-3 text-sm font-semibold shadow-cta hover:-translate-y-1 transition-all duration-300">Gửi admin duyệt</button>
     <a href="/owner/fields" class="rounded-full bg-surface-container-low px-6 py-3 text-sm font-semibold text-on-surface hover:bg-surface-container">Quay lại</a>
   </div>
 </form>

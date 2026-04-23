@@ -12,6 +12,18 @@
                 <span class="headline-md text-xl text-warning"><%= stats.maintenanceFields %></span>
             </div>
             <% } %>
+            <% if(stats.pendingApprovalFields > 0) { %>
+            <div class="bg-surface ghost-border px-6 py-3 rounded-2xl flex flex-col justify-center border-l border-primary/40">
+                <span class="label-sm text-on-surface-variant">Pending Approval</span>
+                <span class="headline-md text-xl text-primary"><%= stats.pendingApprovalFields %></span>
+            </div>
+            <% } %>
+            <% if(stats.rejectedApprovalFields > 0) { %>
+            <div class="bg-surface ghost-border px-6 py-3 rounded-2xl flex flex-col justify-center border-l border-danger/40">
+                <span class="label-sm text-on-surface-variant">Rejected</span>
+                <span class="headline-md text-xl text-danger"><%= stats.rejectedApprovalFields %></span>
+            </div>
+            <% } %>
         </div>
         <a href="/admin/fields/create" class="flex items-center gap-2 bg-primary text-black px-6 py-3 rounded-xl font-bold hover:bg-primary/90 hover:shadow-glow transition-all duration-300">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
@@ -23,6 +35,14 @@
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         <% if (fields && fields.length > 0) { %>
             <% fields.forEach(field => { %>
+                <%
+                    const approvalStatus = field.approvalStatus || 'approved';
+                    const approvalChip = approvalStatus === 'approved'
+                        ? 'text-secondary bg-secondary/10 border-secondary/20'
+                        : approvalStatus === 'pending'
+                            ? 'text-primary bg-primary/10 border-primary/20'
+                            : 'text-danger bg-danger/10 border-danger/20';
+                %>
                 <div class="bg-surface rounded-3xl overflow-hidden group ghost-border hover:-translate-y-2 hover:shadow-ambient transition-all duration-500 flex flex-col">
                     <!-- Image Wrapper -->
                     <div class="relative h-48 overflow-hidden bg-surface-low">
@@ -50,6 +70,9 @@
                         <div class="absolute bottom-4 left-4 bg-surface/80 backdrop-blur-md text-white px-3 py-1 rounded-lg text-xs font-bold font-mono ghost-border">
                             <%= field.type %>
                         </div>
+                        <div class="absolute bottom-4 right-4 px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-[0.14em] border backdrop-blur-md bg-surface/80 <%= approvalChip %>">
+                            <%= approvalStatus %>
+                        </div>
                     </div>
 
                     <!-- Content -->
@@ -59,6 +82,17 @@
                             <svg class="w-4 h-4 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                             <%= field.address %>
                         </p>
+                        <div class="mb-4 space-y-2">
+                            <p class="text-xs text-on-surface-variant">
+                                Owner:
+                                <span class="text-white font-medium"><%= field.owner ? field.owner.name : 'Chưa gán owner' %></span>
+                            </p>
+                            <% if (field.approvalNote) { %>
+                                <div class="rounded-2xl bg-surface-low px-4 py-3 text-xs text-on-surface-variant">
+                                    <%= field.approvalNote %>
+                                </div>
+                            <% } %>
+                        </div>
                         
                         <div class="mt-auto pt-4 flex items-center justify-between">
                             <div class="flex flex-col">
@@ -78,6 +112,27 @@
                                 </form>
                             </div>
                         </div>
+
+                        <% if (approvalStatus !== 'approved') { %>
+                            <div class="mt-4 flex flex-wrap gap-2">
+                                <form action="/admin/fields/<%= field._id %>/approval" method="POST" class="inline">
+                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                    <input type="hidden" name="approvalStatus" value="approved">
+                                    <input type="hidden" name="approvalNote" value="Đã được admin duyệt và mở công khai.">
+                                    <button type="submit" class="px-4 py-2 rounded-xl bg-primary text-black text-xs font-bold uppercase tracking-[0.14em] hover:opacity-90 transition-opacity">
+                                        Approve
+                                    </button>
+                                </form>
+                                <form action="/admin/fields/<%= field._id %>/approval" method="POST" class="inline">
+                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                    <input type="hidden" name="approvalStatus" value="rejected">
+                                    <input type="hidden" name="approvalNote" value="Admin từ chối hồ sơ sân. Chủ sân cần chỉnh sửa và gửi lại.">
+                                    <button type="submit" class="px-4 py-2 rounded-xl bg-danger/10 text-danger text-xs font-bold uppercase tracking-[0.14em] ghost-border hover:bg-danger/20 transition-colors">
+                                        Reject
+                                    </button>
+                                </form>
+                            </div>
+                        <% } %>
                     </div>
                 </div>
             <% }) %>

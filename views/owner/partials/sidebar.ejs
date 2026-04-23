@@ -15,7 +15,9 @@
 
     <% const isDashboard = typeof activeNav !== 'undefined' && activeNav === 'owner-dashboard'; %>
     <% const isBookings = typeof activeNav !== 'undefined' && activeNav === 'bookings'; %>
+    <% const isSchedule = typeof activeNav !== 'undefined' && activeNav === 'schedule'; %>
     <% const isFields = typeof activeNav !== 'undefined' && activeNav === 'fields'; %>
+    <% const isNotifications = typeof activeNav !== 'undefined' && activeNav === 'notifications'; %>
 
     <nav class="space-y-2">
       <a href="/owner/dashboard" class="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-300 <%= isDashboard ? 'bg-primary text-white shadow-cta' : 'bg-surface-container-low text-on-surface hover:-translate-y-0.5' %>">
@@ -26,9 +28,17 @@
         <span class="material-symbols-outlined">confirmation_number</span>
         <span class="font-medium">Bookings</span>
       </a>
+      <a href="/owner/schedule" class="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-300 <%= isSchedule ? 'bg-primary text-white shadow-cta' : 'bg-surface-container-low text-on-surface hover:-translate-y-0.5' %>">
+        <span class="material-symbols-outlined">calendar_month</span>
+        <span class="font-medium">Pitch Schedule</span>
+      </a>
       <a href="/owner/fields" class="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-300 <%= isFields ? 'bg-primary text-white shadow-cta' : 'bg-surface-container-low text-on-surface hover:-translate-y-0.5' %>">
         <span class="material-symbols-outlined">stadium</span>
         <span class="font-medium">Your Pitches</span>
+      </a>
+      <a href="/owner/notifications" class="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-300 <%= isNotifications ? 'bg-primary text-white shadow-cta' : 'bg-surface-container-low text-on-surface hover:-translate-y-0.5' %>">
+        <span class="material-symbols-outlined">notifications</span>
+        <span class="font-medium">Notifications</span>
       </a>
     </nav>
 
