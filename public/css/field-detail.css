@@ -226,6 +226,13 @@
   opacity: 0.55;
   cursor: not-allowed;
 }
+.slot-item.blocked {
+  background: #fef2f2;
+  border-color: transparent;
+  color: #dc2626;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 
 .slot-status-badge {
   display: block;

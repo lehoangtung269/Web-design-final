@@ -181,14 +181,14 @@
         </div>
         <div class="grid grid-cols-2 gap-2 mb-5" id="slots-grid">
           <% slots.forEach(slot => { %>
-            <div class="slot-item <%= slot.status === 'available' ? 'available' : slot.status === 'pending' ? 'pending' : 'booked' %>"
+            <div class="slot-item <%= slot.status === 'available' ? 'available' : slot.status === 'pending' ? 'pending' : slot.status === 'blocked' ? 'blocked' : 'booked' %>"
               data-slot-id="<%= slot._id %>"
               data-start="<%= slot.startTime %>"
               data-end="<%= slot.endTime %>"
               data-status="<%= slot.status %>">
               <span class="block text-xs font-bold"><%= slot.startTime %> - <%= slot.endTime %></span>
               <span class="slot-status-badge">
-                <%= slot.status === 'available' ? '✓ Trống' : slot.status === 'pending' ? '⏳ Đang giữ' : '✗ Đã đặt' %>
+                <%= slot.status === 'available' ? '✓ Trống' : slot.status === 'pending' ? '⏳ Đang giữ' : slot.status === 'blocked' ? '🚫 Đã chặn' : '✗ Đã đặt' %>
               </span>
             </div>
           <% }); %>

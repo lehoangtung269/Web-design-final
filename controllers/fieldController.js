@@ -1,4 +1,5 @@
 const Field = require('../models/Field');
+const Booking = require('../models/Booking');
 const TimeSlot = require('../models/TimeSlot');
 const { escapeRegex } = require('../utils/escapeRegex');
 const { buildApprovedFieldFilter } = require('../utils/fieldApproval');
@@ -82,6 +83,16 @@ const getFieldList = async (req, res) => {
     ]);
 
     const resultMeta = getResultMeta(fields, searchParams);
+
+    // Aggregate booking counts for field cards (#14)
+    const fieldIds = fields.map(f => f._id);
+    const bookingCounts = await Booking.aggregate([
+      { $match: { field: { $in: fieldIds }, status: { $in: ['pending', 'confirmed'] } } },
+      { $group: { _id: '$field', count: { $sum: 1 } } },
+    ]);
+    const countMap = {};
+    bookingCounts.forEach(bc => { countMap[bc._id.toString()] = bc.count; });
+    fields.forEach(f => { f.bookingCount = countMap[f._id.toString()] || 0; });
 
     res.render('fields/list', {
       title: 'Danh sách sân bóng',

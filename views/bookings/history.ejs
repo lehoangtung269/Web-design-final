@@ -1,11 +1,34 @@
 <div class="max-w-5xl mx-auto px-6 py-12 animate-fade-in">
-  <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-10 gap-4">
+  <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
     <div>
       <p class="kinetic-label text-on-surface-variant mb-2">USER ARCHIVE</p>
       <h1 class="kinetic-headline text-4xl text-on-surface tracking-tighter">LỊCH SỬ ĐẶT SÂN</h1>
     </div>
     <div class="bg-surface-container text-on-surface px-5 py-2 rounded-full text-sm font-['Space_Grotesk'] font-bold tracking-widest">
       <%= pagination ? pagination.total : bookings.length %> ĐƠN
+    </div>
+  </div>
+
+  <!-- Search & Filter Bar (#15) -->
+  <div class="rounded-2xl bg-surface-container-low p-4 mb-8">
+    <form action="/history" method="GET" class="flex flex-col sm:flex-row gap-3">
+      <label class="flex items-center gap-2 flex-1 rounded-full bg-white px-4 py-2.5 text-sm">
+        <span class="material-symbols-outlined text-on-surface-variant text-lg">search</span>
+        <input name="search" type="text" value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>" placeholder="Tìm theo tên sân, địa chỉ..." class="w-full border-none focus:ring-0 p-0 bg-transparent text-on-surface placeholder-on-surface-variant/50" />
+      </label>
+      <input type="hidden" name="status" value="<%= typeof statusFilter !== 'undefined' ? statusFilter : 'all' %>" />
+      <button type="submit" class="rounded-full bg-primary text-white px-6 py-2.5 text-sm font-semibold hover:shadow-cta-glow transition-all duration-300">
+        Tìm kiếm
+      </button>
+    </form>
+    <div class="flex flex-wrap gap-2 mt-3">
+      <% const sf = typeof statusFilter !== 'undefined' ? statusFilter : 'all'; %>
+      <% const sq = typeof searchQuery !== 'undefined' && searchQuery ? '&search=' + encodeURIComponent(searchQuery) : ''; %>
+      <a href="/history?status=all<%= sq %>" class="px-4 py-1.5 rounded-full text-xs font-bold font-['Space_Grotesk'] uppercase tracking-widest transition-all duration-300 <%= sf === 'all' ? 'bg-primary text-white shadow-cta-glow' : 'bg-white text-on-surface-variant hover:text-primary' %>">Tất cả</a>
+      <a href="/history?status=pending<%= sq %>" class="px-4 py-1.5 rounded-full text-xs font-bold font-['Space_Grotesk'] uppercase tracking-widest transition-all duration-300 <%= sf === 'pending' ? 'bg-amber-500 text-white' : 'bg-white text-on-surface-variant hover:text-amber-600' %>">Chờ duyệt</a>
+      <a href="/history?status=confirmed<%= sq %>" class="px-4 py-1.5 rounded-full text-xs font-bold font-['Space_Grotesk'] uppercase tracking-widest transition-all duration-300 <%= sf === 'confirmed' ? 'bg-primary text-white shadow-cta-glow' : 'bg-white text-on-surface-variant hover:text-primary' %>">Đã duyệt</a>
+      <a href="/history?status=rejected<%= sq %>" class="px-4 py-1.5 rounded-full text-xs font-bold font-['Space_Grotesk'] uppercase tracking-widest transition-all duration-300 <%= sf === 'rejected' ? 'bg-red-500 text-white' : 'bg-white text-on-surface-variant hover:text-red-500' %>">Từ chối</a>
+      <a href="/history?status=cancelled<%= sq %>" class="px-4 py-1.5 rounded-full text-xs font-bold font-['Space_Grotesk'] uppercase tracking-widest transition-all duration-300 <%= sf === 'cancelled' ? 'bg-surface-container-high text-on-surface' : 'bg-white text-on-surface-variant hover:text-on-surface' %>">Đã hủy</a>
     </div>
   </div>
 

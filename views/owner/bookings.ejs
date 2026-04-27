@@ -49,8 +49,16 @@
       </article>
     <% }) %>
   <% } else { %>
-    <div class="rounded-3xl bg-white p-12 text-center text-on-surface-variant shadow-ambient">
-      Chưa có đơn đặt sân nào.
+    <div class="rounded-2xl bg-white p-12 text-center shadow-ambient">
+      <div class="w-20 h-20 bg-surface-container-low rounded-full flex items-center justify-center mx-auto mb-6">
+        <span class="material-symbols-outlined text-4xl text-on-surface-variant">confirmation_number</span>
+      </div>
+      <h3 class="kinetic-headline text-2xl text-on-surface mb-2">CHƯA CÓ ĐƠN NÀO</h3>
+      <p class="text-on-surface-variant font-light mb-6">Khi khách hàng đặt sân của bạn, đơn sẽ xuất hiện tại đây.</p>
+      <a href="/owner/fields" class="inline-flex items-center gap-2 bg-primary text-white px-8 py-3 rounded-full font-bold text-xs font-['Space_Grotesk'] uppercase tracking-widest hover:shadow-cta transition-all">
+        <span class="material-symbols-outlined text-[16px]">stadium</span>
+        QUẢN LÝ SÂN
+      </a>
     </div>
   <% } %>
 </section>

@@ -1,6 +1,7 @@
 <%
   const fieldSuffix = selectedFieldId !== 'all' ? '&fieldId=' + selectedFieldId : '';
   const selectedApprovalStatus = selectedField ? (selectedField.approvalStatus || 'approved') : null;
+  const viewMode = typeof scheduleViewMode !== 'undefined' ? scheduleViewMode : 'week';
 %>
 
 <section class="rounded-2xl bg-surface-container-low p-6 md:p-10 mb-8 shadow-ambient">
@@ -10,23 +11,49 @@
       <h2 class="kinetic-display text-5xl md:text-6xl leading-none">PITCH</h2>
       <h2 class="kinetic-display text-5xl md:text-6xl text-primary leading-none -mt-2">SCHEDULE</h2>
       <p class="mt-4 text-on-surface-variant max-w-2xl">
-        <%= selectedField ? selectedField.name : 'Tất cả sân của bạn' %> · lịch tuần được dựng từ booking thật trong hệ thống.
+        <%= selectedField ? selectedField.name : 'Tất cả sân của bạn' %> · lịch <%= viewMode === 'day' ? 'ngày' : 'tuần' %> được dựng từ booking thật trong hệ thống.
       </p>
     </div>
 
     <div class="flex flex-wrap items-center gap-3">
-      <div class="rounded-full bg-white px-2 py-2 shadow-ambient flex items-center">
-        <a href="?date=<%= prevWeekStr %><%= fieldSuffix %>" class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors">
-          <span class="material-symbols-outlined">chevron_left</span>
+      <!-- View Mode Toggle -->
+      <div class="rounded-full bg-white px-1 py-1 shadow-ambient flex items-center gap-1">
+        <a href="?date=<%= currentDateStr %><%= fieldSuffix %>&view=week" class="px-4 py-2 rounded-full text-xs font-bold font-['Space_Grotesk'] uppercase tracking-widest transition-all duration-300 <%= viewMode === 'week' ? 'bg-primary text-white' : 'text-on-surface-variant hover:text-primary' %>">
+          <span class="material-symbols-outlined text-[14px] align-middle mr-0.5">calendar_view_week</span> Tuần
         </a>
-        <div class="px-4 min-w-[170px] text-center">
-          <p class="text-sm font-bold text-on-surface"><%= weekTitle %></p>
-        </div>
-        <a href="?date=<%= nextWeekStr %><%= fieldSuffix %>" class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors">
-          <span class="material-symbols-outlined">chevron_right</span>
+        <a href="?date=<%= currentDateStr %><%= fieldSuffix %>&view=day" class="px-4 py-2 rounded-full text-xs font-bold font-['Space_Grotesk'] uppercase tracking-widest transition-all duration-300 <%= viewMode === 'day' ? 'bg-primary text-white' : 'text-on-surface-variant hover:text-primary' %>">
+          <span class="material-symbols-outlined text-[14px] align-middle mr-0.5">calendar_view_day</span> Ngày
         </a>
       </div>
-      <a href="?date=<%= todayStr %><%= fieldSuffix %>" class="rounded-full bg-white px-5 py-3 text-sm font-semibold text-on-surface shadow-ambient hover:-translate-y-1 transition-all duration-300">
+
+      <!-- Date Navigation -->
+      <% if (viewMode === 'day') { %>
+        <div class="rounded-full bg-white px-2 py-2 shadow-ambient flex items-center">
+          <a href="?date=<%= prevDayStr %><%= fieldSuffix %>&view=day" class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors">
+            <span class="material-symbols-outlined">chevron_left</span>
+          </a>
+          <div class="px-4 min-w-[170px] text-center">
+            <p class="text-sm font-bold text-on-surface"><%= dayTitle %></p>
+          </div>
+          <a href="?date=<%= nextDayStr %><%= fieldSuffix %>&view=day" class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors">
+            <span class="material-symbols-outlined">chevron_right</span>
+          </a>
+        </div>
+      <% } else { %>
+        <div class="rounded-full bg-white px-2 py-2 shadow-ambient flex items-center">
+          <a href="?date=<%= prevWeekStr %><%= fieldSuffix %>" class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors">
+            <span class="material-symbols-outlined">chevron_left</span>
+          </a>
+          <div class="px-4 min-w-[170px] text-center">
+            <p class="text-sm font-bold text-on-surface"><%= weekTitle %></p>
+          </div>
+          <a href="?date=<%= nextWeekStr %><%= fieldSuffix %>" class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors">
+            <span class="material-symbols-outlined">chevron_right</span>
+          </a>
+        </div>
+      <% } %>
+
+      <a href="?date=<%= todayStr %><%= fieldSuffix %>&view=<%= viewMode %>" class="rounded-full bg-white px-5 py-3 text-sm font-semibold text-on-surface shadow-ambient hover:-translate-y-1 transition-all duration-300">
         Today
       </a>
     </div>
@@ -36,6 +63,7 @@
 <section class="grid grid-cols-1 xl:grid-cols-[1.3fr_1fr] gap-6 mb-8">
   <form action="/owner/schedule" method="GET" class="rounded-2xl bg-white p-6 shadow-ambient">
     <input type="hidden" name="date" value="<%= currentDateStr %>">
+    <input type="hidden" name="view" value="<%= viewMode %>">
     <div class="flex flex-col md:flex-row md:items-end gap-4">
       <div class="flex-1">
         <p class="kinetic-label text-on-surface-variant mb-2">Field Scope</p>
@@ -89,11 +117,90 @@
     <span class="kinetic-label text-on-surface-variant">Pending</span>
   </div>
   <div class="flex items-center gap-2">
+    <span class="w-2.5 h-2.5 rounded-full bg-red-400"></span>
+    <span class="kinetic-label text-on-surface-variant">Blocked</span>
+  </div>
+  <div class="flex items-center gap-2">
     <span class="w-2.5 h-2.5 rounded-full bg-surface-container-highest"></span>
     <span class="kinetic-label text-on-surface-variant">Open</span>
   </div>
 </section>
 
+<% if (viewMode === 'day') { %>
+<!-- ==================== DAY VIEW ==================== -->
+<section class="rounded-2xl bg-white shadow-ambient overflow-hidden">
+  <div class="space-y-0">
+    <% scheduleRows.forEach((row, rowIndex) => { %>
+      <%
+        // Day view: use todayIndex (0-based, from controller)
+        const todayIdx = typeof dayViewIndex !== 'undefined' ? dayViewIndex : 0;
+        const cell = row.cells[todayIdx];
+        const hasBooking = cell && cell.bookings && cell.bookings.length > 0;
+      %>
+      <div class="flex border-b border-surface-variant/30 last:border-b-0 hover:bg-surface-container-low/50 transition-colors">
+        <!-- Time Column -->
+        <div class="w-24 md:w-32 flex-shrink-0 px-4 py-5 bg-surface-container-low/50 flex flex-col justify-center">
+          <p class="text-sm font-bold text-on-surface"><%= row.startTime %></p>
+          <p class="text-[10px] text-on-surface-variant mt-0.5"><%= row.endTime %></p>
+        </div>
+
+        <!-- Content Column -->
+        <div class="flex-1 px-4 py-4">
+          <% if (hasBooking) { %>
+            <div class="space-y-2">
+              <% cell.bookings.forEach((booking) => { %>
+                <%
+                  const statusClass = booking.status === 'confirmed'
+                    ? 'bg-secondary-container text-secondary'
+                    : booking.status === 'pending'
+                      ? 'bg-primary/10 text-primary'
+                      : 'bg-surface-container-low text-on-surface-variant';
+                  const statusLabel = booking.status === 'confirmed' ? 'Đã duyệt'
+                    : booking.status === 'pending' ? 'Chờ duyệt'
+                    : booking.status === 'rejected' ? 'Từ chối' : 'Đã hủy';
+                %>
+                <a href="/owner/bookings/<%= booking._id %>" class="block rounded-2xl p-4 <%= statusClass %> hover:opacity-90 transition-opacity">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="text-sm font-bold"><%= booking.field ? booking.field.name : 'Unknown' %></p>
+                      <p class="text-xs mt-1 opacity-80"><%= booking.user ? booking.user.name : 'Unknown' %> · <%= booking.user ? booking.user.phone : '' %></p>
+                    </div>
+                    <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest <%= statusClass %>"><%= statusLabel %></span>
+                  </div>
+                </a>
+              <% }) %>
+            </div>
+          <% } else { %>
+            <div class="flex items-center justify-between py-2">
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-surface-container-highest"></span>
+                <span class="text-sm text-on-surface-variant/60">Trống</span>
+              </div>
+              <% if (selectedFieldId !== 'all' && cell) { %>
+                <form action="/owner/schedule/block" method="POST" class="inline" onsubmit="return confirm('Chặn slot này? Khách hàng sẽ không thể đặt.')">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                  <input type="hidden" name="fieldId" value="<%= selectedFieldId %>" />
+                  <input type="hidden" name="date" value="<%= cell.date %>" />
+                  <input type="hidden" name="startTime" value="<%= row.startTime %>" />
+                  <input type="hidden" name="endTime" value="<%= row.endTime %>" />
+                  <input type="hidden" name="redirectDate" value="<%= currentDateStr %>" />
+                  <input type="hidden" name="redirectView" value="day" />
+                  <button type="submit" class="px-3 py-1.5 rounded-full bg-red-50 text-error text-xs font-semibold hover:bg-red-100 transition-colors flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[14px]">block</span>
+                    Chặn slot
+                  </button>
+                </form>
+              <% } %>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+</section>
+
+<% } else { %>
+<!-- ==================== WEEK VIEW ==================== -->
 <section class="overflow-auto rounded-2xl bg-white shadow-ambient">
   <div class="min-w-[1120px]">
     <div class="grid grid-cols-[100px_repeat(7,minmax(0,1fr))] bg-surface-container-low">
@@ -147,3 +254,4 @@
     <% }) %>
   </div>
 </section>
+<% } %>

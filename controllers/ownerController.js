@@ -314,6 +314,31 @@ exports.getSchedule = async (req, res) => {
       ? ` — ${endOfWeek.getDate()}`
       : ` — ${monthNames[endOfWeek.getMonth()]} ${endOfWeek.getDate()}`;
 
+    // Day view support (#17)
+    const scheduleViewMode = req.query.view === 'day' ? 'day' : 'week';
+    const baseDateClamped = new Date(baseDate);
+    baseDateClamped.setHours(0, 0, 0, 0);
+
+    // Find the index of the selected day within the week (0=MON ... 6=SUN)
+    let dayViewIndex = 0;
+    const baseDateStr = toLocalDateString(baseDateClamped);
+    for (let i = 0; i < weekDays.length; i++) {
+      if (weekDays[i].fullDateStr === baseDateStr) {
+        dayViewIndex = i;
+        break;
+      }
+    }
+
+    // Prev/Next day strings
+    const prevDay = new Date(baseDateClamped);
+    prevDay.setDate(baseDateClamped.getDate() - 1);
+    const nextDay = new Date(baseDateClamped);
+    nextDay.setDate(baseDateClamped.getDate() + 1);
+
+    // Day title (e.g. "Thứ 2, 28 Apr")
+    const dayNames = ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+    const dayTitle = `${dayNames[baseDateClamped.getDay()]}, ${baseDateClamped.getDate()} ${monthNames[baseDateClamped.getMonth()]}`;
+
     res.render('owner/schedule', {
       ...ownerLayout,
       title: 'Pitch Schedule',
@@ -328,6 +353,11 @@ exports.getSchedule = async (req, res) => {
       prevWeekStr: toLocalDateString(prevWeek),
       nextWeekStr: toLocalDateString(nextWeek),
       todayStr: toLocalDateString(new Date()),
+      scheduleViewMode,
+      dayViewIndex,
+      prevDayStr: toLocalDateString(prevDay),
+      nextDayStr: toLocalDateString(nextDay),
+      dayTitle,
       weekStats: {
         total: bookings.length,
         confirmed: bookings.filter((booking) => booking.status === 'confirmed').length,
@@ -338,6 +368,49 @@ exports.getSchedule = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.redirect('/owner/dashboard');
+  }
+};
+
+exports.blockTimeSlot = async (req, res) => {
+  try {
+    const { fieldId, date, startTime, endTime, redirectDate, redirectView } = req.body;
+    const ownerId = req.session.user._id;
+
+    // Verify field ownership
+    const field = await Field.findOne({ _id: fieldId, owner: ownerId, status: { $ne: 'deleted' } });
+    if (!field) {
+      req.flash('error', 'Không tìm thấy sân của bạn.');
+      return res.redirect('/owner/schedule');
+    }
+
+    const slotDate = parseLocalDate(date);
+
+    // Find or create the slot, then block it
+    let slot = await TimeSlot.findOne({ field: fieldId, date: slotDate, startTime });
+    if (slot) {
+      if (slot.status === 'booked') {
+        req.flash('error', 'Slot này đã có người đặt, không thể chặn.');
+        return res.redirect(`/owner/schedule?date=${redirectDate || date}&fieldId=${fieldId}&view=${redirectView || 'day'}`);
+      }
+      slot.status = 'blocked';
+      slot.bookedBy = null;
+      await slot.save();
+    } else {
+      await TimeSlot.create({
+        field: fieldId,
+        date: slotDate,
+        startTime,
+        endTime,
+        status: 'blocked',
+      });
+    }
+
+    req.flash('success', `Đã chặn slot ${startTime} - ${endTime} ngày ${date}.`);
+    res.redirect(`/owner/schedule?date=${redirectDate || date}&fieldId=${fieldId}&view=${redirectView || 'day'}`);
+  } catch (err) {
+    console.error('Block Time Slot Error:', err);
+    req.flash('error', 'Không thể chặn slot lúc này.');
+    res.redirect('/owner/schedule');
   }
 };
 

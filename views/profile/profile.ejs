@@ -182,10 +182,14 @@
             <input
               type="password"
               name="currentPassword"
+              id="currentPassword"
               required
               class="w-full bg-transparent border-none focus:ring-0 p-0 text-on-surface placeholder-on-surface-variant/50"
               placeholder="Nhập mật khẩu hiện tại"
             />
+            <button type="button" class="toggle-password p-1 rounded-lg hover:bg-surface-container transition-colors" data-target="currentPassword" aria-label="Hiện mật khẩu">
+              <span class="material-symbols-outlined text-on-surface-variant text-lg">visibility_off</span>
+            </button>
           </div>
         </div>
 
@@ -197,11 +201,15 @@
             <input
               type="password"
               name="newPassword"
+              id="newPassword"
               required
               minlength="6"
               class="w-full bg-transparent border-none focus:ring-0 p-0 text-on-surface placeholder-on-surface-variant/50"
               placeholder="Ít nhất 6 ký tự"
             />
+            <button type="button" class="toggle-password p-1 rounded-lg hover:bg-surface-container transition-colors" data-target="newPassword" aria-label="Hiện mật khẩu">
+              <span class="material-symbols-outlined text-on-surface-variant text-lg">visibility_off</span>
+            </button>
           </div>
         </div>
 
@@ -213,11 +221,15 @@
             <input
               type="password"
               name="confirmNewPassword"
+              id="confirmNewPassword"
               required
               minlength="6"
               class="w-full bg-transparent border-none focus:ring-0 p-0 text-on-surface placeholder-on-surface-variant/50"
               placeholder="Nhập lại mật khẩu mới"
             />
+            <button type="button" class="toggle-password p-1 rounded-lg hover:bg-surface-container transition-colors" data-target="confirmNewPassword" aria-label="Hiện mật khẩu">
+              <span class="material-symbols-outlined text-on-surface-variant text-lg">visibility_off</span>
+            </button>
           </div>
         </div>
 
@@ -245,6 +257,24 @@
     </div>
   </div>
 </section>
+
+<!-- Toggle password visibility script -->
+<script>
+document.querySelectorAll('.toggle-password').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var targetId = this.getAttribute('data-target');
+    var input = document.getElementById(targetId);
+    var icon = this.querySelector('.material-symbols-outlined');
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.textContent = 'visibility';
+    } else {
+      input.type = 'password';
+      icon.textContent = 'visibility_off';
+    }
+  });
+});
+</script>
 
 <!-- ============================================ -->
 <!-- Recent Bookings                              -->

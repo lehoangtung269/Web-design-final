@@ -34,6 +34,7 @@
     selected: 'selected-slot slot-pop',
     pending: 'pending',
     booked: 'booked',
+    blocked: 'blocked',
   };
 
   // ===============================
@@ -124,6 +125,8 @@
           ? '✓ Trống'
           : slot.status === 'pending'
           ? '⏳ Đang giữ'
+          : slot.status === 'blocked'
+          ? '🚫 Đã chặn'
           : '✗ Đã đặt';
 
       div.innerHTML = `
