@@ -222,6 +222,13 @@
     opacity: 0.55;
     cursor: not-allowed;
   }
+  .slot-item.blocked {
+    background: #fef2f2;
+    border-color: transparent;
+    color: #dc2626;
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 
   .slot-status-badge {
     display: block;
@@ -455,14 +462,14 @@
         </div>
         <div class="grid grid-cols-2 gap-2 mb-5" id="slots-grid">
           <% slots.forEach(slot => { %>
-            <div class="slot-item <%= slot.status === 'available' ? 'available' : slot.status === 'pending' ? 'pending' : 'booked' %>"
+            <div class="slot-item <%= slot.status === 'available' ? 'available' : slot.status === 'pending' ? 'pending' : slot.status === 'blocked' ? 'blocked' : 'booked' %>"
               data-slot-id="<%= slot._id %>"
               data-start="<%= slot.startTime %>"
               data-end="<%= slot.endTime %>"
               data-status="<%= slot.status %>">
               <span class="block text-xs font-bold"><%= slot.startTime %> - <%= slot.endTime %></span>
               <span class="slot-status-badge">
-                <%= slot.status === 'available' ? '✓ Trống' : slot.status === 'pending' ? '⏳ Đang giữ' : '✗ Đã đặt' %>
+                <%= slot.status === 'available' ? '✓ Trống' : slot.status === 'pending' ? '⏳ Đang giữ' : slot.status === 'blocked' ? '🚫 Đã chặn' : '✗ Đã đặt' %>
               </span>
             </div>
           <% }); %>

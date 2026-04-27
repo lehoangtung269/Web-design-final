@@ -52,7 +52,10 @@
       </a>
       <a href="/owner/notifications" class="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-300 <%= isNotifications ? 'bg-primary text-white shadow-cta' : 'bg-surface-container-low text-on-surface hover:-translate-y-0.5' %>">
         <span class="material-symbols-outlined">notifications</span>
-        <span class="font-medium">Notifications</span>
+        <span class="font-medium flex-1">Notifications</span>
+        <% if (typeof ownerNotificationCount !== 'undefined' && ownerNotificationCount > 0) { %>
+          <span class="w-5 h-5 rounded-full bg-error text-white text-[10px] font-bold flex items-center justify-center animate-pulse"><%= ownerNotificationCount %></span>
+        <% } %>
       </a>
     </nav>
 

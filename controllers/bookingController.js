@@ -236,7 +236,14 @@ const getHistory = async (req, res) => {
   try {
     const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
     const limit = 10;
+    const statusFilter = req.query.status || 'all';
+    const searchQuery = (req.query.search || '').trim();
     const filter = { user: req.session.user._id };
+
+    // Status filter
+    if (statusFilter && statusFilter !== 'all') {
+      filter.status = statusFilter;
+    }
 
     const [bookings, total] = await Promise.all([
       Booking.find(filter)
@@ -247,15 +254,27 @@ const getHistory = async (req, res) => {
       Booking.countDocuments(filter),
     ]);
 
+    // Client-side search by field name (after populate)
+    let filteredBookings = bookings;
+    if (searchQuery) {
+      const lowerSearch = searchQuery.toLowerCase();
+      filteredBookings = bookings.filter(b =>
+        (b.field && b.field.name && b.field.name.toLowerCase().includes(lowerSearch)) ||
+        (b.field && b.field.address && b.field.address.toLowerCase().includes(lowerSearch))
+      );
+    }
+
     res.render('bookings/history', {
       title: 'Lịch sử đặt sân',
       activeNav: 'history',
-      bookings,
+      bookings: filteredBookings,
+      statusFilter,
+      searchQuery,
       pagination: {
         page,
         limit,
-        total,
-        totalPages: Math.max(Math.ceil(total / limit), 1),
+        total: searchQuery ? filteredBookings.length : total,
+        totalPages: Math.max(Math.ceil((searchQuery ? filteredBookings.length : total) / limit), 1),
       },
     });
   } catch (error) {
