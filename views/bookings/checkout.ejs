@@ -1,6 +1,6 @@
 <style>
   /* ============================================
-     CHECKOUT PAGE — EmeraldPlay Style
+     CHECKOUT PAGE — DatSan.vn Kinetic Style
   ============================================ */
   .checkout-wrapper {
     max-width: 1100px;
@@ -25,7 +25,7 @@
     left: 0;
     right: 0;
     height: 4px;
-    background: #d1fae5;
+    background: #e0d5ff;
     transform: translateY(-50%);
     z-index: 0;
     border-radius: 9999px;
@@ -37,7 +37,7 @@
     left: 0;
     width: 75%;
     height: 4px;
-    background: linear-gradient(90deg, #10b981, #059669);
+    background: linear-gradient(90deg, #6a37d3, #5025a5);
     transform: translateY(-50%);
     z-index: 1;
     border-radius: 9999px;
@@ -62,21 +62,21 @@
     justify-content: center;
     font-weight: 900;
     font-size: 16px;
-    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.25);
+    box-shadow: 0 4px 16px rgba(106, 55, 211, 0.25);
     transition: all 0.3s;
   }
 
   .stepper-circle.done {
-    background: #10b981;
+    background: #6a37d3;
     color: white;
-    border: 3px solid #059669;
+    border: 3px solid #5025a5;
   }
 
   .stepper-circle.active {
     background: white;
-    color: #059669;
-    border: 4px solid #10b981;
-    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.15), 0 4px 20px rgba(16, 185, 129, 0.3);
+    color: #6a37d3;
+    border: 4px solid #6a37d3;
+    box-shadow: 0 0 0 6px rgba(106, 55, 211, 0.15), 0 4px 20px rgba(106, 55, 211, 0.3);
     animation: pulse-step 2s infinite;
   }
 
@@ -84,11 +84,11 @@
 
     0%,
     100% {
-      box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.15), 0 4px 20px rgba(16, 185, 129, 0.3);
+      box-shadow: 0 0 0 6px rgba(106, 55, 211, 0.15), 0 4px 20px rgba(106, 55, 211, 0.3);
     }
 
     50% {
-      box-shadow: 0 0 0 10px rgba(16, 185, 129, 0.08), 0 4px 20px rgba(16, 185, 129, 0.3);
+      box-shadow: 0 0 0 10px rgba(106, 55, 211, 0.08), 0 4px 20px rgba(106, 55, 211, 0.3);
     }
   }
 
@@ -100,11 +100,11 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: #6ee7b7;
+    color: #ae8dff;
   }
 
   .stepper-label.active {
-    color: #064e3b;
+    color: #2d1570;
   }
 
   /* ---- Main Grid ---- */
@@ -126,8 +126,8 @@
     background: white;
     border-radius: 32px;
     padding: 32px 28px;
-    box-shadow: 0 20px 60px rgba(16, 185, 129, 0.12), 0 2px 12px rgba(0, 0, 0, 0.06);
-    border: 1px solid #d1fae5;
+    box-shadow: 0 20px 60px rgba(106, 55, 211, 0.12), 0 2px 12px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e0d5ff;
     position: relative;
     overflow: hidden;
   }
@@ -139,7 +139,7 @@
     right: -60px;
     width: 160px;
     height: 160px;
-    background: radial-gradient(circle, rgba(16, 185, 129, 0.12), transparent 70%);
+    background: radial-gradient(circle, rgba(106, 55, 211, 0.12), transparent 70%);
     border-radius: 50%;
   }
 
@@ -150,14 +150,14 @@
     left: -60px;
     width: 160px;
     height: 160px;
-    background: radial-gradient(circle, rgba(16, 185, 129, 0.08), transparent 70%);
+    background: radial-gradient(circle, rgba(106, 55, 211, 0.08), transparent 70%);
     border-radius: 50%;
   }
 
   .qr-card-title {
     font-size: 18px;
     font-weight: 800;
-    color: #064e3b;
+    color: #2d1570;
     margin-bottom: 6px;
     text-align: center;
     position: relative;
@@ -176,7 +176,7 @@
 
   .qr-image-wrapper {
     background: white;
-    border: 2px solid #d1fae5;
+    border: 2px solid #e0d5ff;
     border-radius: 20px;
     padding: 20px;
     position: relative;
@@ -191,7 +191,7 @@
   .qr-placeholder {
     width: 100%;
     aspect-ratio: 1;
-    background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
+    background: linear-gradient(135deg, #f4f0ff, #ede5ff);
     border-radius: 12px;
     display: flex;
     flex-direction: column;
@@ -210,7 +210,7 @@
   .qr-cell {
     aspect-ratio: 1;
     border-radius: 2px;
-    background: #064e3b;
+    background: #2d1570;
   }
 
   .qr-cell.light {
@@ -221,8 +221,8 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    background: #f0fdf4;
-    border: 1px solid #a7f3d0;
+    background: #f4f0ff;
+    border: 1px solid #c4b5fd;
     padding: 8px 16px;
     border-radius: 9999px;
     margin-top: 16px;
@@ -235,7 +235,7 @@
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: #10b981;
+    background: #6a37d3;
     animation: blink 1.5s infinite;
   }
 
@@ -254,15 +254,15 @@
   .secure-text {
     font-size: 10px;
     font-weight: 800;
-    color: #047857;
+    color: #5025a5;
     letter-spacing: 0.1em;
     text-transform: uppercase;
   }
 
   /* ---- Timer Banner ---- */
   .timer-banner {
-    background: linear-gradient(135deg, #064e3b, #065f46);
-    color: #ecfdf5;
+    background: linear-gradient(135deg, #2d1570, #3a1a8a);
+    color: #ede5ff;
     border-radius: 20px;
     padding: 20px 24px;
     display: flex;
@@ -281,21 +281,21 @@
 
   .timer-icon {
     font-size: 28px;
-    color: #6ee7b7;
+    color: #ae8dff;
   }
 
   .timer-status-label {
     font-size: 10px;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: #6ee7b7;
+    color: #ae8dff;
     font-weight: 700;
   }
 
   .timer-status-text {
     font-size: 17px;
     font-weight: 700;
-    color: #ecfdf5;
+    color: #ede5ff;
   }
 
   .timer-box {
@@ -311,7 +311,7 @@
     font-size: 10px;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: #6ee7b7;
+    color: #ae8dff;
     font-weight: 700;
     margin-bottom: 4px;
   }
@@ -357,18 +357,18 @@
     gap: 8px;
     font-size: 15px;
     font-weight: 800;
-    color: #064e3b;
+    color: #2d1570;
     margin-bottom: 16px;
   }
 
   .details-section-title .material-symbols-outlined {
-    color: #10b981;
+    color: #6a37d3;
     font-size: 20px;
   }
 
   .details-divider {
     border: none;
-    border-top: 1px solid #f0fdf4;
+    border-top: 1px solid #f4f0ff;
     margin: 20px 0;
   }
 
@@ -415,7 +415,7 @@
   }
 
   .bank-row:hover {
-    background: #f0fdf4;
+    background: #f4f0ff;
   }
 
   .bank-row:last-child {
@@ -438,25 +438,25 @@
   }
 
   .bank-row.highlight {
-    background: #f0fdf4;
-    border: 2px solid #a7f3d0;
+    background: #f4f0ff;
+    border: 2px solid #c4b5fd;
   }
 
   .bank-row.highlight .bank-row-label {
-    color: #059669;
+    color: #6a37d3;
     font-weight: 700;
   }
 
   .bank-row.highlight .bank-row-value {
     font-size: 18px;
-    color: #064e3b;
+    color: #2d1570;
   }
 
   .copy-btn {
     background: none;
     border: none;
     cursor: pointer;
-    color: #10b981;
+    color: #6a37d3;
     padding: 4px;
     border-radius: 6px;
     transition: all 0.2s;
@@ -465,17 +465,17 @@
   }
 
   .copy-btn:hover {
-    background: #d1fae5;
-    color: #047857;
+    background: #e0d5ff;
+    color: #5025a5;
     transform: scale(1.1);
   }
 
   .copy-btn.copied {
-    color: #059669;
+    color: #6a37d3;
   }
 
   .copy-btn-green {
-    background: #059669;
+    background: #6a37d3;
     color: white;
     border: none;
     border-radius: 8px;
@@ -487,7 +487,7 @@
   }
 
   .copy-btn-green:hover {
-    background: #047857;
+    background: #5025a5;
     transform: scale(1.05);
   }
 
@@ -508,7 +508,7 @@
   .total-amount {
     font-size: 32px;
     font-weight: 900;
-    color: #059669;
+    color: #6a37d3;
   }
 
   /* ---- Upload Section ---- */
@@ -536,9 +536,9 @@
   }
 
   .file-drop-zone {
-    border: 2px dashed #d1fae5;
+    border: 2px dashed #e0d5ff;
     border-radius: 16px;
-    background: #f0fdf4;
+    background: #f4f0ff;
     padding: 32px 20px;
     text-align: center;
     cursor: pointer;
@@ -549,14 +549,14 @@
 
   .file-drop-zone:hover,
   .file-drop-zone.drag-over {
-    border-color: #10b981;
-    background: #d1fae5;
+    border-color: #6a37d3;
+    background: #e0d5ff;
     transform: scale(1.01);
   }
 
   .file-drop-zone.has-file {
-    border-color: #059669;
-    background: #ecfdf5;
+    border-color: #5025a5;
+    background: #ede5ff;
     border-style: solid;
   }
 
@@ -576,7 +576,7 @@
   .drop-text {
     font-size: 14px;
     font-weight: 600;
-    color: #059669;
+    color: #6a37d3;
     margin-bottom: 4px;
   }
 
@@ -588,7 +588,7 @@
   .file-preview-name {
     font-size: 13px;
     font-weight: 700;
-    color: #047857;
+    color: #5025a5;
     margin-top: 8px;
     display: none;
   }
@@ -612,10 +612,10 @@
 
   .btn-confirm {
     width: 100%;
-    background: linear-gradient(135deg, #059669, #047857);
+    background: linear-gradient(135deg, #6a37d3, #5025a5);
     color: white;
     border: none;
-    border-radius: 20px;
+    border-radius: 9999px;
     padding: 20px 28px;
     font-size: 16px;
     font-weight: 900;
@@ -627,7 +627,7 @@
     justify-content: center;
     gap: 10px;
     transition: all 0.3s ease;
-    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.35);
+    box-shadow: 0 8px 24px rgba(106, 55, 211, 0.35);
     position: relative;
     overflow: hidden;
   }
@@ -645,7 +645,7 @@
 
   .btn-confirm:hover {
     transform: translateY(-3px);
-    box-shadow: 0 14px 36px rgba(16, 185, 129, 0.4);
+    box-shadow: 0 14px 36px rgba(106, 55, 211, 0.4);
   }
 
   .btn-confirm:hover::before {
@@ -671,9 +671,9 @@
   .btn-cancel {
     width: 100%;
     background: white;
-    color: #059669;
-    border: 2px solid #a7f3d0;
-    border-radius: 20px;
+    color: #6a37d3;
+    border: 2px solid #c4b5fd;
+    border-radius: 9999px;
     padding: 14px 28px;
     font-size: 14px;
     font-weight: 700;
@@ -685,8 +685,8 @@
   }
 
   .btn-cancel:hover {
-    background: #f0fdf4;
-    border-color: #6ee7b7;
+    background: #f4f0ff;
+    border-color: #ae8dff;
   }
 
   .checkout-note {
@@ -799,7 +799,7 @@
           </div>
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <span style="font-size: 12px; color: #6b7280; font-weight: 600;">Giờ đá</span>
-            <span style="font-size: 13px; font-weight: 700; color: #0ea5e9;">
+            <span style="font-size: 13px; font-weight: 700; color: #6a37d3;">
               <%= startTime %> – <%= endTime %>
             </span>
           </div>
@@ -842,7 +842,7 @@
             <div class="info-chip-label">Loại sân</div>
             <div class="info-chip-value">
               <span
-                style="background: #d1fae5; color: #065f46; padding: 3px 10px; border-radius: 8px; font-size: 13px;">
+                style="background: #e0d5ff; color: #2d1570; padding: 3px 10px; border-radius: 8px; font-size: 13px;">
                 <%= field.type==='5-a-side' ? '⚽ Sân 5 người' : field.type==='7-a-side' ? '⚽ Sân 7 người'
                   : '⚽ Sân 11 người' %>
               </span>
@@ -850,14 +850,14 @@
           </div>
           <div class="info-chip">
             <div class="info-chip-label">Ngày thi đấu</div>
-            <div class="info-chip-value" style="color: #059669;">
+            <div class="info-chip-value" style="color: #6a37d3;">
               <%= new Date(bookingDate).toLocaleDateString('vi-VN', { weekday: 'long' , day: '2-digit' ,
                 month: '2-digit' , year: 'numeric' }) %>
             </div>
           </div>
           <div class="info-chip">
             <div class="info-chip-label">Khung giờ</div>
-            <div class="info-chip-value" style="color: #0ea5e9;">
+            <div class="info-chip-value" style="color: #6a37d3;">
               <%= startTime %> – <%= endTime %>
             </div>
           </div>
@@ -916,8 +916,8 @@
         <input type="hidden" name="endTime" value="<%= endTime %>" />
 
         <div class="mb-4 bg-surface-container-low rounded-xl p-4 border border-surface-container">
-          <div class="text-xs uppercase tracking-widest text-on-surface-variant mb-1">Buoc 1</div>
-          <div class="text-sm font-bold text-on-surface">Kiem tra thong tin chuyen khoan va tong tien</div>
+          <div class="text-xs uppercase tracking-widest text-on-surface-variant mb-1">Bước 1</div>
+          <div class="text-sm font-bold text-on-surface">Kiểm tra thông tin chuyển khoản và tổng tiền</div>
         </div>
 
         <% if (services && services.length> 0) { %>
@@ -926,9 +926,9 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <% services.forEach(svc=> { %>
                 <label
-                  class="flex items-center gap-3 p-3 bg-white rounded-lg border border-slate-200 cursor-pointer hover:border-emerald-400 transition-colors">
+                  class="flex items-center gap-3 p-3 bg-white rounded-lg border border-slate-200 cursor-pointer hover:border-primary transition-colors">
                   <input type="checkbox" name="services" value="<%= svc._id %>"
-                    class="service-checkbox w-4 h-4 text-emerald-600 rounded focus:ring-emerald-500"
+                    class="service-checkbox w-4 h-4 text-primary rounded focus:ring-primary"
                     data-price="<%= svc.price %>">
                   <div class="flex-1">
                     <div class="text-sm font-semibold text-slate-800">
@@ -945,13 +945,13 @@
           <% } %>
 
             <div class="mb-4 bg-surface-container-low rounded-xl p-4 border border-surface-container">
-              <div class="text-xs uppercase tracking-widest text-on-surface-variant mb-1">Buoc 2</div>
-              <div class="text-sm font-bold text-on-surface">Upload bien lai va xac nhan dat san</div>
+              <div class="text-xs uppercase tracking-widest text-on-surface-variant mb-1">Bước 2</div>
+              <div class="text-sm font-bold text-on-surface">Upload biên lai và xác nhận đặt sân</div>
             </div>
 
             <div class="upload-section">
               <div class="upload-label">
-                <span class="material-symbols-outlined" style="font-size: 18px; color: #10b981;">receipt_long</span>
+                <span class="material-symbols-outlined" style="font-size: 18px; color: #6a37d3;">receipt_long</span>
                 Tải lên biên lai chuyển khoản <span class="upload-required">*</span>
               </div>
 
@@ -972,10 +972,10 @@
             </div>
 
             <div class="mb-4 rounded-xl bg-amber-50 border border-amber-200 p-4">
-              <p class="text-sm font-semibold text-amber-800 mb-2">Checklist truoc khi gui</p>
-              <label class="flex items-center gap-2 text-sm text-amber-900 mb-1"><input type="checkbox" class="confirm-check" /> Da chuyen dung so tien</label>
-              <label class="flex items-center gap-2 text-sm text-amber-900 mb-1"><input type="checkbox" class="confirm-check" /> Da dien dung noi dung chuyen khoan</label>
-              <label class="flex items-center gap-2 text-sm text-amber-900"><input type="checkbox" class="confirm-check" /> Anh bien lai ro rang, dung giao dich</label>
+              <p class="text-sm font-semibold text-amber-800 mb-2">Checklist trước khi gửi</p>
+              <label class="flex items-center gap-2 text-sm text-amber-900 mb-1"><input type="checkbox" class="confirm-check" /> Đã chuyển đúng số tiền</label>
+              <label class="flex items-center gap-2 text-sm text-amber-900 mb-1"><input type="checkbox" class="confirm-check" /> Đã điền đúng nội dung chuyển khoản</label>
+              <label class="flex items-center gap-2 text-sm text-amber-900"><input type="checkbox" class="confirm-check" /> Ảnh biên lai rõ ràng, đúng giao dịch</label>
             </div>
 
             <div class="checkout-actions">
@@ -1104,7 +1104,7 @@
     }
     if (!checkPassed) {
       e.preventDefault();
-      alert('Vui long xac nhan day du checklist truoc khi gui.');
+      alert('Vui lòng xác nhận đầy đủ checklist trước khi gửi.');
       return;
     }
 
@@ -1119,7 +1119,7 @@
     icon.style.display = 'none';
     text.textContent = 'Đang xử lý...';
 
-    btn.style.background = 'linear-gradient(135deg, #047857, #065f46)';
+    btn.style.background = 'linear-gradient(135deg, #5025a5, #3a1a8a)';
     if (window.DatSanAnalytics) {
       const checkoutVariant = window.DatSanAnalytics.getVariant('checkout_copy');
       window.DatSanAnalytics.track('checkout_submit', { variant: checkoutVariant, fieldId: '<%= field._id %>' });

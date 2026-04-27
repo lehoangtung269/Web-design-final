@@ -2,7 +2,7 @@
   <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-10 gap-4">
     <div>
       <p class="kinetic-label text-on-surface-variant mb-2">USER ARCHIVE</p>
-      <h1 class="kinetic-headline text-4xl text-on-surface tracking-tighter">LICHSU DAT SAN</h1>
+      <h1 class="kinetic-headline text-4xl text-on-surface tracking-tighter">LỊCH SỬ ĐẶT SÂN</h1>
     </div>
     <div class="bg-surface-container text-on-surface px-5 py-2 rounded-full text-sm font-['Space_Grotesk'] font-bold tracking-widest">
       <%= pagination ? pagination.total : bookings.length %> ĐƠN
@@ -15,10 +15,10 @@
         <span class="material-symbols-outlined text-5xl text-on-surface-variant">calendar_month</span>
       </div>
       <h2 class="kinetic-headline text-2xl text-on-surface mb-2">CHƯA CÓ ĐƠN NÀO</h2>
-      <p class="text-on-surface-variant font-light mb-8">Hay tim san bong phu hop va bat dau ngay hom nay!</p>
+      <p class="text-on-surface-variant font-light mb-8">Hãy tìm sân bóng phù hợp và bắt đầu ngay hôm nay!</p>
       <a href="/fields" class="inline-flex items-center gap-2 bg-primary hover:bg-primary-container text-white hover:text-primary px-8 py-4 rounded-full font-bold transition-all duration-300 shadow-cta-glow uppercase text-xs tracking-widest font-['Space_Grotesk']">
         <span class="material-symbols-outlined text-[18px]">search</span>
-        KHAM PHA
+        KHÁM PHÁ
       </a>
     </div>
   <% } else { %>
@@ -53,19 +53,19 @@
               
               <% if (booking.status === 'pending') { %>
                 <span class="inline-flex items-center gap-1.5 bg-amber-50 text-amber-600 px-4 py-1.5 rounded-full text-xs font-bold font-['Space_Grotesk'] uppercase tracking-widest shadow-sm">
-                  <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> CHO DUYET
+                  <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> CHỜ DUYỆT
                 </span>
               <% } else if (booking.status === 'confirmed') { %>
                 <span class="inline-flex items-center gap-1 bg-surface-container-low text-primary px-4 py-1.5 rounded-full text-xs font-bold font-['Space_Grotesk'] uppercase tracking-widest shadow-sm">
-                  <span class="material-symbols-outlined text-[16px]">check_circle</span> DA DUYET
+                  <span class="material-symbols-outlined text-[16px]">check_circle</span> ĐÃ DUYỆT
                 </span>
               <% } else if (booking.status === 'rejected') { %>
                 <span class="inline-flex items-center gap-1 bg-error/10 text-error px-4 py-1.5 rounded-full text-xs font-bold font-['Space_Grotesk'] uppercase tracking-widest shadow-sm">
-                  <span class="material-symbols-outlined text-[16px]">cancel</span> TU CHOI
+                  <span class="material-symbols-outlined text-[16px]">cancel</span> TỪ CHỐI
                 </span>
               <% } else { %>
                 <span class="inline-flex items-center gap-1 bg-surface-container text-on-surface-variant px-4 py-1.5 rounded-full text-xs font-bold font-['Space_Grotesk'] uppercase tracking-widest shadow-sm">
-                  <span class="material-symbols-outlined text-[16px]">event_busy</span> DA HUY
+                  <span class="material-symbols-outlined text-[16px]">event_busy</span> ĐÃ HỦY
                 </span>
               <% } %>
             </div>
@@ -76,7 +76,7 @@
                 <form action="/history/<%= booking._id %>/cancel" method="POST" onsubmit="return confirm('Bạn chắc chắn muốn hủy đơn này?');">
                   <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
                   <button type="submit" class="px-4 py-2 rounded-full bg-error/10 text-error hover:bg-error hover:text-white transition-colors text-xs font-bold tracking-widest">
-                    HUY DON
+                    HỦY ĐƠN
                   </button>
                 </form>
               <% } %>
