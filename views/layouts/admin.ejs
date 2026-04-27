@@ -203,8 +203,8 @@
 <body class="bg-background text-on-surface min-h-screen overflow-x-hidden">
     <%- include('../admin/partials/sidebar') %>
 
-    <div class="ml-64 min-h-screen">
-        <header class="sticky top-0 z-40 h-16 px-8 bg-background/80 backdrop-blur-xl border-b border-white/5 flex items-center justify-between">
+    <div class="lg:ml-64 min-h-screen">
+        <header class="sticky top-0 z-40 h-16 px-4 lg:px-8 bg-background/80 backdrop-blur-xl border-b border-white/5 flex items-center justify-between">
             <div class="min-w-0">
                 <p class="label-sm text-on-surface-variant mb-1">The Kinetic Pitch</p>
                 <h1 class="text-xl md:text-2xl font-extrabold headline-tight text-white truncate">
@@ -252,15 +252,21 @@
         <div class="px-8 pt-6">
             <% if (typeof success !== 'undefined' && success && success.length > 0) { %>
                 <% success.forEach((msg) => { %>
-                    <div class="flash-banner mb-3 rounded-xl border border-primary/20 bg-primary/10 px-4 py-3 text-sm text-primary shadow-glow">
-                        <%= msg %>
+                    <div class="flash-banner mb-3 rounded-xl border border-primary/20 bg-primary/10 px-4 py-3 text-sm text-primary shadow-glow flex items-center gap-2" role="alert">
+                        <span class="flex-1"><%= msg %></span>
+                        <button type="button" onclick="this.parentElement.style.opacity='0';setTimeout(()=>this.parentElement.remove(),200)" class="p-1 rounded-lg hover:bg-primary/20 transition-colors" aria-label="Đóng">
+                            <span class="material-symbols-outlined text-[16px]">close</span>
+                        </button>
                     </div>
                 <% }) %>
             <% } %>
             <% if (typeof error !== 'undefined' && error && error.length > 0) { %>
                 <% error.forEach((msg) => { %>
-                    <div class="flash-banner mb-3 rounded-xl border border-error/20 bg-error/10 px-4 py-3 text-sm text-error shadow-ambient">
-                        <%= msg %>
+                    <div class="flash-banner mb-3 rounded-xl border border-error/20 bg-error/10 px-4 py-3 text-sm text-error shadow-ambient flex items-center gap-2" role="alert">
+                        <span class="flex-1"><%= msg %></span>
+                        <button type="button" onclick="this.parentElement.style.opacity='0';setTimeout(()=>this.parentElement.remove(),200)" class="p-1 rounded-lg hover:bg-error/20 transition-colors" aria-label="Đóng">
+                            <span class="material-symbols-outlined text-[16px]">close</span>
+                        </button>
                     </div>
                 <% }) %>
             <% } %>
@@ -276,13 +282,13 @@
     <script>
         setTimeout(function () {
             document.querySelectorAll('.flash-banner').forEach(function (banner) {
-                banner.style.transition = 'opacity 200ms ease';
+                banner.style.transition = 'opacity 400ms ease';
                 banner.style.opacity = '0';
                 setTimeout(function () {
                     banner.remove();
-                }, 220);
+                }, 420);
             });
-        }, 3500);
+        }, 8000);
     </script>
 </body>
 </html>

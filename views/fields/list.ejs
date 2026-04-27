@@ -112,7 +112,7 @@
 
 <section class="max-w-7xl mx-auto px-6 pb-14">
   <% if (isSearchMode && activeFilterCount > 0) { %>
-    <div class="rounded-[2rem] bg-surface-container-low p-4 md:p-5 mb-8 flex flex-wrap items-center gap-2">
+    <div class="rounded-2xl bg-surface-container-low p-4 md:p-5 mb-8 flex flex-wrap items-center gap-2">
       <span class="kinetic-label text-on-surface-variant mr-1">Query summary</span>
       <% if (queryKeyword) { %>
         <span class="bg-white text-primary px-3 py-1.5 rounded-full text-xs font-bold font-['Space_Grotesk'] tracking-[0.12em]">Keyword: <%= queryKeyword %></span>
@@ -163,7 +163,7 @@
       <% }) %>
     </div>
   <% } else { %>
-    <div class="text-center py-28 bg-surface-container-lowest rounded-[3rem] shadow-ambient">
+    <div class="text-center py-28 bg-surface-container-lowest rounded-2xl shadow-ambient">
       <div class="w-24 h-24 bg-surface-container rounded-full flex items-center justify-center mx-auto mb-6">
         <span class="material-symbols-outlined text-5xl text-on-surface-variant">search_off</span>
       </div>

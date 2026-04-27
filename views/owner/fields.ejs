@@ -1,4 +1,4 @@
-<section class="rounded-[2rem] bg-surface-container-low p-6 md:p-10 mb-8 shadow-ambient flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+<section class="rounded-2xl bg-surface-container-low p-6 md:p-10 mb-8 shadow-ambient flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
   <div>
     <p class="kinetic-label text-on-surface-variant mb-2">Field directory</p>
     <h2 class="kinetic-display text-5xl md:text-6xl">YOUR PITCHES</h2>
@@ -32,7 +32,7 @@
 </section>
 
 <% if (notificationCount > 0) { %>
-  <section class="mb-8 rounded-[2rem] bg-red-50 px-6 py-5 shadow-ambient">
+  <section class="mb-8 rounded-2xl bg-red-50 px-6 py-5 shadow-ambient">
     <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
       <div>
         <p class="kinetic-label text-error mb-2">Notifications</p>
@@ -62,7 +62,7 @@
             ? 'bg-white text-on-surface'
             : 'bg-surface-container text-on-surface-variant';
         %>
-        <article class="rounded-[2rem] bg-white overflow-hidden shadow-ambient hover:-translate-y-1 transition-all duration-500">
+        <article class="rounded-2xl bg-white overflow-hidden shadow-ambient hover:-translate-y-1 transition-all duration-500">
           <div class="h-52 bg-surface-container relative">
             <% if (field.images && field.images.length > 0) { %>
               <img src="<%= field.images[0] %>" alt="<%= field.name %>" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
@@ -104,7 +104,7 @@
       <% }) %>
     </div>
   <% } else { %>
-    <div class="rounded-[2rem] bg-white p-12 text-center text-on-surface-variant shadow-ambient">
+    <div class="rounded-2xl bg-white p-12 text-center text-on-surface-variant shadow-ambient">
       Bạn chưa có sân nào đang hiển thị ở mục này. Nếu có sân bị admin từ chối, hãy xem mục `Notifications`.
     </div>
   <% } %>

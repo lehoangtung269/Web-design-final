@@ -3,7 +3,7 @@
   const selectedApprovalStatus = selectedField ? (selectedField.approvalStatus || 'approved') : null;
 %>
 
-<section class="rounded-[2rem] bg-surface-container-low p-6 md:p-10 mb-8 shadow-ambient">
+<section class="rounded-2xl bg-surface-container-low p-6 md:p-10 mb-8 shadow-ambient">
   <div class="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-6">
     <div>
       <p class="kinetic-label text-on-surface-variant mb-3">Operational Calendar</p>
@@ -34,7 +34,7 @@
 </section>
 
 <section class="grid grid-cols-1 xl:grid-cols-[1.3fr_1fr] gap-6 mb-8">
-  <form action="/owner/schedule" method="GET" class="rounded-[2rem] bg-white p-6 shadow-ambient">
+  <form action="/owner/schedule" method="GET" class="rounded-2xl bg-white p-6 shadow-ambient">
     <input type="hidden" name="date" value="<%= currentDateStr %>">
     <div class="flex flex-col md:flex-row md:items-end gap-4">
       <div class="flex-1">
@@ -64,15 +64,15 @@
   </form>
 
   <div class="grid grid-cols-3 gap-4">
-    <div class="rounded-[2rem] bg-white p-5 shadow-ambient">
+    <div class="rounded-2xl bg-white p-5 shadow-ambient">
       <p class="kinetic-label text-on-surface-variant mb-2">Total</p>
       <p class="text-3xl font-black text-on-surface"><%= weekStats.total %></p>
     </div>
-    <div class="rounded-[2rem] bg-white p-5 shadow-ambient">
+    <div class="rounded-2xl bg-white p-5 shadow-ambient">
       <p class="kinetic-label text-on-surface-variant mb-2">Confirmed</p>
       <p class="text-3xl font-black text-secondary"><%= weekStats.confirmed %></p>
     </div>
-    <div class="rounded-[2rem] bg-white p-5 shadow-ambient">
+    <div class="rounded-2xl bg-white p-5 shadow-ambient">
       <p class="kinetic-label text-on-surface-variant mb-2">Pending</p>
       <p class="text-3xl font-black text-primary"><%= weekStats.pending %></p>
     </div>
@@ -94,7 +94,7 @@
   </div>
 </section>
 
-<section class="overflow-auto rounded-[2rem] bg-white shadow-ambient">
+<section class="overflow-auto rounded-2xl bg-white shadow-ambient">
   <div class="min-w-[1120px]">
     <div class="grid grid-cols-[100px_repeat(7,minmax(0,1fr))] bg-surface-container-low">
       <div class="px-4 py-4 text-[10px] font-bold uppercase tracking-[0.14em] text-on-surface-variant">Time</div>

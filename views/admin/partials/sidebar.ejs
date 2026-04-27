@@ -1,4 +1,18 @@
-<aside class="fixed left-0 top-0 z-50 h-screen w-64 bg-surface-lowest border-r border-white/5 flex flex-col">
+<!-- Mobile Hamburger Button -->
+<button id="admin-mobile-menu-btn" class="fixed top-4 left-4 z-[60] lg:hidden w-10 h-10 rounded-xl bg-surface-container text-on-surface-variant hover:text-white hover:bg-surface-container-high ghost-border flex items-center justify-center transition-all" aria-label="Mở menu điều hướng">
+  <span class="material-symbols-outlined text-[20px]" id="admin-menu-icon">menu</span>
+</button>
+
+<!-- Mobile Backdrop Overlay -->
+<div id="admin-sidebar-backdrop" class="fixed inset-0 z-[55] bg-black/50 backdrop-blur-sm hidden lg:hidden transition-opacity duration-300 opacity-0"></div>
+
+<!-- Sidebar (desktop: always visible, mobile: slide-in) -->
+<aside id="admin-sidebar" class="fixed left-0 top-0 z-[60] h-screen w-64 bg-surface-lowest border-r border-white/5 flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0">
+    <!-- Close button for mobile -->
+    <button id="admin-sidebar-close" class="lg:hidden absolute top-6 right-4 w-8 h-8 rounded-lg bg-surface-container text-on-surface-variant hover:text-white hover:bg-surface-container-high ghost-border flex items-center justify-center transition-all">
+      <span class="material-symbols-outlined text-[18px]">close</span>
+    </button>
+
     <div class="px-6 py-7 border-b border-white/5">
         <a href="/admin/dashboard" class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center shadow-glow">
@@ -50,3 +64,65 @@
         </a>
     </div>
 </aside>
+
+<script>
+(function() {
+  var btn = document.getElementById('admin-mobile-menu-btn');
+  var sidebar = document.getElementById('admin-sidebar');
+  var backdrop = document.getElementById('admin-sidebar-backdrop');
+  var closeBtn = document.getElementById('admin-sidebar-close');
+  var menuIcon = document.getElementById('admin-menu-icon');
+  if (!btn || !sidebar || !backdrop) return;
+
+  function openSidebar() {
+    sidebar.classList.remove('-translate-x-full');
+    sidebar.classList.add('translate-x-0');
+    backdrop.classList.remove('hidden', 'opacity-0');
+    backdrop.classList.add('opacity-100');
+    menuIcon.textContent = 'close';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeSidebar() {
+    sidebar.classList.add('-translate-x-full');
+    sidebar.classList.remove('translate-x-0');
+    backdrop.classList.add('opacity-0');
+    setTimeout(function() {
+      backdrop.classList.add('hidden');
+    }, 300);
+    menuIcon.textContent = 'menu';
+    document.body.style.overflow = '';
+  }
+
+  btn.addEventListener('click', function() {
+    var isOpen = sidebar.classList.contains('translate-x-0');
+    isOpen ? closeSidebar() : openSidebar();
+  });
+
+  backdrop.addEventListener('click', closeSidebar);
+  if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
+
+  // Close on nav link click (mobile)
+  sidebar.querySelectorAll('nav a').forEach(function(link) {
+    link.addEventListener('click', function() {
+      if (window.innerWidth < 1024) closeSidebar();
+    });
+  });
+
+  // Handle resize
+  window.addEventListener('resize', function() {
+    if (window.innerWidth >= 1024) {
+      sidebar.classList.remove('-translate-x-full');
+      sidebar.classList.add('translate-x-0');
+      backdrop.classList.add('hidden', 'opacity-0');
+      document.body.style.overflow = '';
+    } else {
+      if (!sidebar.classList.contains('-translate-x-full')) {
+        sidebar.classList.add('-translate-x-full');
+        sidebar.classList.remove('translate-x-0');
+        backdrop.classList.add('hidden', 'opacity-0');
+      }
+    }
+  });
+})();
+</script>

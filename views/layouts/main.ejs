@@ -141,8 +141,12 @@
     <% if (typeof success !== 'undefined' && success && success.length > 0) { %>
       <div class="max-w-7xl mx-auto px-6 pt-2">
         <% success.forEach(msg => { %>
-          <div class="bg-surface-container-low text-on-surface px-4 py-3 rounded-2xl mb-2 flex items-center gap-2">
-            <span class="material-symbols-outlined text-secondary">check_circle</span><%= msg %>
+          <div class="flash-msg bg-surface-container-low text-on-surface px-4 py-3 rounded-2xl mb-2 flex items-center gap-2 transition-all duration-500" role="alert">
+            <span class="material-symbols-outlined text-secondary">check_circle</span>
+            <span class="flex-1"><%= msg %></span>
+            <button type="button" onclick="this.parentElement.style.opacity='0';setTimeout(()=>this.parentElement.remove(),300)" class="ml-auto p-1 rounded-full hover:bg-surface-container transition-colors" aria-label="Đóng thông báo">
+              <span class="material-symbols-outlined text-on-surface-variant text-lg">close</span>
+            </button>
           </div>
         <% }) %>
       </div>
@@ -150,8 +154,12 @@
     <% if (typeof error !== 'undefined' && error && error.length > 0) { %>
       <div class="max-w-7xl mx-auto px-6 pt-2">
         <% error.forEach(msg => { %>
-          <div class="bg-red-50 text-red-700 px-4 py-3 rounded-2xl mb-2 flex items-center gap-2">
-            <span class="material-symbols-outlined text-red-500">error</span><%= msg %>
+          <div class="flash-msg bg-red-50 text-red-700 px-4 py-3 rounded-2xl mb-2 flex items-center gap-2 transition-all duration-500" role="alert">
+            <span class="material-symbols-outlined text-red-500">error</span>
+            <span class="flex-1"><%= msg %></span>
+            <button type="button" onclick="this.parentElement.style.opacity='0';setTimeout(()=>this.parentElement.remove(),300)" class="ml-auto p-1 rounded-full hover:bg-red-100 transition-colors" aria-label="Đóng thông báo">
+              <span class="material-symbols-outlined text-red-400 text-lg">close</span>
+            </button>
           </div>
         <% }) %>
       </div>
@@ -224,6 +232,14 @@
         }
       });
     }
+
+    // Auto-dismiss flash messages after 8 seconds (with fade-out)
+    setTimeout(function () {
+      document.querySelectorAll('.flash-msg').forEach(function (el) {
+        el.style.opacity = '0';
+        setTimeout(function () { el.remove(); }, 500);
+      });
+    }, 8000);
   </script>
 </body>
 </html>

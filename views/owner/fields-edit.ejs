@@ -1,4 +1,4 @@
-<section class="rounded-[2rem] bg-surface-container-low p-6 md:p-10 mb-8 shadow-ambient">
+<section class="rounded-2xl bg-surface-container-low p-6 md:p-10 mb-8 shadow-ambient">
   <p class="kinetic-label text-on-surface-variant mb-3">Pitch maintenance</p>
   <h2 class="kinetic-display text-5xl md:text-6xl">EDIT FIELD PROFILE</h2>
   <%
@@ -18,7 +18,7 @@
   <% } %>
 </section>
 
-<form action="/owner/fields/<%= field._id %>" method="POST" enctype="multipart/form-data" class="max-w-5xl rounded-[2rem] bg-white p-6 md:p-8 space-y-6 shadow-ambient">
+<form action="/owner/fields/<%= field._id %>" method="POST" enctype="multipart/form-data" class="max-w-5xl rounded-2xl bg-white p-6 md:p-8 space-y-6 shadow-ambient">
   <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <input name="name" value="<%= field.name %>" required placeholder="Tên sân" class="rounded-2xl border-none bg-surface-container-low px-4 py-3" />

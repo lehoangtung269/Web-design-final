@@ -71,16 +71,35 @@
 
   <main class="lg:ml-72 px-4 md:px-8 pb-10">
     <% if (typeof error !== 'undefined' && error.length > 0) { %>
-      <div class="mb-5 rounded-3xl bg-red-50 text-error px-5 py-4 text-sm font-medium shadow-ambient">
-        <span class="material-symbols-outlined text-base mr-1">warning</span><%= error[0] %>
+      <div class="flash-msg mb-5 rounded-3xl bg-red-50 text-error px-5 py-4 text-sm font-medium shadow-ambient flex items-center gap-2" role="alert">
+        <span class="material-symbols-outlined text-base">warning</span>
+        <span class="flex-1"><%= error[0] %></span>
+        <button type="button" onclick="this.parentElement.style.opacity='0';setTimeout(()=>this.parentElement.remove(),300)" class="p-1 rounded-full hover:bg-red-100 transition-colors" aria-label="Đóng">
+          <span class="material-symbols-outlined text-error text-lg">close</span>
+        </button>
       </div>
     <% } %>
     <% if (typeof success !== 'undefined' && success.length > 0) { %>
-      <div class="mb-5 rounded-3xl bg-primary/10 text-primary px-5 py-4 text-sm font-medium shadow-ambient">
-        <span class="material-symbols-outlined text-base mr-1">check_circle</span><%= success[0] %>
+      <div class="flash-msg mb-5 rounded-3xl bg-primary/10 text-primary px-5 py-4 text-sm font-medium shadow-ambient flex items-center gap-2" role="alert">
+        <span class="material-symbols-outlined text-base">check_circle</span>
+        <span class="flex-1"><%= success[0] %></span>
+        <button type="button" onclick="this.parentElement.style.opacity='0';setTimeout(()=>this.parentElement.remove(),300)" class="p-1 rounded-full hover:bg-primary/10 transition-colors" aria-label="Đóng">
+          <span class="material-symbols-outlined text-primary text-lg">close</span>
+        </button>
       </div>
     <% } %>
     <%- body %>
   </main>
+
+  <script>
+    // Auto-dismiss flash messages after 8 seconds
+    setTimeout(function () {
+      document.querySelectorAll('.flash-msg').forEach(function (el) {
+        el.style.transition = 'opacity 400ms ease';
+        el.style.opacity = '0';
+        setTimeout(function () { el.remove(); }, 420);
+      });
+    }, 8000);
+  </script>
 </body>
 </html>
