@@ -99,12 +99,14 @@
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
-            border-radius: 0.5rem;
+            border-radius: 1rem;
             padding: 0.75rem 1rem;
             font-size: 0.875rem;
             font-weight: 700;
-            transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
         }
+        .btn:hover { transform: translateY(-2px); }
+        .btn:active { transform: translateY(0) scale(0.98); }
 
         .btn-sm {
             padding: 0.5rem 0.875rem;
@@ -119,15 +121,18 @@
 
         .btn-outline:hover {
             background: #262a30;
+            box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.3);
         }
 
         .btn-primary {
             background: linear-gradient(135deg, #4EDE63, #10B981);
             color: #003824;
+            box-shadow: 0 8px 24px -6px rgba(78, 222, 99, 0.3);
         }
 
         .btn-primary:hover {
             filter: brightness(1.04);
+            box-shadow: 0 12px 28px -4px rgba(78, 222, 99, 0.4);
         }
 
         .btn-blue {
@@ -224,9 +229,22 @@
                     <span class="text-sm font-semibold">View Site</span>
                 </a>
 
-                <div class="hidden xl:flex items-center gap-2 rounded-full bg-surface-container px-4 py-2 ghost-border w-80">
+                <div class="hidden xl:flex items-center gap-2 rounded-full bg-surface-container px-4 py-2 ghost-border w-80 relative" id="admin-search-wrapper">
                     <span class="material-symbols-outlined text-on-surface-variant text-[18px]">search</span>
-                    <input type="text" placeholder="Search admin workspace..." class="w-full bg-transparent border-none p-0 text-sm text-on-surface placeholder:text-on-surface-variant/60 focus:ring-0" />
+                    <input type="text" id="admin-search-input" placeholder="Search admin workspace..." autocomplete="off"
+                        class="w-full bg-transparent border-none p-0 text-sm text-on-surface placeholder:text-on-surface-variant/60 focus:ring-0" />
+                    <kbd class="text-[10px] text-on-surface-variant bg-surface-container-high px-1.5 py-0.5 rounded font-mono">/</kbd>
+                    <!-- Search Results Dropdown -->
+                    <div id="admin-search-results" class="absolute top-full left-0 right-0 mt-2 bg-surface-container rounded-2xl border border-white/10 shadow-2xl overflow-hidden z-50 hidden">
+                        <div id="search-results-list" class="max-h-80 overflow-y-auto"></div>
+                        <div id="search-empty" class="hidden px-4 py-8 text-center text-sm text-on-surface-variant">
+                            <span class="material-symbols-outlined text-2xl mb-2 block opacity-40">search_off</span>
+                            Không tìm thấy kết quả
+                        </div>
+                        <div id="search-loading" class="hidden px-4 py-4 text-center">
+                            <div class="inline-block w-5 h-5 border-2 border-on-surface-variant/20 border-t-primary rounded-full animate-spin"></div>
+                        </div>
+                    </div>
                 </div>
 
                 <button type="button" class="w-10 h-10 rounded-full bg-surface-container text-on-surface-variant hover:text-white hover:bg-surface-container-high transition-all ghost-border">
@@ -289,6 +307,90 @@
                 }, 420);
             });
         }, 8000);
+
+        // ── Admin Search ──
+        (function () {
+            var input = document.getElementById('admin-search-input');
+            var wrapper = document.getElementById('admin-search-wrapper');
+            var dropdown = document.getElementById('admin-search-results');
+            var listEl = document.getElementById('search-results-list');
+            var emptyEl = document.getElementById('search-empty');
+            var loadingEl = document.getElementById('search-loading');
+            if (!input || !dropdown) return;
+
+            var timer = null;
+            var typeColors = {
+                field: { bg: 'rgba(78,222,99,0.1)', color: '#4EDE63' },
+                user: { bg: 'rgba(96,165,250,0.1)', color: '#60A5FA' },
+                booking: { bg: 'rgba(251,191,36,0.1)', color: '#FBBF24' }
+            };
+
+            function showDropdown() { dropdown.classList.remove('hidden'); }
+            function hideDropdown() { dropdown.classList.add('hidden'); }
+
+            function renderResults(results) {
+                loadingEl.classList.add('hidden');
+                if (!results || results.length === 0) {
+                    listEl.innerHTML = '';
+                    emptyEl.classList.remove('hidden');
+                    return;
+                }
+                emptyEl.classList.add('hidden');
+                var html = '';
+                results.forEach(function (r) {
+                    var tc = typeColors[r.type] || typeColors.field;
+                    html += '<a href="' + r.url + '" class="flex items-center gap-3 px-4 py-3 hover:bg-surface-container-high transition-colors">'
+                        + '<div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:' + tc.bg + '">'
+                        + '<span class="material-symbols-outlined text-[18px]" style="color:' + tc.color + '">' + r.icon + '</span>'
+                        + '</div>'
+                        + '<div class="min-w-0 flex-1">'
+                        + '<p class="text-sm font-semibold text-white truncate">' + r.title + '</p>'
+                        + '<p class="text-xs text-on-surface-variant truncate">' + r.subtitle + '</p>'
+                        + '</div>'
+                        + '<span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full" style="background:' + tc.bg + ';color:' + tc.color + '">' + r.type + '</span>'
+                        + '</a>';
+                });
+                listEl.innerHTML = html;
+            }
+
+            input.addEventListener('input', function () {
+                var q = input.value.trim();
+                clearTimeout(timer);
+                if (q.length < 2) { hideDropdown(); return; }
+
+                showDropdown();
+                listEl.innerHTML = '';
+                emptyEl.classList.add('hidden');
+                loadingEl.classList.remove('hidden');
+
+                timer = setTimeout(function () {
+                    fetch('/admin/api/search?q=' + encodeURIComponent(q))
+                        .then(function (r) { return r.json(); })
+                        .then(function (data) { renderResults(data.results); })
+                        .catch(function () {
+                            loadingEl.classList.add('hidden');
+                            emptyEl.classList.remove('hidden');
+                        });
+                }, 350);
+            });
+
+            input.addEventListener('focus', function () {
+                if (input.value.trim().length >= 2) showDropdown();
+            });
+
+            document.addEventListener('click', function (e) {
+                if (!wrapper.contains(e.target)) hideDropdown();
+            });
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+                    e.preventDefault();
+                    input.focus();
+                }
+                if (e.key === 'Escape') { hideDropdown(); input.blur(); }
+            });
+        })();
     </script>
+    <script src="/public/js/form-autosave.js"></script>
 </body>
 </html>

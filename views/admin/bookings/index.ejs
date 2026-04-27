@@ -9,7 +9,13 @@
             <p class="text-sm text-on-surface-variant mt-2">Review approvals, payment flow and pitch reservations across the system.</p>
         </div>
 
-        <form action="/admin/bookings" method="GET" class="flex flex-col sm:flex-row gap-3">
+        <div class="flex flex-col sm:flex-row gap-3">
+            <a href="/admin/bookings/export?status=<%= currentStatus %>&fieldId=<%= currentFieldId %>"
+               class="flex items-center gap-2 px-5 py-3 rounded-2xl bg-surface-container text-on-surface-variant text-sm font-bold ghost-border hover:bg-surface-container-high hover:-translate-y-0.5 transition-all duration-300">
+                <span class="material-symbols-outlined text-[18px]">download</span>
+                Export CSV
+            </a>
+            <form action="/admin/bookings" method="GET" class="flex flex-col sm:flex-row gap-3">
             <input type="hidden" name="status" value="<%= currentStatus %>">
             <select name="fieldId" class="min-w-[220px] rounded-lg bg-surface-container border-none text-sm text-white focus:ring-1 focus:ring-primary/30">
                 <option value="all" <%= currentFieldId === 'all' ? 'selected' : '' %>>All Fields</option>
@@ -17,10 +23,11 @@
                     <option value="<%= field._id %>" <%= currentFieldId === field._id.toString() ? 'selected' : '' %>><%= field.name %></option>
                 <% }) %>
             </select>
-            <button type="submit" class="px-5 py-3 rounded-lg bg-surface-container-high text-white text-sm font-bold hover:bg-surface-variant transition-colors">
+            <button type="submit" class="px-5 py-3 rounded-2xl bg-surface-container-high text-white text-sm font-bold hover:bg-surface-variant hover:-translate-y-0.5 transition-all duration-300">
                 Apply Scope
             </button>
-        </form>
+            </form>
+        </div>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">

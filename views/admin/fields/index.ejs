@@ -25,7 +25,7 @@
             </div>
             <% } %>
         </div>
-        <a href="/admin/fields/create" class="flex items-center gap-2 bg-primary text-black px-6 py-3 rounded-xl font-bold hover:bg-primary/90 hover:shadow-glow transition-all duration-300">
+        <a href="/admin/fields/create" class="flex items-center gap-2 bg-primary text-black px-6 py-3 rounded-2xl font-bold hover:bg-primary/90 hover:shadow-glow hover:-translate-y-0.5 transition-all duration-300">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
             Deploy New Arena
         </a>
@@ -119,7 +119,7 @@
                                     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                     <input type="hidden" name="approvalStatus" value="approved">
                                     <input type="hidden" name="approvalNote" value="Đã được admin duyệt và mở công khai.">
-                                    <button type="submit" class="px-4 py-2 rounded-xl bg-primary text-black text-xs font-bold uppercase tracking-[0.14em] hover:opacity-90 transition-opacity">
+                                    <button type="submit" class="px-4 py-2 rounded-2xl bg-primary text-black text-xs font-bold uppercase tracking-[0.14em] hover:opacity-90 hover:-translate-y-0.5 transition-all duration-300">
                                         Approve
                                     </button>
                                 </form>
@@ -127,7 +127,7 @@
                                     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                     <input type="hidden" name="approvalStatus" value="rejected">
                                     <input type="hidden" name="approvalNote" value="Admin từ chối hồ sơ sân. Chủ sân cần chỉnh sửa và gửi lại.">
-                                    <button type="submit" class="px-4 py-2 rounded-xl bg-danger/10 text-danger text-xs font-bold uppercase tracking-[0.14em] ghost-border hover:bg-danger/20 transition-colors">
+                                    <button type="submit" class="px-4 py-2 rounded-2xl bg-danger/10 text-danger text-xs font-bold uppercase tracking-[0.14em] ghost-border hover:bg-danger/20 hover:-translate-y-0.5 transition-all duration-300">
                                         Reject
                                     </button>
                                 </form>
@@ -143,7 +143,7 @@
                 </div>
                 <h3 class="text-xl headline-md text-white mb-2">No Arenas Deployed</h3>
                 <p class="text-on-surface-variant mb-6 max-w-md">Initialize the system by deploying your first arena entity. Ensure all parameters are correctly set.</p>
-                <a href="/admin/fields/create" class="bg-primary text-black px-6 py-3 rounded-xl font-bold hover:bg-primary/90 transition-all shadow-glow">Deploy Arena</a>
+                <a href="/admin/fields/create" class="bg-primary text-black px-6 py-3 rounded-2xl font-bold hover:bg-primary/90 hover:-translate-y-0.5 transition-all duration-300 shadow-glow">Deploy Arena</a>
             </div>
         <% } %>
     </div>

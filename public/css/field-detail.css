@@ -1,0 +1,278 @@
+/* ============================================
+   FIELD DETAIL PAGE — DatSan.vn
+   Extracted from inline <style> in detail.ejs
+============================================ */
+
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes selectedPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0.4); }
+  50% { box-shadow: 0 0 0 6px rgba(16,185,129,0); }
+}
+
+.slot-pop { animation: pop 0.25s ease-out; }
+
+/* ── Custom Calendar ── */
+.calendar-wrapper {
+  position: relative;
+}
+.calendar-input-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  user-select: none;
+  color: #0f172a;
+  font-weight: 600;
+  font-size: 15px;
+}
+.calendar-input-btn:hover {
+  border-color: #6a37d3;
+  background: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16,185,129,0.15);
+}
+.calendar-input-btn .cal-icon {
+  color: #6a37d3;
+  font-size: 22px;
+}
+.calendar-input-btn .cal-arrow {
+  margin-left: auto;
+  color: #94a3b8;
+  font-size: 18px;
+  transition: transform 0.2s;
+}
+.calendar-input-btn.open .cal-arrow { transform: rotate(180deg); }
+
+/* Calendar Popup */
+.calendar-popup {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.14), 0 4px 16px rgba(16,185,129,0.1);
+  border: 1px solid #e2e8f0;
+  z-index: 100;
+  overflow: hidden;
+  animation: fadeSlideUp 0.25s ease;
+  display: none;
+}
+.calendar-popup.open { display: block; }
+
+.cal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px 12px;
+  background: linear-gradient(135deg, #0b1c30, #0b1c30);
+  color: white;
+}
+.cal-nav-btn {
+  background: rgba(255,255,255,0.15);
+  border: none;
+  color: white;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  font-size: 16px;
+}
+.cal-nav-btn:hover { background: rgba(255,255,255,0.25); transform: scale(1.1); }
+
+.cal-month-year {
+  font-size: 15px;
+  font-weight: 800;
+  color: white;
+  text-transform: capitalize;
+}
+
+.cal-grid {
+  padding: 12px 16px 16px;
+}
+.cal-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 6px;
+}
+.cal-weekday {
+  text-align: center;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+  padding: 4px 0;
+}
+.cal-weekday:first-child { color: #ef4444; }
+
+.cal-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+.cal-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #374151;
+  border: 2px solid transparent;
+  position: relative;
+}
+.cal-day:hover:not(.disabled):not(.empty) {
+  background: #ebf1ff;
+  color: #0b1c30;
+  transform: scale(1.1);
+}
+.cal-day.today {
+  border-color: #6a37d3;
+  color: #6a37d3;
+  font-weight: 800;
+}
+.cal-day.selected {
+  background: #6a37d3;
+  color: white !important;
+  font-weight: 800;
+  border-color: #6a37d3;
+  box-shadow: 0 3px 12px rgba(16,185,129,0.4);
+  animation: selectedPulse 2s infinite;
+}
+.cal-day.disabled {
+  color: #d1d5db;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.cal-day.sunday { color: #ef4444; }
+.cal-day.empty { pointer-events: none; }
+
+/* ── Slot Grid Enhanced ── */
+.slot-item {
+  position: relative;
+  border-radius: 14px;
+  text-align: center;
+  padding: 10px 8px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+  user-select: none;
+  overflow: hidden;
+}
+.slot-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.slot-item:hover::before { opacity: 1; }
+
+.slot-item.available {
+  background: #ffffff;
+  border-color: transparent;
+  color: #0b1c30;
+}
+.slot-item.available:hover {
+  border-color: #6a37d3;
+  box-shadow: 0 4px 16px rgba(16,185,129,0.2);
+  transform: translateY(-2px) scale(1.02);
+  background: #ebf1ff;
+}
+.slot-item.selected-slot {
+  background: linear-gradient(135deg, #6a37d3, #6a37d3) !important;
+  border-color: #0b1c30 !important;
+  color: white !important;
+  box-shadow: 0 6px 20px rgba(16,185,129,0.45) !important;
+  transform: scale(1.05) !important;
+  animation: selectedPulse 2s infinite;
+}
+.slot-item.pending {
+  background: #fffbeb;
+  border-color: transparent;
+  color: #92400e;
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+.slot-item.booked {
+  background: #f8fafc;
+  border-color: transparent;
+  color: #94a3b8;
+  text-decoration: line-through;
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.slot-status-badge {
+  display: block;
+  font-size: 9px;
+  margin-top: 3px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.8;
+}
+
+/* Skeleton loader for slots */
+.slot-skeleton {
+  border-radius: 14px;
+  height: 60px;
+  background: linear-gradient(90deg, #ffffff 25%, #ebf1ff 50%, #ffffff 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+}
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Slots grid loading overlay */
+#slots-grid.loading { opacity: 0.5; pointer-events: none; }
+
+/* Loading spinner for slots */
+.slots-loading {
+  display: none;
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+}
+.slots-loading.visible { display: flex; }
+.slots-spin {
+  width: 28px; height: 28px;
+  border: 3px solid #ebf1ff;
+  border-top-color: #6a37d3;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Booking summary animation */
+#booking-summary.visible {
+  display: block !important;
+  animation: fadeSlideUp 0.35s ease;
+}

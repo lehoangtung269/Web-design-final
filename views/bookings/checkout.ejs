@@ -615,7 +615,7 @@
     background: linear-gradient(135deg, #6a37d3, #5025a5);
     color: white;
     border: none;
-    border-radius: 9999px;
+    border-radius: 1rem;
     padding: 20px 28px;
     font-size: 16px;
     font-weight: 900;
@@ -673,12 +673,12 @@
     background: white;
     color: #6a37d3;
     border: 2px solid #c4b5fd;
-    border-radius: 9999px;
+    border-radius: 1rem;
     padding: 14px 28px;
     font-size: 14px;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s;
     text-decoration: none;
     text-align: center;
     display: block;
@@ -727,6 +727,26 @@
 </style>
 
 <div class="checkout-wrapper">
+
+  <!-- Brand Header & Navigation -->
+  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; flex-wrap: wrap; gap: 16px;">
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <a href="/" style="font-size: 22px; font-weight: 900; font-style: italic; color: #2d1570; text-decoration: none; display: flex; align-items: center; gap: 6px;">
+        ⚽ DatSan.vn
+      </a>
+      <div style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #94a3b8;">
+        <a href="/" style="color: #6a37d3; text-decoration: none; font-weight: 600;">Trang chủ</a>
+        <span class="material-symbols-outlined" style="font-size: 14px;">chevron_right</span>
+        <a href="/fields/<%= field._id %>" style="color: #6a37d3; text-decoration: none; font-weight: 600;"><%= field.name %></a>
+        <span class="material-symbols-outlined" style="font-size: 14px;">chevron_right</span>
+        <span style="color: #0f172a; font-weight: 700;">Thanh toán</span>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 8px; background: #f4f0ff; padding: 8px 16px; border-radius: 12px; border: 1px solid #e0d5ff;">
+      <span class="material-symbols-outlined" style="font-size: 18px; color: #6a37d3;">support_agent</span>
+      <span style="font-size: 12px; font-weight: 700; color: #5025a5;">Hotline: 1900-xxxx</span>
+    </div>
+  </div>
 
   <!-- Progress Stepper -->
   <div style="margin-bottom: 64px;">

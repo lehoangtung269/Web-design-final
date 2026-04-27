@@ -18,6 +18,8 @@ router.get('/schedule', adminController.getSchedule);
 // ================================
 // Quản lý đơn đặt sân
 // ================================
+router.get('/api/search', adminController.searchAdmin);
+router.get('/bookings/export', adminController.exportBookingsCSV);
 router.get('/bookings', adminController.getBookings);
 router.get('/bookings/:id', adminController.getBookingDetail);
 router.post('/bookings/:id/approve', adminController.approveBooking);

@@ -105,7 +105,14 @@ exports.getDashboard = async (req, res) => {
     const rejectedNotificationCount = allOwnerFields.length - visibleOwnerFields.length;
     const allFieldIds = allOwnerFields.map((field) => field._id);
 
-    const [pendingBookings, confirmedBookings, totalRevenue, recentBookings, ownerName] = await Promise.all([
+    // Chart: 7-day booking trends for owner's fields
+    const today = new Date();
+    today.setHours(23, 59, 59, 999);
+    const sevenDaysAgo = new Date(today);
+    sevenDaysAgo.setDate(today.getDate() - 6);
+    sevenDaysAgo.setHours(0, 0, 0, 0);
+
+    const [pendingBookings, confirmedBookings, totalRevenue, recentBookings, ownerName, bookingTrendsAgg] = await Promise.all([
       Booking.countDocuments({ field: { $in: allFieldIds }, status: 'pending' }),
       Booking.countDocuments({ field: { $in: allFieldIds }, status: 'confirmed' }),
       Booking.aggregate([
@@ -118,7 +125,40 @@ exports.getDashboard = async (req, res) => {
         .sort({ createdAt: -1 })
         .limit(6),
       getFreshOwnerName(ownerId, req.session.user?.name),
+      Booking.aggregate([
+        { $match: { field: { $in: allFieldIds }, date: { $gte: sevenDaysAgo, $lte: today } } },
+        {
+          $group: {
+            _id: { $dateToString: { format: '%Y-%m-%d', date: '$date', timezone: 'Asia/Ho_Chi_Minh' } },
+            count: { $sum: 1 },
+          },
+        },
+        { $sort: { _id: 1 } },
+      ]),
     ]);
+
+    // Build chart data
+    const chartData = [];
+    let maxBookings = 0;
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(today.getDate() - i);
+      d.setHours(0, 0, 0, 0);
+      const dateStr = toLocalDateString(d);
+      const match = bookingTrendsAgg.find((item) => item._id === dateStr);
+      const count = match ? match.count : 0;
+      maxBookings = Math.max(maxBookings, count);
+      chartData.push({
+        date: dateStr,
+        shortLabel: d.toLocaleDateString('en-US', { weekday: 'short' }),
+        fullLabel: d.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' }),
+        count,
+      });
+    }
+    const peakDay = chartData.reduce(
+      (best, item) => (item.count > best.count ? item : best),
+      chartData[0] || { shortLabel: '--', count: 0 }
+    );
 
     const fieldSummary = summarizeFieldApprovals(visibleOwnerFields);
 
@@ -139,6 +179,9 @@ exports.getDashboard = async (req, res) => {
       },
       ownedFields: fields,
       recentBookings,
+      chartData,
+      maxBookings: maxBookings || 1,
+      peakDay,
     });
   } catch (err) {
     console.error(err);

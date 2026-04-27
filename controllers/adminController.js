@@ -1069,6 +1069,133 @@ const toggleUserStatus = async (req, res) => {
   }
 };
 
+// ================================
+// ADMIN SEARCH API
+// ================================
+const searchAdmin = async (req, res) => {
+  try {
+    const q = (req.query.q || '').trim();
+    if (!q || q.length < 2) {
+      return res.json({ results: [] });
+    }
+
+    const regex = new RegExp(q, 'i');
+
+    const [fields, users, bookings] = await Promise.all([
+      Field.find({
+        status: { $ne: 'deleted' },
+        $or: [{ name: regex }, { address: regex }, { city: regex }],
+      })
+        .select('_id name address type status')
+        .limit(5),
+      User.find({
+        $or: [{ name: regex }, { email: regex }, { phone: regex }],
+      })
+        .select('_id name email role')
+        .limit(5),
+      Booking.find({
+        $or: [{ startTime: regex }, { endTime: regex }],
+      })
+        .populate('user', 'name')
+        .populate('field', 'name')
+        .select('_id status date startTime endTime')
+        .sort({ createdAt: -1 })
+        .limit(5),
+    ]);
+
+    const results = [];
+
+    fields.forEach((f) => {
+      results.push({
+        type: 'field',
+        icon: 'stadium',
+        title: f.name,
+        subtitle: `${f.address} · ${f.type}`,
+        url: `/admin/fields/${f._id}/edit`,
+        status: f.status,
+      });
+    });
+
+    users.forEach((u) => {
+      results.push({
+        type: 'user',
+        icon: 'person',
+        title: u.name,
+        subtitle: `${u.email} · ${u.role}`,
+        url: '/admin/users',
+      });
+    });
+
+    bookings.forEach((b) => {
+      results.push({
+        type: 'booking',
+        icon: 'event_available',
+        title: `#${b._id.toString().slice(-6).toUpperCase()}`,
+        subtitle: `${b.field ? b.field.name : 'Unknown'} · ${b.startTime}-${b.endTime}`,
+        url: `/admin/bookings/${b._id}`,
+        status: b.status,
+      });
+    });
+
+    res.json({ results });
+  } catch (error) {
+    console.error('Admin Search Error:', error);
+    res.status(500).json({ results: [], error: 'Search failed' });
+  }
+};
+
+// ================================
+// EXPORT BOOKINGS CSV
+// ================================
+const exportBookingsCSV = async (req, res) => {
+  try {
+    const { status, fieldId = 'all' } = req.query;
+    const filter = {};
+    if (status && status !== 'all') filter.status = status;
+    if (fieldId !== 'all' && mongoose.Types.ObjectId.isValid(fieldId)) filter.field = fieldId;
+
+    const bookings = await Booking.find(filter)
+      .populate('user', 'name email phone')
+      .populate('field', 'name')
+      .sort({ createdAt: -1 })
+      .limit(5000);
+
+    // BOM for Excel UTF-8 compatibility
+    const BOM = '\uFEFF';
+    const headers = ['ID', 'Khách hàng', 'Email', 'SĐT', 'Sân', 'Ngày', 'Giờ bắt đầu', 'Giờ kết thúc', 'Số tiền', 'Trạng thái', 'Ngày tạo'];
+    const rows = bookings.map((b) => {
+      const amount = b.finalTotal ?? b.totalPrice ?? 0;
+      return [
+        b._id.toString().slice(-6).toUpperCase(),
+        b.user ? b.user.name : 'Unknown',
+        b.user ? b.user.email || '' : '',
+        b.user ? b.user.phone || '' : '',
+        b.field ? b.field.name : 'Deleted',
+        b.date ? new Date(b.date).toLocaleDateString('vi-VN') : '',
+        b.startTime || '',
+        b.endTime || '',
+        amount,
+        b.status || '',
+        b.createdAt ? new Date(b.createdAt).toLocaleDateString('vi-VN') : '',
+      ].map((val) => {
+        const str = String(val).replace(/"/g, '""');
+        return `"${str}"`;
+      }).join(',');
+    });
+
+    const csv = BOM + headers.join(',') + '\n' + rows.join('\n');
+    const filename = `bookings_export_${new Date().toISOString().slice(0, 10)}.csv`;
+
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.send(csv);
+  } catch (error) {
+    console.error('Export CSV Error:', error);
+    req.flash('error', 'Lỗi khi xuất dữ liệu!');
+    res.redirect('/admin/bookings');
+  }
+};
+
 module.exports = {
   getDashboard,
   getSchedule,
@@ -1086,4 +1213,6 @@ module.exports = {
   getUsers,
   toggleUserStatus,
   updateUserPermissions,
+  searchAdmin,
+  exportBookingsCSV,
 };

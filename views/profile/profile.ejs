@@ -88,7 +88,7 @@
         <h2 class="kinetic-headline text-2xl md:text-3xl text-on-surface">THÔNG TIN CÁ NHÂN</h2>
       </div>
 
-      <form action="/profile/update" method="POST" class="space-y-5">
+      <form action="/profile/update" method="POST" data-autosave="profile-update" class="space-y-5">
         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
         <!-- Họ tên -->
@@ -157,7 +157,7 @@
         </div>
 
         <!-- Submit -->
-        <button type="submit" class="w-full rounded-full bg-gradient-to-r from-primary to-primary-container text-white py-3.5 font-semibold transition-all duration-500 hover:-translate-y-0.5 hover:shadow-cta-glow flex items-center justify-center gap-2">
+        <button type="submit" class="w-full rounded-2xl bg-gradient-to-r from-primary to-primary-container text-white py-3.5 font-semibold transition-all duration-300 hover:-translate-y-1 hover:shadow-cta-glow flex items-center justify-center gap-2">
           <span class="material-symbols-outlined text-lg">save</span>
           Lưu thay đổi
         </button>
@@ -237,7 +237,7 @@
         </div>
 
         <!-- Submit -->
-        <button type="submit" class="w-full rounded-full bg-on-surface text-white py-3.5 font-semibold transition-all duration-500 hover:-translate-y-0.5 hover:shadow-ambient flex items-center justify-center gap-2">
+        <button type="submit" class="w-full rounded-2xl bg-on-surface text-white py-3.5 font-semibold transition-all duration-300 hover:-translate-y-1 hover:shadow-ambient flex items-center justify-center gap-2">
           <span class="material-symbols-outlined text-lg">shield</span>
           Cập nhật mật khẩu
         </button>

@@ -55,6 +55,53 @@
   </section>
 <% } %>
 
+<% if (typeof chartData !== 'undefined' && chartData.length > 0) { %>
+<section class="rounded-2xl bg-white p-6 md:p-8 shadow-ambient mb-8">
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+    <div>
+      <p class="kinetic-label text-on-surface-variant">Booking trends</p>
+      <h3 class="kinetic-headline text-3xl">7-Day Activity</h3>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2 text-sm text-on-surface-variant">
+        <span class="w-3 h-3 rounded-full bg-primary"></span> Bookings
+      </div>
+    </div>
+  </div>
+
+  <div class="h-52 flex items-end justify-between gap-2">
+    <% chartData.forEach((item) => { %>
+      <% const height = Math.max((item.count / maxBookings) * 100, item.count > 0 ? 10 : 4); %>
+      <div class="flex-1 flex flex-col items-center gap-2 group">
+        <div class="w-full h-44 flex items-end">
+          <div class="w-full rounded-t-xl relative transition-all duration-300 group-hover:scale-105"
+               style="height: <%= height %>%; background: <%= item.count === peakDay.count && item.date === peakDay.date ? 'linear-gradient(135deg, #6a37d3, #ae8dff)' : 'rgba(106, 55, 211, 0.15)' %>;">
+            <div class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold text-on-surface opacity-0 group-hover:opacity-100 transition-opacity">
+              <%= item.count %>
+            </div>
+          </div>
+        </div>
+        <div class="text-center">
+          <p class="text-[10px] font-bold uppercase tracking-wide <%= item.date === peakDay.date ? 'text-primary' : 'text-on-surface-variant' %>"><%= item.shortLabel %></p>
+          <p class="text-[10px] text-on-surface-variant/60 mt-0.5"><%= item.fullLabel %></p>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+
+  <div class="mt-5 rounded-xl bg-surface-container-low p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+    <div>
+      <p class="kinetic-label text-on-surface-variant mb-1">Peak Day</p>
+      <p class="text-sm text-on-surface"><%= peakDay.shortLabel %> recorded <span class="text-primary font-bold"><%= peakDay.count %></span> bookings.</p>
+    </div>
+    <a href="/owner/bookings" class="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline">
+      View all bookings
+      <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+    </a>
+  </div>
+</section>
+<% } %>
+
 <section class="grid grid-cols-1 xl:grid-cols-[1.2fr_1fr] gap-6 mb-8">
   <div class="rounded-2xl bg-white p-6 md:p-8 shadow-ambient">
     <div class="flex items-center justify-between mb-5">
