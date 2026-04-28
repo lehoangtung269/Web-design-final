@@ -677,3 +677,102 @@ exports.updateField = async (req, res) => {
     res.redirect(`/owner/fields/${req.params.id}/edit`);
   }
 };
+
+exports.getSettings = async (req, res) => {
+  try {
+    const user = await User.findById(req.session.user._id).select('-password');
+    res.render('owner/settings', {
+      ...ownerLayout,
+      activeNav: 'settings',
+      title: 'Cài đặt tài khoản',
+      pageTitle: 'Cài đặt tài khoản',
+      user,
+    });
+  } catch (error) {
+    console.error('Lỗi lấy settings:', error);
+    req.flash('error', 'Lỗi tải trang cài đặt!');
+    res.redirect('/owner/dashboard');
+  }
+};
+
+exports.updateSettings = async (req, res) => {
+  try {
+    const { name, phone, bankName, accountNumber, accountName } = req.body;
+
+    await User.findByIdAndUpdate(req.session.user._id, {
+      name,
+      phone,
+      bankInfo: {
+        bankName,
+        accountNumber,
+        accountName,
+      }
+    });
+
+    req.session.user.name = name; // Update session
+    req.flash('success', 'Đã cập nhật thông tin thành công!');
+    res.redirect('/owner/settings');
+  } catch (error) {
+    console.error('Lỗi update settings:', error);
+    req.flash('error', 'Không thể lưu cài đặt. Vui lòng thử lại!');
+    res.redirect('/owner/settings');
+  }
+};
+
+exports.uploadQR = async (req, res) => {
+  try {
+    if (!req.cloudinaryUrl) {
+      req.flash('error', 'Vui lòng chọn ảnh QR để tải lên!');
+      return res.redirect('/owner/settings');
+    }
+
+    const updateData = {
+      paymentQR: {
+        url: req.cloudinaryUrl,
+        publicId: req.cloudinaryPublicId
+      }
+    };
+
+    await User.findByIdAndUpdate(req.session.user._id, updateData, { new: true });
+
+    req.flash('success', 'Đã tải lên QR code thanh toán thành công!');
+    res.redirect('/owner/settings');
+  } catch (error) {
+    console.error('Lỗi upload QR settings:', error);
+    req.flash('error', 'Chưa lưu được ảnh QR!');
+    res.redirect('/owner/settings');
+  }
+};
+
+exports.changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    if (newPassword !== confirmPassword) {
+      req.flash('error', 'Mật khẩu mới không khớp!');
+      return res.redirect('/owner/settings');
+    }
+
+    const user = await User.findById(req.session.user._id);
+    if (!user) {
+      req.flash('error', 'Không tìm thấy tài khoản!');
+      return res.redirect('/owner/settings');
+    }
+
+    const isMatch = await user.comparePassword(currentPassword);
+    if (!isMatch) {
+      req.flash('error', 'Mật khẩu hiện tại không đúng!');
+      return res.redirect('/owner/settings');
+    }
+
+    user.password = newPassword; // Will be hashed by pre-save hook
+    await user.save();
+
+    req.flash('success', 'Đổi mật khẩu thành công!');
+    res.redirect('/owner/settings');
+  } catch (error) {
+    console.error('Lỗi đổi mật khẩu:', error);
+    req.flash('error', 'Không thể đổi mật khẩu!');
+    res.redirect('/owner/settings');
+  }
+};

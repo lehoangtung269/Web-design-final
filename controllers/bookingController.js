@@ -6,6 +6,8 @@ const BookingService = require('../models/BookingService');
 const cloudinary = require('../config/cloudinary');
 const fs = require('fs');
 const { buildApprovedFieldFilter } = require('../utils/fieldApproval');
+const { generateBookingCode } = require('../utils/generateBookingCode');
+const { sendNewBookingUserEmail, sendNewBookingOwnerEmail } = require('../utils/emailService');
 
 // Helper: Parse 'YYYY-MM-DD' string as LOCAL midnight (not UTC)
 function parseLocalDate(dateStr) {
@@ -35,8 +37,10 @@ const getCheckout = async (req, res) => {
       return res.redirect(`/fields/${fieldId}`);
     }
 
-    // Lấy thông tin sân
-    const field = await Field.findOne(buildApprovedFieldFilter({ _id: fieldId, status: 'active' }));
+    // Lấy thông tin sân và chủ sân để lấy mã QR/Bank Info
+    const field = await Field.findOne(buildApprovedFieldFilter({ _id: fieldId, status: 'active' }))
+      .populate('owner', 'paymentQR bankInfo');
+
     if (!field) {
       req.flash('error', 'Không tìm thấy sân bóng!');
       return res.redirect('/fields');
@@ -152,6 +156,9 @@ const postBooking = async (req, res) => {
       }
     }
 
+    // Tạo mã đặt sân độc nhất
+    const bookingCode = await generateBookingCode();
+
     // Tạo booking mới
     const booking = await Booking.create({
       user: req.session.user._id,
@@ -166,11 +173,29 @@ const postBooking = async (req, res) => {
       finalTotal,
       paymentImage: paymentImageUrl,
       status: 'pending',
+      bookingCode,
     });
 
     // Lưu junction table BookingService
     if (bookingServicesData.length > 0) {
       await BookingService.insertMany(bookingServicesData.map(bs => ({ ...bs, booking: booking._id })));
+    }
+
+    // Phase 1: Gửi email thông báo (Chạy ngầm, không block request)
+    try {
+      // Gắn tạm thông tin user/field để template email hoạt động (vì model mới .create() chưa có populate đầy đủ)
+      booking.user = { name: req.session.user.name, phone: req.session.user.phone || 'N/A' };
+      booking.field = { name: field.name };
+
+      // Gửi email cho user
+      sendNewBookingUserEmail(req.session.user.email, booking).catch(e => console.error('Gửi email user lỗi:', e));
+
+      // Gửi email cho owner nếu owner có email
+      if (field.owner && field.owner.email) {
+        sendNewBookingOwnerEmail(field.owner.email, booking).catch(e => console.error('Gửi email owner lỗi:', e));
+      }
+    } catch (emailErr) {
+      console.error('Lỗi khi chuẩn bị gửi email:', emailErr);
     }
 
     req.flash('success', 'Đặt sân thành công! Đơn của bạn đang chờ Admin duyệt.');
@@ -247,10 +272,10 @@ const getHistory = async (req, res) => {
 
     const [bookings, total] = await Promise.all([
       Booking.find(filter)
-      .populate('field', 'name address type')
-      .sort({ createdAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(limit),
+        .populate('field', 'name address type')
+        .sort({ createdAt: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit),
       Booking.countDocuments(filter),
     ]);
 

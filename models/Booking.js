@@ -80,6 +80,13 @@ const bookingSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    // Mã đặt sân — sinh tự động khi tạo booking (DS-YYYYMMDD-XXXX)
+    bookingCode: {
+      type: String,
+      unique: true,
+      sparse: true, // Cho phép null/undefined trên các doc cũ
+      index: true,
+    },
   },
   {
     timestamps: true, // Tự động thêm createdAt và updatedAt

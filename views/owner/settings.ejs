@@ -1,0 +1,183 @@
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-bold text-on-surface tracking-tight kinetic-display">Cài đặt tài khoản</h1>
+            <p class="text-on-surface-variant text-sm mt-1">Cập nhật thông tin cá nhân và cấu hình thanh toán bằng mã QR
+            </p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Cột trái: Form thông tin cá nhân & Ngân hàng -->
+        <div class="lg:col-span-2 space-y-6">
+            <div class="bg-surface-container-lowest rounded-2xl shadow-ambient p-6">
+                <h2
+                    class="text-lg font-bold text-on-surface mb-6 border-b border-outline-variant pb-2 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">person</span> Thông tin cá nhân & Ngân hàng
+                </h2>
+
+                <form action="/owner/settings" method="POST" class="space-y-5">
+                    <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <!-- Tên -->
+                        <div>
+                            <label class="block text-sm font-semibold text-on-surface mb-2">Họ và tên</label>
+                            <input type="text" name="name" value="<%= user.name %>" required
+                                class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-4 py-3 text-on-surface font-medium focus:border-primary focus:bg-white focus:ring-1 focus:ring-primary focus:outline-none transition-all">
+                        </div>
+
+                        <!-- Điện thoại -->
+                        <div>
+                            <label class="block text-sm font-semibold text-on-surface mb-2">Số điện thoại</label>
+                            <input type="tel" name="phone" value="<%= user.phone %>" required
+                                class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-4 py-3 text-on-surface font-medium focus:border-primary focus:bg-white focus:ring-1 focus:ring-primary focus:outline-none transition-all">
+                        </div>
+                    </div>
+
+                    <div class="pt-4 mt-2 border-t border-outline-variant/50">
+                        <h3 class="text-sm font-bold text-on-surface-variant uppercase tracking-wider mb-4">Thông tin
+                            chuyển khoản</h3>
+
+                        <!-- Tên ngân hàng -->
+                        <div class="mb-4">
+                            <label class="block text-sm font-semibold text-on-surface mb-2">Tên ngân hàng</label>
+                            <input type="text" name="bankName"
+                                value="<%= user.bankInfo && user.bankInfo.bankName ? user.bankInfo.bankName : '' %>"
+                                placeholder="VD: Vietcombank, TPBank, Momo..."
+                                class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-4 py-3 text-on-surface font-medium focus:border-primary focus:bg-white focus:ring-1 focus:ring-primary focus:outline-none transition-all">
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <!-- Số tài khoản -->
+                            <div>
+                                <label class="block text-sm font-semibold text-on-surface mb-2">Số tài khoản</label>
+                                <input type="text" name="accountNumber"
+                                    value="<%= user.bankInfo && user.bankInfo.accountNumber ? user.bankInfo.accountNumber : '' %>"
+                                    placeholder="0123456789"
+                                    class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-4 py-3 text-on-surface font-medium focus:border-primary focus:bg-white focus:ring-1 focus:ring-primary focus:outline-none transition-all">
+                            </div>
+
+                            <!-- Tên chủ thẻ -->
+                            <div>
+                                <label class="block text-sm font-semibold text-on-surface mb-2">Tên chủ tài
+                                    khoản</label>
+                                <input type="text" name="accountName"
+                                    value="<%= user.bankInfo && user.bankInfo.accountName ? user.bankInfo.accountName : '' %>"
+                                    placeholder="NGUYEN VAN A"
+                                    class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-4 py-3 text-on-surface font-medium focus:border-primary focus:bg-white focus:ring-1 focus:ring-primary focus:outline-none transition-all uppercase">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end pt-4">
+                        <button type="submit"
+                            class="bg-primary text-white font-semibold py-3 px-8 rounded-xl hover:bg-primary-container hover:-translate-y-0.5 hover:text-primary transition-all duration-300 shadow-cta-glow flex items-center gap-2">
+                            <span class="material-symbols-outlined">save</span>
+                            Lưu thông tin
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="bg-surface-container-lowest rounded-2xl shadow-ambient p-6">
+                <h2
+                    class="text-lg font-bold text-on-surface mb-6 border-b border-outline-variant pb-2 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">lock_reset</span> Đổi mật khẩu
+                </h2>
+
+                <form action="/owner/settings/password" method="POST" class="space-y-5">
+                    <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+
+                    <div>
+                        <label class="block text-sm font-semibold text-on-surface mb-2">Mật khẩu hiện tại</label>
+                        <input type="password" name="currentPassword" required
+                            class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-4 py-3 text-on-surface focus:border-primary focus:bg-white focus:ring-1 focus:ring-primary focus:outline-none transition-all">
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-sm font-semibold text-on-surface mb-2">Mật khẩu mới</label>
+                            <input type="password" name="newPassword" required minlength="6"
+                                class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-4 py-3 text-on-surface focus:border-primary focus:bg-white focus:ring-1 focus:ring-primary focus:outline-none transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-on-surface mb-2">Nhập lại mật khẩu
+                                mới</label>
+                            <input type="password" name="confirmPassword" required minlength="6"
+                                class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-4 py-3 text-on-surface focus:border-primary focus:bg-white focus:ring-1 focus:ring-primary focus:outline-none transition-all">
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end pt-4 mt-2 border-t border-outline-variant/50">
+                        <button type="submit"
+                            class="bg-surface-container-highest text-on-surface font-semibold py-3 px-8 rounded-xl hover:bg-error hover:text-white transition-all duration-300 flex items-center gap-2">
+                            <span class="material-symbols-outlined">key</span>
+                            Cập nhật mật khẩu
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Cột phải: Upload mã QR -->
+        <div class="lg:col-span-1">
+            <div class="bg-surface-container-lowest rounded-2xl shadow-ambient p-6 h-full">
+                <h2
+                    class="text-lg font-bold text-on-surface mb-6 border-b border-outline-variant pb-2 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">qr_code_2</span> Mã QR Thanh toán
+                </h2>
+
+                <div class="text-center">
+                    <!-- Hiển thị QR cũ -->
+                    <% if (user.paymentQR && user.paymentQR.url) { %>
+                        <div
+                            class="w-48 h-48 mx-auto mb-6 rounded-xl overflow-hidden border-2 border-primary/20 shadow-sm relative group bg-white p-2">
+                            <img src="<%= user.paymentQR.url %>" alt="QR Code" class="w-full h-full object-contain">
+                            <div
+                                class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-xl">
+                                <a href="<%= user.paymentQR.url %>" target="_blank"
+                                    class="text-white hover:text-primary transition-colors">
+                                    <span class="material-symbols-outlined text-3xl">open_in_new</span>
+                                </a>
+                            </div>
+                        </div>
+                        <p class="text-sm text-success font-medium mb-6 flex items-center justify-center gap-1">
+                            <span class="material-symbols-outlined text-base">check_circle</span>
+                            Đã tải lên mã QR
+                        </p>
+                        <% } else { %>
+                            <div
+                                class="w-48 h-48 mx-auto mb-6 rounded-xl border-2 border-dashed border-outline-variant bg-surface-container flex flex-col items-center justify-center text-on-surface-variant">
+                                <span class="material-symbols-outlined text-5xl mb-2">no_photography</span>
+                                <span class="text-xs font-semibold">Chưa có mã QR</span>
+                            </div>
+                            <% } %>
+
+                                <!-- Form upload QR mới -->
+                                <form action="/owner/settings/qr" method="POST" enctype="multipart/form-data"
+                                    class="mt-4">
+                                    <input type="hidden" name="_csrf"
+                                        value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+
+                                    <div class="mb-4 text-left">
+                                        <label
+                                            class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Tải
+                                            lên QR mới</label>
+                                        <input type="file" name="qrImage" accept="image/*" required
+                                            class="w-full text-sm text-on-surface file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary hover:file:text-white transition-all cursor-pointer bg-surface-container-low rounded-xl">
+                                        <p class="text-[11px] text-on-surface-variant mt-2">Định dạng JPG, PNG (Tối đa
+                                            5MB).</p>
+                                    </div>
+
+                                    <button type="submit"
+                                        class="w-full bg-surface-container-highest text-on-surface hover:bg-primary hover:text-white font-semibold py-2.5 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2">
+                                        <span class="material-symbols-outlined">upload</span>
+                                        Tải lên ngay
+                                    </button>
+                                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

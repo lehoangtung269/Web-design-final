@@ -5,7 +5,7 @@ const serviceController = require('../controllers/serviceController');
 const { isAuthenticated } = require('../middlewares/authMiddleware');
 const { authorizeRole } = require('../middlewares/roleMiddleware');
 const asyncHandler = require('../middlewares/asyncHandler');
-const { uploadFieldImages, uploadServiceImage } = require('../middlewares/uploadMiddleware');
+const { uploadFieldImages, uploadServiceImage, uploadPaymentQR } = require('../middlewares/uploadMiddleware');
 const Field = require('../models/Field');
 
 router.use(isAuthenticated, authorizeRole('field_owner'));
@@ -38,6 +38,20 @@ router.get('/fields/create', asyncHandler(ownerController.showCreateField));
 router.post('/fields', uploadFieldImages, asyncHandler(ownerController.createField));
 router.get('/fields/:id/edit', asyncHandler(ownerController.showEditField));
 router.post('/fields/:id', uploadFieldImages, asyncHandler(ownerController.updateField));
+
+// ================================
+// Tra cứu mã đặt sân (Phase 3)
+// ================================
+router.get('/check-booking', asyncHandler(ownerController.showCheckBooking));
+router.post('/check-booking', asyncHandler(ownerController.processCheckBooking));
+
+// ================================
+// Cài đặt tài khoản (Phase 4 & 5)
+// ================================
+router.get('/settings', asyncHandler(ownerController.getSettings));
+router.post('/settings', asyncHandler(ownerController.updateSettings));
+router.post('/settings/qr', uploadPaymentQR, asyncHandler(ownerController.uploadQR));
+router.post('/settings/password', asyncHandler(ownerController.changePassword));
 
 // ============================================
 // SERVICE MANAGEMENT ROUTES

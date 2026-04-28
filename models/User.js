@@ -48,6 +48,15 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    paymentQR: {
+      url: String,
+      publicId: String, // Cloudinary
+    },
+    bankInfo: {
+      bankName: String,
+      accountNumber: String,
+      accountName: String,
+    },
   },
   {
     timestamps: true, // Tự động thêm createdAt và updatedAt

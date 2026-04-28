@@ -4,7 +4,8 @@
       <p class="kinetic-label text-on-surface-variant mb-2">USER ARCHIVE</p>
       <h1 class="kinetic-headline text-4xl text-on-surface tracking-tighter">LỊCH SỬ ĐẶT SÂN</h1>
     </div>
-    <div class="bg-surface-container text-on-surface px-5 py-2 rounded-full text-sm font-['Space_Grotesk'] font-bold tracking-widest">
+    <div
+      class="bg-surface-container text-on-surface px-5 py-2 rounded-full text-sm font-['Space_Grotesk'] font-bold tracking-widest">
       <%= pagination ? pagination.total : bookings.length %> ĐƠN
     </div>
   </div>
@@ -14,111 +15,152 @@
     <form action="/history" method="GET" class="flex flex-col sm:flex-row gap-3">
       <label class="flex items-center gap-2 flex-1 rounded-full bg-white px-4 py-2.5 text-sm">
         <span class="material-symbols-outlined text-on-surface-variant text-lg">search</span>
-        <input name="search" type="text" value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>" placeholder="Tìm theo tên sân, địa chỉ..." class="w-full border-none focus:ring-0 p-0 bg-transparent text-on-surface placeholder-on-surface-variant/50" />
+        <input name="search" type="text" value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
+          placeholder="Tìm theo tên sân, địa chỉ..."
+          class="w-full border-none focus:ring-0 p-0 bg-transparent text-on-surface placeholder-on-surface-variant/50" />
       </label>
       <input type="hidden" name="status" value="<%= typeof statusFilter !== 'undefined' ? statusFilter : 'all' %>" />
-      <button type="submit" class="rounded-full bg-primary text-white px-6 py-2.5 text-sm font-semibold hover:shadow-cta-glow transition-all duration-300">
+      <button type="submit"
+        class="rounded-full bg-primary text-white px-6 py-2.5 text-sm font-semibold hover:shadow-cta-glow transition-all duration-300">
         Tìm kiếm
       </button>
     </form>
     <div class="flex flex-wrap gap-2 mt-3">
-      <% const sf = typeof statusFilter !== 'undefined' ? statusFilter : 'all'; %>
-      <% const sq = typeof searchQuery !== 'undefined' && searchQuery ? '&search=' + encodeURIComponent(searchQuery) : ''; %>
-      <a href="/history?status=all<%= sq %>" class="px-4 py-1.5 rounded-full text-xs font-bold font-['Space_Grotesk'] uppercase tracking-widest transition-all duration-300 <%= sf === 'all' ? 'bg-primary text-white shadow-cta-glow' : 'bg-white text-on-surface-variant hover:text-primary' %>">Tất cả</a>
-      <a href="/history?status=pending<%= sq %>" class="px-4 py-1.5 rounded-full text-xs font-bold font-['Space_Grotesk'] uppercase tracking-widest transition-all duration-300 <%= sf === 'pending' ? 'bg-amber-500 text-white' : 'bg-white text-on-surface-variant hover:text-amber-600' %>">Chờ duyệt</a>
-      <a href="/history?status=confirmed<%= sq %>" class="px-4 py-1.5 rounded-full text-xs font-bold font-['Space_Grotesk'] uppercase tracking-widest transition-all duration-300 <%= sf === 'confirmed' ? 'bg-primary text-white shadow-cta-glow' : 'bg-white text-on-surface-variant hover:text-primary' %>">Đã duyệt</a>
-      <a href="/history?status=rejected<%= sq %>" class="px-4 py-1.5 rounded-full text-xs font-bold font-['Space_Grotesk'] uppercase tracking-widest transition-all duration-300 <%= sf === 'rejected' ? 'bg-red-500 text-white' : 'bg-white text-on-surface-variant hover:text-red-500' %>">Từ chối</a>
-      <a href="/history?status=cancelled<%= sq %>" class="px-4 py-1.5 rounded-full text-xs font-bold font-['Space_Grotesk'] uppercase tracking-widest transition-all duration-300 <%= sf === 'cancelled' ? 'bg-surface-container-high text-on-surface' : 'bg-white text-on-surface-variant hover:text-on-surface' %>">Đã hủy</a>
+      <% const sf=typeof statusFilter !=='undefined' ? statusFilter : 'all' ; %>
+        <% const sq=typeof searchQuery !=='undefined' && searchQuery ? '&search=' + encodeURIComponent(searchQuery) : ''
+          ; %>
+          <a href="/history?status=all<%= sq %>"
+            class="px-4 py-1.5 rounded-full text-xs font-bold font-['Space_Grotesk'] uppercase tracking-widest transition-all duration-300 <%= sf === 'all' ? 'bg-primary text-white shadow-cta-glow' : 'bg-white text-on-surface-variant hover:text-primary' %>">Tất
+            cả</a>
+          <a href="/history?status=pending<%= sq %>"
+            class="px-4 py-1.5 rounded-full text-xs font-bold font-['Space_Grotesk'] uppercase tracking-widest transition-all duration-300 <%= sf === 'pending' ? 'bg-amber-500 text-white' : 'bg-white text-on-surface-variant hover:text-amber-600' %>">Chờ
+            duyệt</a>
+          <a href="/history?status=confirmed<%= sq %>"
+            class="px-4 py-1.5 rounded-full text-xs font-bold font-['Space_Grotesk'] uppercase tracking-widest transition-all duration-300 <%= sf === 'confirmed' ? 'bg-primary text-white shadow-cta-glow' : 'bg-white text-on-surface-variant hover:text-primary' %>">Đã
+            duyệt</a>
+          <a href="/history?status=rejected<%= sq %>"
+            class="px-4 py-1.5 rounded-full text-xs font-bold font-['Space_Grotesk'] uppercase tracking-widest transition-all duration-300 <%= sf === 'rejected' ? 'bg-red-500 text-white' : 'bg-white text-on-surface-variant hover:text-red-500' %>">Từ
+            chối</a>
+          <a href="/history?status=cancelled<%= sq %>"
+            class="px-4 py-1.5 rounded-full text-xs font-bold font-['Space_Grotesk'] uppercase tracking-widest transition-all duration-300 <%= sf === 'cancelled' ? 'bg-surface-container-high text-on-surface' : 'bg-white text-on-surface-variant hover:text-on-surface' %>">Đã
+            hủy</a>
     </div>
   </div>
 
-  <% if (bookings.length === 0) { %>
+  <% if (bookings.length===0) { %>
     <div class="bg-surface-container-lowest rounded-2xl shadow-ambient p-20 text-center">
       <div class="w-24 h-24 bg-surface-container rounded-full flex items-center justify-center mx-auto mb-6">
         <span class="material-symbols-outlined text-5xl text-on-surface-variant">calendar_month</span>
       </div>
       <h2 class="kinetic-headline text-2xl text-on-surface mb-2">CHƯA CÓ ĐƠN NÀO</h2>
       <p class="text-on-surface-variant font-light mb-8">Hãy tìm sân bóng phù hợp và bắt đầu ngay hôm nay!</p>
-      <a href="/fields" class="inline-flex items-center gap-2 bg-primary hover:bg-primary-container text-white hover:text-primary px-8 py-4 rounded-full font-bold transition-all duration-300 shadow-cta-glow uppercase text-xs tracking-widest font-['Space_Grotesk']">
+      <a href="/fields"
+        class="inline-flex items-center gap-2 bg-primary hover:bg-primary-container text-white hover:text-primary px-8 py-4 rounded-full font-bold transition-all duration-300 shadow-cta-glow uppercase text-xs tracking-widest font-['Space_Grotesk']">
         <span class="material-symbols-outlined text-[18px]">search</span>
         KHÁM PHÁ
       </a>
     </div>
-  <% } else { %>
-    <div class="grid grid-cols-1 gap-6">
-      <% bookings.forEach(function(booking) { %>
-        <div class="block bg-surface-container-lowest rounded-2xl p-6 md:p-8 shadow-sm hover:shadow-ambient transition-all duration-500 group relative overflow-hidden">
-          
-          <div class="flex flex-col md:flex-row items-center gap-6">
-            <!-- Left Info -->
-            <div class="flex-1 w-full text-center md:text-left">
-              <h3 class="text-2xl font-black tracking-tighter text-on-surface mb-1 group-hover:text-primary transition-colors"><%= booking.field ? booking.field.name : 'N/A' %></h3>
-              <p class="text-xs text-on-surface-variant font-medium flex items-center justify-center md:justify-start gap-1">
-                <span class="material-symbols-outlined text-[14px]">location_on</span>
-                <span class="truncate"><%= booking.field ? booking.field.address : 'Đã xóa' %></span>
-              </p>
-            </div>
+    <% } else { %>
+      <div class="grid grid-cols-1 gap-6">
+        <% bookings.forEach(function(booking) { %>
+          <div
+            class="block bg-surface-container-lowest rounded-2xl p-6 md:p-8 shadow-sm hover:shadow-ambient transition-all duration-500 group relative overflow-hidden">
 
-            <!-- Middle Time -->
-            <div class="flex-1 w-full flex flex-col items-center justify-center bg-surface-container-low rounded-2xl py-4">
-              <div class="font-['Space_Grotesk'] font-bold text-lg text-primary mb-1">
-                <%= new Date(booking.date).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' }) %>
+            <div class="flex flex-col md:flex-row items-center gap-6">
+              <!-- Left Info -->
+              <div class="flex-1 w-full text-center md:text-left">
+                <h3
+                  class="text-2xl font-black tracking-tighter text-on-surface mb-1 group-hover:text-primary transition-colors">
+                  <%= booking.field ? booking.field.name : 'N/A' %>
+                </h3>
+                <p
+                  class="text-xs text-on-surface-variant font-medium flex items-center justify-center md:justify-start gap-1 mb-1">
+                  <span class="material-symbols-outlined text-[14px]">location_on</span>
+                  <span class="truncate">
+                    <%= booking.field ? booking.field.address : 'Đã xóa' %>
+                  </span>
+                </p>
+                <% if (booking.bookingCode) { %>
+                  <p
+                    class="text-xs bg-surface-container-highest inline-block px-2 py-0.5 rounded text-on-surface font-bold tracking-wider">
+                    MÃ: <%= booking.bookingCode %>
+                  </p>
+                  <% } %>
               </div>
-              <div class="kinetic-label text-on-surface-variant flex items-center gap-1">
-                <span class="material-symbols-outlined text-[14px]">schedule</span>
-                <%= booking.startTime %> — <%= booking.endTime %>
-              </div>
-            </div>
 
-            <!-- Right Status -->
-            <div class="flex-1 w-full flex flex-col items-center justify-center">
-              <div class="text-2xl font-black text-on-surface mb-2"><%= booking.totalPrice.toLocaleString('vi-VN') %>đ</div>
-              
-              <% if (booking.status === 'pending') { %>
-                <span class="inline-flex items-center gap-1.5 bg-amber-50 text-amber-600 px-4 py-1.5 rounded-full text-xs font-bold font-['Space_Grotesk'] uppercase tracking-widest shadow-sm">
-                  <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> CHỜ DUYỆT
-                </span>
-              <% } else if (booking.status === 'confirmed') { %>
-                <span class="inline-flex items-center gap-1 bg-surface-container-low text-primary px-4 py-1.5 rounded-full text-xs font-bold font-['Space_Grotesk'] uppercase tracking-widest shadow-sm">
-                  <span class="material-symbols-outlined text-[16px]">check_circle</span> ĐÃ DUYỆT
-                </span>
-              <% } else if (booking.status === 'rejected') { %>
-                <span class="inline-flex items-center gap-1 bg-error/10 text-error px-4 py-1.5 rounded-full text-xs font-bold font-['Space_Grotesk'] uppercase tracking-widest shadow-sm">
-                  <span class="material-symbols-outlined text-[16px]">cancel</span> TỪ CHỐI
-                </span>
-              <% } else { %>
-                <span class="inline-flex items-center gap-1 bg-surface-container text-on-surface-variant px-4 py-1.5 rounded-full text-xs font-bold font-['Space_Grotesk'] uppercase tracking-widest shadow-sm">
-                  <span class="material-symbols-outlined text-[16px]">event_busy</span> ĐÃ HỦY
-                </span>
-              <% } %>
-            </div>
-            
-            <!-- Hover Arrow -->
-            <div class="hidden md:flex items-center justify-center gap-2">
-              <% if (booking.status === 'pending') { %>
-                <form action="/history/<%= booking._id %>/cancel" method="POST" onsubmit="return confirm('Bạn chắc chắn muốn hủy đơn này?');">
-                  <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-                  <button type="submit" class="px-4 py-2 rounded-full bg-error/10 text-error hover:bg-error hover:text-white transition-colors text-xs font-bold tracking-widest">
-                    HỦY ĐƠN
-                  </button>
-                </form>
-              <% } %>
-              <a href="/checkout/confirmation/<%= booking._id %>" class="w-12 h-12 rounded-full bg-surface-container group-hover:bg-primary text-on-surface-variant group-hover:text-white transition-all duration-300 flex items-center justify-center">
-                <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
-              </a>
+              <!-- Middle Time -->
+              <div
+                class="flex-1 w-full flex flex-col items-center justify-center bg-surface-container-low rounded-2xl py-4">
+                <div class="font-['Space_Grotesk'] font-bold text-lg text-primary mb-1">
+                  <%= new Date(booking.date).toLocaleDateString('vi-VN', { day: '2-digit' , month: '2-digit' ,
+                    year: 'numeric' }) %>
+                </div>
+                <div class="kinetic-label text-on-surface-variant flex items-center gap-1">
+                  <span class="material-symbols-outlined text-[14px]">schedule</span>
+                  <%= booking.startTime %> — <%= booking.endTime %>
+                </div>
+              </div>
+
+              <!-- Right Status -->
+              <div class="flex-1 w-full flex flex-col items-center justify-center">
+                <div class="text-2xl font-black text-on-surface mb-2">
+                  <%= booking.totalPrice.toLocaleString('vi-VN') %>đ
+                </div>
+
+                <% if (booking.status==='pending' ) { %>
+                  <span
+                    class="inline-flex items-center gap-1.5 bg-amber-50 text-amber-600 px-4 py-1.5 rounded-full text-xs font-bold font-['Space_Grotesk'] uppercase tracking-widest shadow-sm">
+                    <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> CHỜ DUYỆT
+                  </span>
+                  <% } else if (booking.status==='confirmed' ) { %>
+                    <span
+                      class="inline-flex items-center gap-1 bg-surface-container-low text-primary px-4 py-1.5 rounded-full text-xs font-bold font-['Space_Grotesk'] uppercase tracking-widest shadow-sm">
+                      <span class="material-symbols-outlined text-[16px]">check_circle</span> ĐÃ DUYỆT
+                    </span>
+                    <% } else if (booking.status==='rejected' ) { %>
+                      <span
+                        class="inline-flex items-center gap-1 bg-error/10 text-error px-4 py-1.5 rounded-full text-xs font-bold font-['Space_Grotesk'] uppercase tracking-widest shadow-sm">
+                        <span class="material-symbols-outlined text-[16px]">cancel</span> TỪ CHỐI
+                      </span>
+                      <% } else { %>
+                        <span
+                          class="inline-flex items-center gap-1 bg-surface-container text-on-surface-variant px-4 py-1.5 rounded-full text-xs font-bold font-['Space_Grotesk'] uppercase tracking-widest shadow-sm">
+                          <span class="material-symbols-outlined text-[16px]">event_busy</span> ĐÃ HỦY
+                        </span>
+                        <% } %>
+              </div>
+
+              <!-- Hover Arrow -->
+              <div class="hidden md:flex items-center justify-center gap-2">
+                <% if (booking.status==='pending' ) { %>
+                  <form action="/history/<%= booking._id %>/cancel" method="POST"
+                    onsubmit="return confirm('Bạn chắc chắn muốn hủy đơn này?');">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                    <button type="submit"
+                      class="px-4 py-2 rounded-full bg-error/10 text-error hover:bg-error hover:text-white transition-colors text-xs font-bold tracking-widest">
+                      HỦY ĐƠN
+                    </button>
+                  </form>
+                  <% } %>
+                    <a href="/checkout/confirmation/<%= booking._id %>"
+                      class="w-12 h-12 rounded-full bg-surface-container group-hover:bg-primary text-on-surface-variant group-hover:text-white transition-all duration-300 flex items-center justify-center">
+                      <span
+                        class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </a>
+              </div>
             </div>
           </div>
-        </div>
-      <% }); %>
-    </div>
-    <% if (pagination && pagination.totalPages > 1) { %>
-      <div class="mt-8 flex items-center justify-center gap-2">
-        <% for (let i = 1; i <= pagination.totalPages; i++) { %>
-          <a href="/history?page=<%= i %>" class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold <%= pagination.page === i ? 'bg-primary text-white' : 'bg-surface-container text-on-surface hover:bg-surface-container-high' %>">
-            <%= i %>
-          </a>
-        <% } %>
+          <% }); %>
       </div>
-    <% } %>
-  <% } %>
+      <% if (pagination && pagination.totalPages> 1) { %>
+        <div class="mt-8 flex items-center justify-center gap-2">
+          <% for (let i=1; i <=pagination.totalPages; i++) { %>
+            <a href="/history?page=<%= i %>"
+              class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold <%= pagination.page === i ? 'bg-primary text-white' : 'bg-surface-container text-on-surface hover:bg-surface-container-high' %>">
+              <%= i %>
+            </a>
+            <% } %>
+        </div>
+        <% } %>
+          <% } %>
 </div>

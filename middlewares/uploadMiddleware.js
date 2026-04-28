@@ -98,4 +98,41 @@ const uploadServiceImage = (req, res, next) => {
   });
 };
 
-module.exports = { uploadFieldImages, uploadServiceImage };
+// ================================
+// Middleware: Upload ảnh QR Code Thanh Toán (Phần 4)
+// Tiên quyết: Chỉ hỗ trợ 1 ảnh
+// ================================
+const uploadPaymentQR = (req, res, next) => {
+  const multerUpload = upload.single('qrImage');
+
+  multerUpload(req, res, async (err) => {
+    if (err) {
+      req.flash('error', err.message || 'Lỗi upload ảnh QR!');
+      return res.redirect('back');
+    }
+
+    if (!req.file) {
+      return next();
+    }
+
+    try {
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: 'payment-qr',
+        transformation: [{ width: 400, height: 400, crop: 'fit', quality: 'auto' }]
+      });
+
+      req.cloudinaryUrl = result.secure_url;
+      req.cloudinaryPublicId = result.public_id;
+
+      fs.unlink(req.file.path, () => { });
+      next();
+    } catch (uploadError) {
+      console.error('Cloudinary QR Upload Error:', uploadError);
+      try { fs.unlinkSync(req.file.path); } catch (e) { }
+      req.flash('error', 'Lỗi lưu trữ ảnh QR!');
+      return res.redirect('back');
+    }
+  });
+};
+
+module.exports = { uploadFieldImages, uploadServiceImage, uploadPaymentQR };

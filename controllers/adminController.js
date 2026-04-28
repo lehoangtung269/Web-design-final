@@ -3,6 +3,7 @@ const User = require('../models/User');
 const Booking = require('../models/Booking');
 const Field = require('../models/Field');
 const TimeSlot = require('../models/TimeSlot');
+const BookingService = require('../models/BookingService');
 const { sendBookingConfirmationAsync } = require('../utils/emailService');
 const {
   APPROVAL_STATUS,
@@ -858,15 +859,17 @@ const deleteField = async (req, res) => {
       status: { $in: ['confirmed', 'pending'] },
     });
     if (activeBookings > 0) {
-      req.flash('error', `Không thể xóa sân vì còn ${activeBookings} đơn đặt đang hoạt động (đã duyệt/chờ duyệt). Vui lòng xử lý hết trước!`);
+      req.flash('error', `Không thể xóa sân vì còn ${activeBookings} đơn đặt đang hoạt động (đã duyệt/chờ duyệt). Vui lòng hủy hoặc từ chối hết trước!`);
       return res.redirect('/admin/fields');
     }
 
-    // Xóa tất cả Booking và TimeSlot liên kết để tránh rác dữ liệu
+    // Cascade delete: BookingService → Booking → TimeSlot → Field
+    const bookingIds = await Booking.find({ field: id }).distinct('_id');
+    if (bookingIds.length > 0) {
+      await BookingService.deleteMany({ booking: { $in: bookingIds } });
+    }
     await Booking.deleteMany({ field: id });
     await TimeSlot.deleteMany({ field: id });
-
-    // Sau đó mới xóa Sân bóng
     await Field.findByIdAndDelete(id);
 
     req.flash('success', 'Đã xóa sân thành công!');

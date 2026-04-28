@@ -729,20 +729,25 @@
 <div class="checkout-wrapper">
 
   <!-- Brand Header & Navigation -->
-  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; flex-wrap: wrap; gap: 16px;">
+  <div
+    style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; flex-wrap: wrap; gap: 16px;">
     <div style="display: flex; align-items: center; gap: 16px;">
-      <a href="/" style="font-size: 22px; font-weight: 900; font-style: normal; color: #2d1570; text-decoration: none; display: flex; align-items: center; gap: 6px;">
+      <a href="/"
+        style="font-size: 22px; font-weight: 900; font-style: normal; color: #2d1570; text-decoration: none; display: flex; align-items: center; gap: 6px;">
         ⚽ DatSan.vn
       </a>
       <div style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #94a3b8;">
         <a href="/" style="color: #6a37d3; text-decoration: none; font-weight: 600;">Trang chủ</a>
         <span class="material-symbols-outlined" style="font-size: 14px;">chevron_right</span>
-        <a href="/fields/<%= field._id %>" style="color: #6a37d3; text-decoration: none; font-weight: 600;"><%= field.name %></a>
+        <a href="/fields/<%= field._id %>" style="color: #6a37d3; text-decoration: none; font-weight: 600;">
+          <%= field.name %>
+        </a>
         <span class="material-symbols-outlined" style="font-size: 14px;">chevron_right</span>
         <span style="color: #0f172a; font-weight: 700;">Thanh toán</span>
       </div>
     </div>
-    <div style="display: flex; align-items: center; gap: 8px; background: #f4f0ff; padding: 8px 16px; border-radius: 12px; border: 1px solid #e0d5ff;">
+    <div
+      style="display: flex; align-items: center; gap: 8px; background: #f4f0ff; padding: 8px 16px; border-radius: 12px; border: 1px solid #e0d5ff;">
       <span class="material-symbols-outlined" style="font-size: 18px; color: #6a37d3;">support_agent</span>
       <span style="font-size: 12px; font-weight: 700; color: #5025a5;">Hotline: 1900-xxxx</span>
     </div>
@@ -789,8 +794,17 @@
 
         <!-- QR Code Image -->
         <div class="qr-image-wrapper">
-          <img src="/public/images/qr_bank1.jpg" alt="QR Code Thanh Toán"
-            style="width: 100%; height: 100%; object-fit: contain; border-radius: 10px;" />
+          <% if (field.owner && field.owner.paymentQR && field.owner.paymentQR.url) { %>
+            <img src="<%= field.owner.paymentQR.url %>" alt="QR Code Thanh Toán"
+              style="width: 100%; height: 100%; object-fit: contain; border-radius: 10px;" />
+            <% } else { %>
+              <div class="qr-placeholder">
+                <span class="material-symbols-outlined" style="font-size: 48px; color: #ae8dff;">no_photography</span>
+                <span style="font-size: 13px; font-weight: 700; color: #6a37d3; text-align: center;">
+                  Chủ sân chưa cập nhật<br>mã QR thanh toán
+                </span>
+              </div>
+              <% } %>
         </div>
 
 
@@ -890,41 +904,51 @@
           Thông tin chuyển khoản
         </div>
 
-        <div class="bank-row">
-          <span class="bank-row-label">Ngân hàng</span>
-          <span class="bank-row-value">Vietcombank</span>
-        </div>
-        <div class="bank-row">
-          <span class="bank-row-label">Chủ tài khoản</span>
-          <span class="bank-row-value">DAT SAN VN</span>
-        </div>
-        <div class="bank-row">
-          <span class="bank-row-label">Số tài khoản</span>
-          <span class="bank-row-value">
-            1935442985
-            <button class="copy-btn" id="copy-account" onclick="copyToClipboard('1935442985', this)"
-              title="Sao chép STK">
-              <span class="material-symbols-outlined" style="font-size: 16px;">content_copy</span>
-            </button>
-          </span>
-        </div>
-        <div class="bank-row highlight">
-          <span class="bank-row-label">Nội dung chuyển khoản</span>
-          <span class="bank-row-value">
-            <strong id="transfer-content">DATSAN <%= currentUser.phone %></strong>
-            <button class="copy-btn-green" id="copy-content"
-              onclick="copyToClipboard('DATSAN <%= currentUser.phone %>', this)" title="Sao chép nội dung">
-              <span class="material-symbols-outlined" style="font-size: 14px;">content_copy</span>
-            </button>
-          </span>
-        </div>
+        <% if (field.owner && field.owner.bankInfo && field.owner.bankInfo.accountNumber) { %>
+          <div class="bank-row">
+            <span class="bank-row-label">Ngân hàng</span>
+            <span class="bank-row-value">
+              <%= field.owner.bankInfo.bankName || 'N/A' %>
+            </span>
+          </div>
+          <div class="bank-row">
+            <span class="bank-row-label">Chủ tài khoản</span>
+            <span class="bank-row-value">
+              <%= field.owner.bankInfo.accountName || 'N/A' %>
+            </span>
+          </div>
+          <div class="bank-row">
+            <span class="bank-row-label">Số tài khoản</span>
+            <span class="bank-row-value">
+              <%= field.owner.bankInfo.accountNumber %>
+                <button class="copy-btn" id="copy-account"
+                  onclick="copyToClipboard('<%= field.owner.bankInfo.accountNumber %>', this)" title="Sao chép STK">
+                  <span class="material-symbols-outlined" style="font-size: 16px;">content_copy</span>
+                </button>
+            </span>
+          </div>
+          <% } else { %>
+            <div class="bank-row text-center text-sm text-slate-500 py-3 block">
+              Chủ sân chưa cập nhật thông tin tài khoản ngân hàng.
+            </div>
+            <% } %>
+              <div class="bank-row highlight">
+                <span class="bank-row-label">Nội dung chuyển khoản</span>
+                <span class="bank-row-value">
+                  <strong id="transfer-content">DATSAN <%= currentUser.phone %></strong>
+                  <button class="copy-btn-green" id="copy-content"
+                    onclick="copyToClipboard('DATSAN <%= currentUser.phone %>', this)" title="Sao chép nội dung">
+                    <span class="material-symbols-outlined" style="font-size: 14px;">content_copy</span>
+                  </button>
+                </span>
+              </div>
 
-        <div class="total-row">
-          <span class="total-label">Tổng thanh toán</span>
-          <span class="total-amount">
-            <%= totalPrice.toLocaleString('vi-VN') %>đ
-          </span>
-        </div>
+              <div class="total-row">
+                <span class="total-label">Tổng thanh toán</span>
+                <span class="total-amount">
+                  <%= totalPrice.toLocaleString('vi-VN') %>đ
+                </span>
+              </div>
       </div>
 
       <!-- Upload Section + Form -->
@@ -993,9 +1017,12 @@
 
             <div class="mb-4 rounded-xl bg-amber-50 border border-amber-200 p-4">
               <p class="text-sm font-semibold text-amber-800 mb-2">Checklist trước khi gửi</p>
-              <label class="flex items-center gap-2 text-sm text-amber-900 mb-1"><input type="checkbox" class="confirm-check" /> Đã chuyển đúng số tiền</label>
-              <label class="flex items-center gap-2 text-sm text-amber-900 mb-1"><input type="checkbox" class="confirm-check" /> Đã điền đúng nội dung chuyển khoản</label>
-              <label class="flex items-center gap-2 text-sm text-amber-900"><input type="checkbox" class="confirm-check" /> Ảnh biên lai rõ ràng, đúng giao dịch</label>
+              <label class="flex items-center gap-2 text-sm text-amber-900 mb-1"><input type="checkbox"
+                  class="confirm-check" /> Đã chuyển đúng số tiền</label>
+              <label class="flex items-center gap-2 text-sm text-amber-900 mb-1"><input type="checkbox"
+                  class="confirm-check" /> Đã điền đúng nội dung chuyển khoản</label>
+              <label class="flex items-center gap-2 text-sm text-amber-900"><input type="checkbox"
+                  class="confirm-check" /> Ảnh biên lai rõ ràng, đúng giao dịch</label>
             </div>
 
             <div class="checkout-actions">

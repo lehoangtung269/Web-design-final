@@ -1,0 +1,230 @@
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-bold text-on-surface tracking-tight kinetic-display">Tra cứu mã đặt sân</h1>
+            <p class="text-on-surface-variant text-sm mt-1">Kiểm tra thông tin đặt sân thông qua mã số (Mã có định dạng
+                DS-YYYYMMDD-XXXX)</p>
+        </div>
+    </div>
+
+    <!-- Search Card -->
+    <div class="bg-surface-container-lowest rounded-2xl shadow-ambient p-6">
+        <form action="/owner/check-booking" method="POST" class="max-w-xl mx-auto flex flex-col md:flex-row gap-3">
+            <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+            <div class="relative flex-1">
+                <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-on-surface-variant">
+                    <span class="material-symbols-outlined">search</span>
+                </span>
+                <input type="text" name="code" value="<%= searchedCode || '' %>" placeholder="Ví dụ: DS-20250428-A7F3"
+                    required
+                    class="w-full bg-surface-container-low border border-outline-variant rounded-xl pl-12 pr-4 py-3 text-on-surface font-medium placeholder-gray-400 focus:border-primary focus:bg-white focus:ring-1 focus:ring-primary focus:outline-none transition-all uppercase">
+            </div>
+            <button type="submit"
+                class="bg-primary text-white font-semibold py-3 px-6 rounded-xl hover:bg-primary-container hover:-translate-y-0.5 hover:text-primary transition-all duration-300 shadow-cta-glow flex items-center justify-center gap-2 whitespace-nowrap">
+                <span>Tra cứu</span>
+            </button>
+        </form>
+    </div>
+
+    <!-- Results Area -->
+    <% if (typeof searchedCode !=='undefined' && searchedCode !=='' && !booking) { %>
+        <div class="bg-error/10 border border-error/20 rounded-2xl p-6 text-center">
+            <span class="material-symbols-outlined text-4xl text-error mb-2">sentiment_dissatisfied</span>
+            <h3 class="text-lg font-bold text-error">Không tìm thấy mã đặt sân!</h3>
+            <p class="text-error mt-1 text-sm">Mã "<%= searchedCode %>" không tồn tại hoặc không thuộc về các sân bóng
+                    do bạn quản lý.</p>
+        </div>
+        <% } else if (booking) { %>
+            <div class="bg-surface-container-lowest rounded-2xl shadow-ambient overflow-hidden">
+                <!-- Status Header -->
+                <div
+                    class="px-6 py-4 flex items-center justify-between border-b border-outline-variant
+        <%= booking.status === 'confirmed' ? 'bg-success/10' : booking.status === 'pending' ? 'bg-warning/10' : booking.status === 'cancelled' ? 'bg-outline-variant' : 'bg-error/10' %>">
+                    <div class="flex items-center gap-3">
+                        <span
+                            class="material-symbols-outlined text-2xl
+            <%= booking.status === 'confirmed' ? 'text-success' : booking.status === 'pending' ? 'text-warning' : booking.status === 'cancelled' ? 'text-on-surface-variant' : 'text-error' %>">
+                            <%= booking.status==='confirmed' ? 'check_circle' : booking.status==='pending' ? 'schedule'
+                                : booking.status==='cancelled' ? 'cancel' : 'error' %>
+                        </span>
+                        <h2
+                            class="text-lg font-bold
+            <%= booking.status === 'confirmed' ? 'text-success' : booking.status === 'pending' ? 'text-warning' : booking.status === 'cancelled' ? 'text-on-surface-variant' : 'text-error' %>">
+                            MÃ ĐẶT SÂN: <%= booking.bookingCode %>
+                        </h2>
+                    </div>
+                    <div>
+                        <% if (booking.status==='confirmed' ) { %>
+                            <span
+                                class="px-3 py-1 rounded-full bg-success/20 text-success text-xs font-bold uppercase tracking-wider">Đã
+                                duyệt (Thành công)</span>
+                            <% } else if (booking.status==='pending' ) { %>
+                                <span
+                                    class="px-3 py-1 rounded-full bg-warning/20 text-warning text-xs font-bold uppercase tracking-wider">Đang
+                                    chờ duyệt</span>
+                                <% } else if (booking.status==='rejected' ) { %>
+                                    <span
+                                        class="px-3 py-1 rounded-full bg-error/20 text-error text-xs font-bold uppercase tracking-wider">Đã
+                                        từ chối</span>
+                                    <% } else { %>
+                                        <span
+                                            class="px-3 py-1 rounded-full bg-outline text-on-surface-variant text-xs font-bold uppercase tracking-wider">Đã
+                                            hủy</span>
+                                        <% } %>
+                    </div>
+                </div>
+
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Cột 1: Thông tin người đặt và sân -->
+                        <div class="space-y-6">
+                            <div>
+                                <h3
+                                    class="text-sm font-bold text-on-surface-variant uppercase tracking-wider mb-3 flex items-center gap-1.5 border-b border-outline-variant pb-2">
+                                    <span class="material-symbols-outlined text-base">person</span> Khách hàng
+                                </h3>
+                                <div class="space-y-2">
+                                    <p class="font-medium text-on-surface text-lg">
+                                        <%= booking.user.name %>
+                                    </p>
+                                    <div class="flex items-center gap-2 text-sm text-on-surface-variant">
+                                        <span class="material-symbols-outlined text-sm">call</span>
+                                        <a href="tel:<%= booking.user.phone %>"
+                                            class="hover:text-primary transition-colors font-medium">
+                                            <%= booking.user.phone %>
+                                        </a>
+                                    </div>
+                                    <div class="flex items-center gap-2 text-sm text-on-surface-variant">
+                                        <span class="material-symbols-outlined text-sm">mail</span>
+                                        <a href="mailto:<%= booking.user.email %>"
+                                            class="hover:text-primary transition-colors">
+                                            <%= booking.user.email %>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3
+                                    class="text-sm font-bold text-on-surface-variant uppercase tracking-wider mb-3 flex items-center gap-1.5 border-b border-outline-variant pb-2">
+                                    <span class="material-symbols-outlined text-base">stadium</span> Thông tin sân
+                                </h3>
+                                <div class="bg-surface-container-low rounded-xl p-4">
+                                    <p class="font-bold text-primary text-base mb-1">
+                                        <%= booking.field.name %>
+                                    </p>
+                                    <p class="text-sm text-on-surface-variant mb-4 flex items-start gap-1.5">
+                                        <span class="material-symbols-outlined text-[1rem] mt-0.5">location_on</span>
+                                        <%= booking.field.address %>
+                                    </p>
+
+                                    <div class="grid grid-cols-2 gap-3 border-t border-outline-variant pt-3">
+                                        <div>
+                                            <p class="text-xs text-on-surface-variant font-medium">Ngày đá</p>
+                                            <p class="font-semibold text-on-surface text-base">
+                                                <%= new Date(booking.date).toLocaleDateString('vi-VN') %>
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs text-on-surface-variant font-medium">Giờ đá</p>
+                                            <p
+                                                class="font-bold text-primary bg-primary/10 inline-block px-2 py-0.5 rounded text-sm mt-0.5">
+                                                <%= booking.startTime %> - <%= booking.endTime %>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cột 2: Thanh toán và Dịch vụ -->
+                        <div class="space-y-6">
+                            <div>
+                                <h3
+                                    class="text-sm font-bold text-on-surface-variant uppercase tracking-wider mb-3 flex items-center gap-1.5 border-b border-outline-variant pb-2">
+                                    <span class="material-symbols-outlined text-base">payments</span> Thông tin thanh
+                                    toán
+                                </h3>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between items-center text-sm">
+                                        <span class="text-on-surface-variant">Tiền sân:</span>
+                                        <span class="font-medium text-on-surface">
+                                            <%= new Intl.NumberFormat('vi-VN').format(booking.basePrice) %> đ
+                                        </span>
+                                    </div>
+
+                                    <% if (services && services.length> 0) { %>
+                                        <div class="flex justify-between items-center text-sm">
+                                            <span class="text-on-surface-variant">Tiền dịch vụ thêm:</span>
+                                            <span class="font-medium text-on-surface">
+                                                <%= new Intl.NumberFormat('vi-VN').format(booking.servicesTotal) %> đ
+                                            </span>
+                                        </div>
+                                        <% } %>
+
+                                            <div
+                                                class="flex justify-between items-center pt-3 border-t border-outline-variant">
+                                                <span class="font-bold text-on-surface">Tổng cộng:</span>
+                                                <span class="font-bold text-xl text-primary">
+                                                    <%= new Intl.NumberFormat('vi-VN').format(booking.finalTotal ||
+                                                        booking.totalPrice) %> đ
+                                                </span>
+                                            </div>
+                                </div>
+                            </div>
+
+                            <% if (services && services.length> 0) { %>
+                                <div>
+                                    <h3
+                                        class="text-sm font-bold text-on-surface-variant uppercase tracking-wider mb-3 flex items-center gap-1.5 border-b border-outline-variant pb-2">
+                                        <span class="material-symbols-outlined text-base">room_service</span> Dịch vụ đi
+                                        kèm
+                                    </h3>
+                                    <div class="bg-surface-container-low rounded-xl p-3">
+                                        <% services.forEach(function(service) { %>
+                                            <div
+                                                class="flex justify-between items-center py-2 border-b border-outline-variant last:border-0 last:pb-0">
+                                                <div>
+                                                    <p class="font-medium text-sm text-on-surface">
+                                                        <%= service.name %>
+                                                    </p>
+                                                    <p class="text-xs text-on-surface-variant">
+                                                        <%= new Intl.NumberFormat('vi-VN').format(service.price) %> đ
+                                                    </p>
+                                                </div>
+                                                <div class="text-sm font-semibold text-primary">
+                                                    x<%= service.quantity %>
+                                                </div>
+                                            </div>
+                                            <% }) %>
+                                    </div>
+                                </div>
+                                <% } %>
+
+                                    <% if (booking.paymentImage) { %>
+                                        <div>
+                                            <h3
+                                                class="text-sm font-bold text-on-surface-variant uppercase tracking-wider mb-3 flex items-center gap-1.5 border-b border-outline-variant pb-2">
+                                                <span class="material-symbols-outlined text-base">receipt_long</span>
+                                                Chuyển khoản
+                                            </h3>
+                                            <a href="<%= booking.paymentImage %>" target="_blank"
+                                                class="block aspect-video w-full rounded-xl overflow-hidden group relative bg-surface-container-highest border border-outline-variant hover:border-primary transition-colors">
+                                                <img src="<%= booking.paymentImage %>" alt="Bill thanh toán"
+                                                    class="w-full h-full object-cover">
+                                                <div
+                                                    class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <span
+                                                        class="material-symbols-outlined text-white text-3xl drop-shadow-md">zoom_in</span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <% } %>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+</div>
