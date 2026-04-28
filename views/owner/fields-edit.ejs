@@ -1,6 +1,6 @@
 <section class="rounded-2xl bg-surface-container-low p-6 md:p-10 mb-8 shadow-ambient">
-  <p class="kinetic-label text-on-surface-variant mb-3">Pitch maintenance</p>
-  <h2 class="kinetic-display text-5xl md:text-6xl">EDIT FIELD PROFILE</h2>
+  <p class="kinetic-label text-on-surface-variant mb-3">Bảo trì hồ sơ sân</p>
+  <h2 class="kinetic-display text-5xl md:text-6xl">CHỈNH SỬA HỒ SƠ SÂN</h2>
   <%
     const approvalStatus = field.approvalStatus || 'approved';
     const approvalText = approvalStatus === 'approved'
@@ -42,11 +42,11 @@
   <input name="images" type="file" accept="image/*" multiple class="w-full rounded-2xl border-none bg-surface-container-low px-4 py-3" />
 
   <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
-    <label class="flex items-center gap-2 rounded-xl bg-surface-container-low px-3 py-2"><input type="checkbox" name="facilities" value="night_lights" <%= field.facilities && field.facilities.includes('night_lights') ? 'checked' : '' %> /> Night lights</label>
-    <label class="flex items-center gap-2 rounded-xl bg-surface-container-low px-3 py-2"><input type="checkbox" name="facilities" value="spectator_stands" <%= field.facilities && field.facilities.includes('spectator_stands') ? 'checked' : '' %> /> Stands</label>
-    <label class="flex items-center gap-2 rounded-xl bg-surface-container-low px-3 py-2"><input type="checkbox" name="facilities" value="restrooms" <%= field.facilities && field.facilities.includes('restrooms') ? 'checked' : '' %> /> Restrooms</label>
-    <label class="flex items-center gap-2 rounded-xl bg-surface-container-low px-3 py-2"><input type="checkbox" name="facilities" value="showers" <%= field.facilities && field.facilities.includes('showers') ? 'checked' : '' %> /> Showers</label>
-    <label class="flex items-center gap-2 rounded-xl bg-surface-container-low px-3 py-2"><input type="checkbox" name="facilities" value="lounge_ac" <%= field.facilities && field.facilities.includes('lounge_ac') ? 'checked' : '' %> /> Lounge AC</label>
+    <label class="flex items-center gap-2 rounded-xl bg-surface-container-low px-3 py-2"><input type="checkbox" name="facilities" value="night_lights" <%= field.facilities && field.facilities.includes('night_lights') ? 'checked' : '' %> /> Đèn sân ban đêm</label>
+    <label class="flex items-center gap-2 rounded-xl bg-surface-container-low px-3 py-2"><input type="checkbox" name="facilities" value="spectator_stands" <%= field.facilities && field.facilities.includes('spectator_stands') ? 'checked' : '' %> /> Khán đài</label>
+    <label class="flex items-center gap-2 rounded-xl bg-surface-container-low px-3 py-2"><input type="checkbox" name="facilities" value="restrooms" <%= field.facilities && field.facilities.includes('restrooms') ? 'checked' : '' %> /> Nhà vệ sinh</label>
+    <label class="flex items-center gap-2 rounded-xl bg-surface-container-low px-3 py-2"><input type="checkbox" name="facilities" value="showers" <%= field.facilities && field.facilities.includes('showers') ? 'checked' : '' %> /> Phòng tắm</label>
+    <label class="flex items-center gap-2 rounded-xl bg-surface-container-low px-3 py-2"><input type="checkbox" name="facilities" value="lounge_ac" <%= field.facilities && field.facilities.includes('lounge_ac') ? 'checked' : '' %> /> Phòng chờ máy lạnh</label>
     <label class="flex items-center gap-2 rounded-xl bg-surface-container-low px-3 py-2"><input type="checkbox" name="facilities" value="free_wifi" <%= field.facilities && field.facilities.includes('free_wifi') ? 'checked' : '' %> /> Wifi</label>
   </div>
 

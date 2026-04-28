@@ -3,31 +3,31 @@
     <div class="flex justify-between items-center">
         <div class="flex gap-4">
             <div class="bg-surface ghost-border px-6 py-3 rounded-2xl flex flex-col justify-center">
-                <span class="label-sm text-on-surface-variant">Active Arenas</span>
+                <span class="label-sm text-on-surface-variant">Sân đang hoạt động</span>
                 <span class="headline-md text-xl text-primary"><%= stats.activeFields %> / <%= stats.totalFields %></span>
             </div>
             <% if(stats.maintenanceFields > 0) { %>
             <div class="bg-surface ghost-border px-6 py-3 rounded-2xl flex flex-col justify-center border-l border-warning/50">
-                <span class="label-sm text-on-surface-variant">Maintenance</span>
+                <span class="label-sm text-on-surface-variant">Bảo trì</span>
                 <span class="headline-md text-xl text-warning"><%= stats.maintenanceFields %></span>
             </div>
             <% } %>
             <% if(stats.pendingApprovalFields > 0) { %>
             <div class="bg-surface ghost-border px-6 py-3 rounded-2xl flex flex-col justify-center border-l border-primary/40">
-                <span class="label-sm text-on-surface-variant">Pending Approval</span>
+                <span class="label-sm text-on-surface-variant">Chờ duyệt</span>
                 <span class="headline-md text-xl text-primary"><%= stats.pendingApprovalFields %></span>
             </div>
             <% } %>
             <% if(stats.rejectedApprovalFields > 0) { %>
             <div class="bg-surface ghost-border px-6 py-3 rounded-2xl flex flex-col justify-center border-l border-danger/40">
-                <span class="label-sm text-on-surface-variant">Rejected</span>
+                <span class="label-sm text-on-surface-variant">Bị từ chối</span>
                 <span class="headline-md text-xl text-danger"><%= stats.rejectedApprovalFields %></span>
             </div>
             <% } %>
         </div>
         <a href="/admin/fields/create" class="flex items-center gap-2 bg-primary text-black px-6 py-3 rounded-2xl font-bold hover:bg-primary/90 hover:shadow-glow hover:-translate-y-0.5 transition-all duration-300">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-            Deploy New Arena
+            Thêm sân mới
         </a>
     </div>
 
@@ -37,6 +37,11 @@
             <% fields.forEach(field => { %>
                 <%
                     const approvalStatus = field.approvalStatus || 'approved';
+                    const approvalLabel = approvalStatus === 'approved'
+                        ? 'Đã duyệt'
+                        : approvalStatus === 'pending'
+                            ? 'Chờ duyệt'
+                            : 'Từ chối';
                     const approvalChip = approvalStatus === 'approved'
                         ? 'text-secondary bg-secondary/10 border-secondary/20'
                         : approvalStatus === 'pending'
@@ -51,18 +56,18 @@
                         <% } else { %>
                             <div class="w-full h-full flex flex-col items-center justify-center text-on-surface-variant opacity-30 group-hover:opacity-50 transition-opacity">
                                 <svg class="w-12 h-12 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L28 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                <span class="label-sm">No Visual Data</span>
+                                <span class="label-sm">Chưa có ảnh</span>
                             </div>
                         <% } %>
                         <!-- Status Badge Overlay -->
                         <div class="absolute top-4 right-4">
                             <% if (field.status === 'active') { %>
                                 <span class="bg-surface/80 backdrop-blur-md text-primary px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ghost-border flex items-center gap-1.5">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span> Active
+                                    <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span> Hoạt động
                                 </span>
                             <% } else { %>
                                 <span class="bg-surface/80 backdrop-blur-md text-warning px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ghost-border flex items-center gap-1.5">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-warning"></span> Maint.
+                                    <span class="w-1.5 h-1.5 rounded-full bg-warning"></span> Bảo trì
                                 </span>
                             <% } %>
                         </div>
@@ -71,7 +76,7 @@
                             <%= field.type %>
                         </div>
                         <div class="absolute bottom-4 right-4 px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-[0.14em] border backdrop-blur-md bg-surface/80 <%= approvalChip %>">
-                            <%= approvalStatus %>
+                            <%= approvalLabel %>
                         </div>
                     </div>
 
@@ -84,8 +89,8 @@
                         </p>
                         <div class="mb-4 space-y-2">
                             <p class="text-xs text-on-surface-variant">
-                                Owner:
-                                <span class="text-white font-medium"><%= field.owner ? field.owner.name : 'Chưa gán owner' %></span>
+                                Chủ sân:
+                                <span class="text-white font-medium"><%= field.owner ? field.owner.name : 'Chưa gán' %></span>
                             </p>
                             <% if (field.approvalNote) { %>
                                 <div class="rounded-2xl bg-surface-low px-4 py-3 text-xs text-on-surface-variant">
@@ -96,7 +101,7 @@
                         
                         <div class="mt-auto pt-4 flex items-center justify-between">
                             <div class="flex flex-col">
-                                <span class="label-sm text-on-surface-variant">Rate/Slot</span>
+                                <span class="label-sm text-on-surface-variant">Giá / slot</span>
                                 <span class="text-lg font-bold text-white"><%= field.pricePerSlot.toLocaleString('vi-VN') %>₫</span>
                             </div>
                             
@@ -104,7 +109,7 @@
                                 <a href="/admin/fields/<%= field._id %>/edit" class="w-10 h-10 rounded-xl bg-surface-low hover:bg-primary/20 flex items-center justify-center text-on-surface-variant hover:text-primary transition-all ghost-border hover:shadow-glow">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                                 </a>
-                                <form action="/admin/fields/<%= field._id %>/delete" method="POST" onsubmit="return confirm('Initiate self-destruct for this arena? This cannot be undone.');" class="inline">
+                                <form action="/admin/fields/<%= field._id %>/delete" method="POST" onsubmit="return confirm('Xóa sân này? Hành động này không thể hoàn tác.');" class="inline">
                                     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                     <button type="submit" class="w-10 h-10 rounded-xl bg-surface-low hover:bg-danger/20 flex items-center justify-center text-on-surface-variant hover:text-danger transition-all ghost-border hover:shadow-[0_0_15px_rgba(255,76,76,0.2)]">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
@@ -120,7 +125,7 @@
                                     <input type="hidden" name="approvalStatus" value="approved">
                                     <input type="hidden" name="approvalNote" value="Đã được admin duyệt và mở công khai.">
                                     <button type="submit" class="px-4 py-2 rounded-2xl bg-primary text-black text-xs font-bold uppercase tracking-[0.14em] hover:opacity-90 hover:-translate-y-0.5 transition-all duration-300">
-                                        Approve
+                                        Duyệt
                                     </button>
                                 </form>
                                 <form action="/admin/fields/<%= field._id %>/approval" method="POST" class="inline">
@@ -128,7 +133,7 @@
                                     <input type="hidden" name="approvalStatus" value="rejected">
                                     <input type="hidden" name="approvalNote" value="Admin từ chối hồ sơ sân. Chủ sân cần chỉnh sửa và gửi lại.">
                                     <button type="submit" class="px-4 py-2 rounded-2xl bg-danger/10 text-danger text-xs font-bold uppercase tracking-[0.14em] ghost-border hover:bg-danger/20 hover:-translate-y-0.5 transition-all duration-300">
-                                        Reject
+                                        Từ chối
                                     </button>
                                 </form>
                             </div>
@@ -141,9 +146,9 @@
                 <div class="w-20 h-20 rounded-full bg-surface-low flex items-center justify-center mb-4">
                     <svg class="w-10 h-10 text-on-surface-variant" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                 </div>
-                <h3 class="text-xl headline-md text-white mb-2">No Arenas Deployed</h3>
-                <p class="text-on-surface-variant mb-6 max-w-md">Initialize the system by deploying your first arena entity. Ensure all parameters are correctly set.</p>
-                <a href="/admin/fields/create" class="bg-primary text-black px-6 py-3 rounded-2xl font-bold hover:bg-primary/90 hover:-translate-y-0.5 transition-all duration-300 shadow-glow">Deploy Arena</a>
+                <h3 class="text-xl headline-md text-white mb-2">Chưa có sân nào</h3>
+                <p class="text-on-surface-variant mb-6 max-w-md">Hãy thêm sân đầu tiên để khởi tạo dữ liệu quản lý. Đảm bảo các thông số sân đã được nhập đầy đủ.</p>
+                <a href="/admin/fields/create" class="bg-primary text-black px-6 py-3 rounded-2xl font-bold hover:bg-primary/90 hover:-translate-y-0.5 transition-all duration-300 shadow-glow">Thêm sân</a>
             </div>
         <% } %>
     </div>

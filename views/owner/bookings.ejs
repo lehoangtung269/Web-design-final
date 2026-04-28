@@ -1,7 +1,7 @@
 <section class="rounded-2xl bg-surface-container-low p-6 md:p-10 mb-8 shadow-ambient">
-  <p class="kinetic-label text-on-surface-variant mb-3">Booking operations</p>
-  <h2 class="kinetic-display text-5xl md:text-6xl leading-none">BOOKING</h2>
-  <h2 class="kinetic-display text-5xl md:text-6xl text-primary leading-none -mt-2">CONTROL</h2>
+  <p class="kinetic-label text-on-surface-variant mb-3">Quản lý đơn đặt sân</p>
+  <h2 class="kinetic-display text-5xl md:text-6xl leading-none">ĐIỀU HÀNH</h2>
+  <h2 class="kinetic-display text-5xl md:text-6xl text-primary leading-none -mt-2">ĐƠN ĐẶT</h2>
 </section>
 
 <section class="space-y-3">
@@ -11,20 +11,20 @@
         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div class="min-w-0">
             <p class="kinetic-label text-on-surface-variant mb-1">#<%= booking._id.toString().slice(-6).toUpperCase() %></p>
-            <h3 class="kinetic-headline text-3xl text-on-surface"><%= booking.field ? booking.field.name : 'N/A' %></h3>
+            <h3 class="kinetic-headline text-3xl text-on-surface"><%= booking.field ? booking.field.name : 'Không xác định' %></h3>
             <p class="text-sm text-on-surface-variant mt-1"><%= new Date(booking.date).toLocaleDateString('vi-VN') %> - <%= booking.startTime %> - <%= booking.endTime %></p>
             <p class="text-sm text-on-surface mt-2"><%= booking.user ? booking.user.name : '' %> <span class="text-on-surface-variant">(<%= booking.user ? booking.user.phone : '' %>)</span></p>
           </div>
 
           <div class="flex flex-col md:items-end gap-2">
             <% if (booking.status === 'confirmed') { %>
-              <span class="rounded-full px-3 py-1 text-xs font-semibold bg-secondary-container text-secondary">CONFIRMED</span>
+              <span class="rounded-full px-3 py-1 text-xs font-semibold bg-secondary-container text-secondary">ĐÃ DUYỆT</span>
             <% } else if (booking.status === 'pending') { %>
-              <span class="rounded-full px-3 py-1 text-xs font-semibold bg-primary/10 text-primary">PENDING</span>
+              <span class="rounded-full px-3 py-1 text-xs font-semibold bg-primary/10 text-primary">CHỜ DUYỆT</span>
             <% } else if (booking.status === 'cancelled') { %>
-              <span class="rounded-full px-3 py-1 text-xs font-semibold bg-surface-container text-on-surface-variant">CANCELLED</span>
+              <span class="rounded-full px-3 py-1 text-xs font-semibold bg-surface-container text-on-surface-variant">ĐÃ HỦY</span>
             <% } else { %>
-              <span class="rounded-full px-3 py-1 text-xs font-semibold bg-red-50 text-error">REJECTED</span>
+              <span class="rounded-full px-3 py-1 text-xs font-semibold bg-red-50 text-error">TỪ CHỐI</span>
             <% } %>
             <% if (booking.paymentImage) { %>
               <a href="<%= booking.paymentImage %>" target="_blank" class="text-sm font-semibold text-primary hover:underline">Xem bill chuyển khoản</a>

@@ -44,7 +44,7 @@ exports.getServices = asyncHandler(async (req, res) => {
 
     res.render('owner/services-index', {
         ...ownerLayout,
-        title: 'Services',
+        title: 'Dịch vụ',
         activeNav: 'services',
         services,
         fields,
@@ -69,7 +69,7 @@ exports.getCreateService = asyncHandler(async (req, res) => {
 
     res.render('owner/services-create', {
         ...ownerLayout,
-        title: 'Add Service',
+        title: 'Thêm dịch vụ',
         activeNav: 'services',
         fields
     });
@@ -136,7 +136,7 @@ exports.getEditService = asyncHandler(async (req, res) => {
 
     res.render('owner/services-edit', {
         ...ownerLayout,
-        title: `Edit: ${service.name}`,
+        title: `Chỉnh sửa: ${service.name}`,
         activeNav: 'services',
         service,
         fields

@@ -7,9 +7,9 @@
 <section class="rounded-2xl bg-surface-container-low p-6 md:p-10 mb-8 shadow-ambient">
   <div class="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-6">
     <div>
-      <p class="kinetic-label text-on-surface-variant mb-3">Operational Calendar</p>
-      <h2 class="kinetic-display text-5xl md:text-6xl leading-none">PITCH</h2>
-      <h2 class="kinetic-display text-5xl md:text-6xl text-primary leading-none -mt-2">SCHEDULE</h2>
+      <p class="kinetic-label text-on-surface-variant mb-3">Lịch vận hành</p>
+      <h2 class="kinetic-display text-5xl md:text-6xl leading-none">LỊCH</h2>
+      <h2 class="kinetic-display text-5xl md:text-6xl text-primary leading-none -mt-2">SÂN</h2>
       <p class="mt-4 text-on-surface-variant max-w-2xl">
         <%= selectedField ? selectedField.name : 'Tất cả sân của bạn' %> · lịch <%= viewMode === 'day' ? 'ngày' : 'tuần' %> được dựng từ booking thật trong hệ thống.
       </p>
@@ -54,7 +54,7 @@
       <% } %>
 
       <a href="?date=<%= todayStr %><%= fieldSuffix %>&view=<%= viewMode %>" class="rounded-full bg-white px-5 py-3 text-sm font-semibold text-on-surface shadow-ambient hover:-translate-y-1 transition-all duration-300">
-        Today
+        Hôm nay
       </a>
     </div>
   </div>
@@ -66,7 +66,7 @@
     <input type="hidden" name="view" value="<%= viewMode %>">
     <div class="flex flex-col md:flex-row md:items-end gap-4">
       <div class="flex-1">
-        <p class="kinetic-label text-on-surface-variant mb-2">Field Scope</p>
+        <p class="kinetic-label text-on-surface-variant mb-2">Phạm vi sân</p>
         <select name="fieldId" class="w-full rounded-2xl border-none bg-surface-container-low px-4 py-3 text-sm text-on-surface focus:ring-1 focus:ring-primary/30">
           <option value="all" <%= selectedFieldId === 'all' ? 'selected' : '' %>>Tất cả sân</option>
           <% fieldOptions.forEach((field) => { %>
@@ -77,7 +77,7 @@
         </select>
       </div>
       <button type="submit" class="rounded-full bg-gradient-to-r from-primary to-primary-container text-white px-6 py-3 text-sm font-semibold shadow-cta hover:-translate-y-1 transition-all duration-300">
-        Apply Filter
+        Áp dụng bộ lọc
       </button>
     </div>
 
@@ -93,15 +93,15 @@
 
   <div class="grid grid-cols-3 gap-4">
     <div class="rounded-2xl bg-white p-5 shadow-ambient">
-      <p class="kinetic-label text-on-surface-variant mb-2">Total</p>
+      <p class="kinetic-label text-on-surface-variant mb-2">Tổng</p>
       <p class="text-3xl font-black text-on-surface"><%= weekStats.total %></p>
     </div>
     <div class="rounded-2xl bg-white p-5 shadow-ambient">
-      <p class="kinetic-label text-on-surface-variant mb-2">Confirmed</p>
+      <p class="kinetic-label text-on-surface-variant mb-2">Đã duyệt</p>
       <p class="text-3xl font-black text-secondary"><%= weekStats.confirmed %></p>
     </div>
     <div class="rounded-2xl bg-white p-5 shadow-ambient">
-      <p class="kinetic-label text-on-surface-variant mb-2">Pending</p>
+      <p class="kinetic-label text-on-surface-variant mb-2">Chờ duyệt</p>
       <p class="text-3xl font-black text-primary"><%= weekStats.pending %></p>
     </div>
   </div>
@@ -110,19 +110,19 @@
 <section class="mb-6 flex flex-wrap items-center gap-6">
   <div class="flex items-center gap-2">
     <span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
-    <span class="kinetic-label text-on-surface-variant">Confirmed</span>
+    <span class="kinetic-label text-on-surface-variant">Đã duyệt</span>
   </div>
   <div class="flex items-center gap-2">
     <span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
-    <span class="kinetic-label text-on-surface-variant">Pending</span>
+    <span class="kinetic-label text-on-surface-variant">Chờ duyệt</span>
   </div>
   <div class="flex items-center gap-2">
     <span class="w-2.5 h-2.5 rounded-full bg-red-400"></span>
-    <span class="kinetic-label text-on-surface-variant">Blocked</span>
+    <span class="kinetic-label text-on-surface-variant">Đã chặn</span>
   </div>
   <div class="flex items-center gap-2">
     <span class="w-2.5 h-2.5 rounded-full bg-surface-container-highest"></span>
-    <span class="kinetic-label text-on-surface-variant">Open</span>
+    <span class="kinetic-label text-on-surface-variant">Còn trống</span>
   </div>
 </section>
 
@@ -162,8 +162,8 @@
                 <a href="/owner/bookings/<%= booking._id %>" class="block rounded-2xl p-4 <%= statusClass %> hover:opacity-90 transition-opacity">
                   <div class="flex items-center justify-between">
                     <div>
-                      <p class="text-sm font-bold"><%= booking.field ? booking.field.name : 'Unknown' %></p>
-                      <p class="text-xs mt-1 opacity-80"><%= booking.user ? booking.user.name : 'Unknown' %> · <%= booking.user ? booking.user.phone : '' %></p>
+                      <p class="text-sm font-bold"><%= booking.field ? booking.field.name : 'Không xác định' %></p>
+                      <p class="text-xs mt-1 opacity-80"><%= booking.user ? booking.user.name : 'Không xác định' %> · <%= booking.user ? booking.user.phone : '' %></p>
                     </div>
                     <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest <%= statusClass %>"><%= statusLabel %></span>
                   </div>
@@ -204,7 +204,7 @@
 <section class="overflow-auto rounded-2xl bg-white shadow-ambient">
   <div class="min-w-[1120px]">
     <div class="grid grid-cols-[100px_repeat(7,minmax(0,1fr))] bg-surface-container-low">
-      <div class="px-4 py-4 text-[10px] font-bold uppercase tracking-[0.14em] text-on-surface-variant">Time</div>
+                <div class="px-4 py-4 text-[10px] font-bold uppercase tracking-[0.14em] text-on-surface-variant">Thời gian</div>
       <% weekDays.forEach((day) => { %>
         <div class="px-4 py-4 text-center <%= day.isToday ? 'bg-primary/10' : '' %>">
           <p class="text-[10px] font-bold uppercase tracking-[0.12em] <%= day.isToday ? 'text-primary' : 'text-on-surface-variant' %>"><%= day.name %></p>
@@ -231,21 +231,28 @@
                       : booking.status === 'pending'
                         ? 'bg-primary/10 text-primary'
                         : 'bg-surface-container-low text-on-surface-variant';
+                    const statusLabel = booking.status === 'confirmed'
+                      ? 'Đã duyệt'
+                      : booking.status === 'pending'
+                        ? 'Chờ duyệt'
+                        : booking.status === 'rejected'
+                          ? 'Từ chối'
+                          : 'Đã hủy';
                   %>
                   <article class="rounded-2xl p-3 <%= statusClass %>">
                     <p class="text-[10px] font-bold uppercase tracking-[0.12em] opacity-80"><%= booking.startTime %> - <%= booking.endTime %></p>
                     <p class="text-sm font-bold mt-1 truncate">
-                      <%= selectedFieldId === 'all' ? (booking.field ? booking.field.name : 'Unknown Field') : (booking.user ? booking.user.name : 'Unknown User') %>
+                      <%= selectedFieldId === 'all' ? (booking.field ? booking.field.name : 'Sân không xác định') : (booking.user ? booking.user.name : 'Người dùng không xác định') %>
                     </p>
                     <p class="text-[11px] mt-1 truncate opacity-80">
-                      <%= selectedFieldId === 'all' ? (booking.user ? booking.user.name : 'Unknown User') : (booking.user ? booking.user.phone : booking.status) %>
+                      <%= selectedFieldId === 'all' ? (booking.user ? booking.user.name : 'Người dùng không xác định') : (booking.user ? booking.user.phone : statusLabel) %>
                     </p>
                   </article>
                 <% }) %>
               </div>
             <% } else { %>
               <div class="h-full min-h-[96px] rounded-2xl border border-dashed border-surface-variant/60 flex items-center justify-center">
-                <span class="text-[10px] font-bold uppercase tracking-[0.14em] text-on-surface-variant/40">Open</span>
+                <span class="text-[10px] font-bold uppercase tracking-[0.14em] text-on-surface-variant/40">Trống</span>
               </div>
             <% } %>
           </div>

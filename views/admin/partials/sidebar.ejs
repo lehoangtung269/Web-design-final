@@ -19,8 +19,8 @@
                 <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">sports_soccer</span>
             </div>
             <div>
-                <h1 class="text-lg font-extrabold tracking-tight text-primary">Kinetic Pitch</h1>
-                <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant">Admin Command</p>
+                <h1 class="text-lg font-extrabold tracking-tight text-primary">DatSan.vn</h1>
+                <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant">Khu quản trị</p>
             </div>
         </a>
     </div>
@@ -28,23 +28,23 @@
     <nav class="flex-1 px-4 py-6 space-y-1">
         <a href="/admin/dashboard" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-150 <%= activeNav === 'dashboard' ? 'bg-primary/10 text-primary border-r-2 border-primary' : 'text-on-surface-variant hover:text-white hover:bg-surface-container' %>">
             <span class="material-symbols-outlined text-[20px]">dashboard</span>
-            Overview
+            Tổng quan
         </a>
         <a href="/admin/schedule" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-150 <%= activeNav === 'schedule' ? 'bg-primary/10 text-primary border-r-2 border-primary' : 'text-on-surface-variant hover:text-white hover:bg-surface-container' %>">
             <span class="material-symbols-outlined text-[20px]">calendar_today</span>
-            Pitch Schedule
+            Lịch sân
         </a>
         <a href="/admin/bookings" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-150 <%= activeNav === 'bookings' ? 'bg-primary/10 text-primary border-r-2 border-primary' : 'text-on-surface-variant hover:text-white hover:bg-surface-container' %>">
             <span class="material-symbols-outlined text-[20px]">confirmation_number</span>
-            Bookings
+            Đơn đặt sân
         </a>
         <a href="/admin/fields" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-150 <%= activeNav === 'fields' ? 'bg-primary/10 text-primary border-r-2 border-primary' : 'text-on-surface-variant hover:text-white hover:bg-surface-container' %>">
             <span class="material-symbols-outlined text-[20px]">stadium</span>
-            Pitch Assets
+            Quản lý sân
         </a>
         <a href="/admin/users" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-150 <%= activeNav === 'users' ? 'bg-primary/10 text-primary border-r-2 border-primary' : 'text-on-surface-variant hover:text-white hover:bg-surface-container' %>">
             <span class="material-symbols-outlined text-[20px]">group</span>
-            Users
+            Người dùng
         </a>
     </nav>
 
@@ -52,15 +52,15 @@
         <div class="rounded-xl bg-surface-container p-4 mb-3 ghost-border">
             <div class="flex items-center gap-2 text-primary mb-2">
                 <span class="w-2 h-2 rounded-full bg-primary shadow-glow"></span>
-                <span class="label-sm">System Status</span>
+                <span class="label-sm">Trạng thái hệ thống</span>
             </div>
-            <p class="text-sm text-on-surface">Operational</p>
-            <p class="text-xs text-on-surface-variant mt-1">Admin pipeline is running normally.</p>
+            <p class="text-sm text-on-surface">Hoạt động ổn định</p>
+            <p class="text-xs text-on-surface-variant mt-1">Toàn bộ luồng quản trị đang vận hành bình thường.</p>
         </div>
 
         <a href="/auth/logout" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-on-surface-variant hover:text-error hover:bg-surface-container transition-all duration-150">
             <span class="material-symbols-outlined text-[20px]">logout</span>
-            Sign Out
+            Đăng xuất
         </a>
     </div>
 </aside>

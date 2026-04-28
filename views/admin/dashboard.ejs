@@ -5,10 +5,10 @@
                 <div class="flex items-start justify-between mb-5">
                     <span class="material-symbols-outlined text-primary">stadium</span>
                     <span class="px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.14em] bg-primary/10 text-primary">
-                        Active <%= stats.activeFields %>
+                        Đang hoạt động <%= stats.activeFields %>
                     </span>
                 </div>
-                <p class="text-[11px] font-bold uppercase tracking-[0.14em] text-on-surface-variant mb-2">Total Fields</p>
+                <p class="text-[11px] font-bold uppercase tracking-[0.14em] text-on-surface-variant mb-2">Tổng số sân</p>
                 <p class="text-3xl font-bold headline-tight text-white"><%= stats.totalFields %></p>
             </div>
 
@@ -16,10 +16,10 @@
                 <div class="flex items-start justify-between mb-5">
                     <span class="material-symbols-outlined text-primary">event_available</span>
                     <span class="px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.14em] bg-primary/10 text-primary">
-                        <%= stats.confirmedToday %> Confirmed
+                        <%= stats.confirmedToday %> đã duyệt
                     </span>
                 </div>
-                <p class="text-[11px] font-bold uppercase tracking-[0.14em] text-on-surface-variant mb-2">Today's Bookings</p>
+                <p class="text-[11px] font-bold uppercase tracking-[0.14em] text-on-surface-variant mb-2">Đơn đặt hôm nay</p>
                 <p class="text-3xl font-bold headline-tight text-white"><%= stats.todayBookings %></p>
             </div>
 
@@ -30,7 +30,7 @@
                         <%= trends.revenueChange >= 0 ? '+' : '' %><%= trends.revenueChange %>%
                     </span>
                 </div>
-                <p class="text-[11px] font-bold uppercase tracking-[0.14em] text-on-surface-variant mb-2">Daily Revenue</p>
+                <p class="text-[11px] font-bold uppercase tracking-[0.14em] text-on-surface-variant mb-2">Doanh thu trong ngày</p>
                 <p class="text-3xl font-bold headline-tight text-white"><%= stats.dailyRevenue.toLocaleString('vi-VN') %>đ</p>
             </div>
 
@@ -41,7 +41,7 @@
                         <%= trends.volumeChange >= 0 ? '+' : '' %><%= trends.volumeChange %>%
                     </span>
                 </div>
-                <p class="text-[11px] font-bold uppercase tracking-[0.14em] text-on-surface-variant mb-2">Occupancy Rate</p>
+                <p class="text-[11px] font-bold uppercase tracking-[0.14em] text-on-surface-variant mb-2">Tỷ lệ lấp đầy</p>
                 <p class="text-3xl font-bold headline-tight text-white"><%= stats.occupancyRate %>%</p>
             </div>
         </div>
@@ -49,15 +49,15 @@
         <div class="rounded-xl bg-surface-container p-6 overflow-hidden">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
                 <div>
-                    <h2 class="text-xl font-bold tracking-tight text-white">Booking Trends</h2>
-                    <p class="text-sm text-on-surface-variant mt-1">Production booking load across the last <%= currentRange %> days.</p>
+                    <h2 class="text-xl font-bold tracking-tight text-white">Xu hướng đặt sân</h2>
+                    <p class="text-sm text-on-surface-variant mt-1">Biến động lượng đặt sân trong <%= currentRange %> ngày gần nhất.</p>
                 </div>
                 <div class="flex items-center gap-2 bg-surface-container-high rounded-lg p-1">
                     <a href="?range=7" class="px-4 py-2 rounded-md text-xs font-bold uppercase tracking-[0.14em] transition-all <%= currentRange === 7 ? 'bg-surface-lowest text-primary' : 'text-on-surface-variant hover:text-white' %>">
-                        7 Days
+                        7 ngày
                     </a>
                     <a href="?range=30" class="px-4 py-2 rounded-md text-xs font-bold uppercase tracking-[0.14em] transition-all <%= currentRange === 30 ? 'bg-surface-lowest text-primary' : 'text-on-surface-variant hover:text-white' %>">
-                        30 Days
+                        30 ngày
                     </a>
                 </div>
             </div>
@@ -84,11 +84,11 @@
 
             <div class="mt-6 rounded-lg bg-surface-container-high/60 p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                 <div>
-                    <p class="text-[11px] font-bold uppercase tracking-[0.14em] text-on-surface-variant mb-1">Peak Day</p>
-                    <p class="text-sm text-white"><%= peakDay.shortLabel %> recorded <span class="text-primary font-semibold"><%= peakDay.count %></span> bookings.</p>
+                    <p class="text-[11px] font-bold uppercase tracking-[0.14em] text-on-surface-variant mb-1">Ngày cao điểm</p>
+                    <p class="text-sm text-white"><%= peakDay.shortLabel %> ghi nhận <span class="text-primary font-semibold"><%= peakDay.count %></span> lượt đặt.</p>
                 </div>
                 <a href="/admin/bookings" class="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-white transition-colors">
-                    Review ledger
+                    Xem sổ đơn
                     <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
                 </a>
             </div>
@@ -97,10 +97,10 @@
         <div class="rounded-xl bg-surface-container overflow-hidden">
             <div class="px-6 py-5 flex items-center justify-between bg-surface-container-high/40">
                 <div>
-                    <h2 class="text-xl font-bold tracking-tight text-white">Recent Bookings</h2>
-                    <p class="text-sm text-on-surface-variant mt-1">Most recent reservations entering the approval pipeline.</p>
+                    <h2 class="text-xl font-bold tracking-tight text-white">Đơn đặt gần đây</h2>
+                    <p class="text-sm text-on-surface-variant mt-1">Các đơn mới nhất vừa đi vào quy trình duyệt.</p>
                 </div>
-                <a href="/admin/bookings" class="text-sm font-semibold text-primary hover:text-white transition-colors">View All</a>
+                <a href="/admin/bookings" class="text-sm font-semibold text-primary hover:text-white transition-colors">Xem tất cả</a>
             </div>
 
             <% if (recentBookings && recentBookings.length > 0) { %>
@@ -109,10 +109,10 @@
                         <thead>
                             <tr class="bg-surface-lowest text-[10px] uppercase tracking-[0.14em] text-on-surface-variant">
                                 <th class="px-6 py-4 font-bold">ID</th>
-                                <th class="px-6 py-4 font-bold">Customer</th>
-                                <th class="px-6 py-4 font-bold">Field</th>
-                                <th class="px-6 py-4 font-bold">Time</th>
-                                <th class="px-6 py-4 font-bold">Status</th>
+                                <th class="px-6 py-4 font-bold">Khách hàng</th>
+                                <th class="px-6 py-4 font-bold">Sân</th>
+                                <th class="px-6 py-4 font-bold">Thời gian</th>
+                                <th class="px-6 py-4 font-bold">Trạng thái</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -126,11 +126,11 @@
                                     </td>
                                     <td class="px-6 py-4">
                                         <% if (booking.status === 'confirmed') { %>
-                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.14em] bg-primary/10 text-primary">Confirmed</span>
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.14em] bg-primary/10 text-primary">Đã duyệt</span>
                                         <% } else if (booking.status === 'pending') { %>
-                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.14em] bg-secondary/10 text-secondary">Pending</span>
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.14em] bg-secondary/10 text-secondary">Chờ duyệt</span>
                                         <% } else { %>
-                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.14em] bg-error/10 text-error">Closed</span>
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.14em] bg-error/10 text-error">Đã đóng</span>
                                         <% } %>
                                     </td>
                                 </tr>
@@ -143,8 +143,8 @@
                     <div class="w-16 h-16 rounded-full bg-surface-container-high flex items-center justify-center mx-auto mb-4">
                         <span class="material-symbols-outlined text-on-surface-variant">inbox</span>
                     </div>
-                    <p class="text-lg font-semibold text-white mb-1">No booking signal yet</p>
-                    <p class="text-sm text-on-surface-variant">New reservations will appear here when users complete checkout.</p>
+                    <p class="text-lg font-semibold text-white mb-1">Chưa có tín hiệu đặt sân</p>
+                    <p class="text-sm text-on-surface-variant">Các đơn mới sẽ xuất hiện tại đây khi người dùng hoàn tất thanh toán.</p>
                 </div>
             <% } %>
         </div>
@@ -152,32 +152,32 @@
 
     <aside class="col-span-12 xl:col-span-3 space-y-8">
         <div class="rounded-xl bg-surface-container p-6">
-            <h2 class="text-[11px] font-bold uppercase tracking-[0.16em] text-on-surface-variant mb-5">Quick Actions</h2>
+            <h2 class="text-[11px] font-bold uppercase tracking-[0.16em] text-on-surface-variant mb-5">Thao tác nhanh</h2>
             <div class="space-y-3">
                 <a href="/admin/fields/create" class="flex items-center gap-3 p-3 rounded-lg bg-surface-container-high hover:bg-surface-variant transition-colors">
                     <span class="material-symbols-outlined text-primary">add_box</span>
-                    <span class="text-sm font-medium text-white">Add New Field</span>
+                    <span class="text-sm font-medium text-white">Thêm sân mới</span>
                 </a>
                 <a href="/admin/bookings?status=pending" class="flex items-center gap-3 p-3 rounded-lg bg-surface-container-high hover:bg-surface-variant transition-colors">
                     <span class="material-symbols-outlined text-secondary">approval</span>
-                    <span class="text-sm font-medium text-white">Review Pending Bookings</span>
+                    <span class="text-sm font-medium text-white">Xem đơn chờ duyệt</span>
                 </a>
                 <a href="/admin/schedule" class="flex items-center gap-3 p-3 rounded-lg bg-surface-container-high hover:bg-surface-variant transition-colors">
                     <span class="material-symbols-outlined text-primary">calendar_month</span>
-                    <span class="text-sm font-medium text-white">Open Weekly Schedule</span>
+                    <span class="text-sm font-medium text-white">Mở lịch tuần</span>
                 </a>
             </div>
         </div>
 
         <div class="rounded-xl bg-surface-container p-6">
-            <h2 class="text-[11px] font-bold uppercase tracking-[0.16em] text-on-surface-variant mb-5">Operations Snapshot</h2>
+            <h2 class="text-[11px] font-bold uppercase tracking-[0.16em] text-on-surface-variant mb-5">Tóm tắt vận hành</h2>
             <div class="space-y-4">
                 <div class="rounded-lg bg-surface-container-high p-4">
-                    <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-on-surface-variant mb-2">Pending Review</p>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-on-surface-variant mb-2">Chờ xử lý</p>
                     <p class="text-2xl font-bold headline-tight text-white"><%= stats.pendingBookings %></p>
                 </div>
                 <div class="rounded-lg bg-surface-container-high p-4">
-                    <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-on-surface-variant mb-2">User Accounts</p>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-on-surface-variant mb-2">Tài khoản người dùng</p>
                     <p class="text-2xl font-bold headline-tight text-white"><%= stats.totalUsers %></p>
                 </div>
             </div>
@@ -186,10 +186,10 @@
         <div class="rounded-xl border border-primary/20 bg-gradient-to-br from-primary-container/10 to-surface-lowest p-5">
             <div class="flex items-center gap-2 text-primary mb-3">
                 <span class="material-symbols-outlined text-[18px]">tips_and_updates</span>
-                <span class="text-[10px] font-bold uppercase tracking-[0.16em]">Tactical Tip</span>
+                <span class="text-[10px] font-bold uppercase tracking-[0.16em]">Gợi ý vận hành</span>
             </div>
             <p class="text-sm leading-6 text-on-surface">
-                Demand peaked on <span class="font-semibold text-primary"><%= peakDay.shortLabel %></span>. Review pricing and staff allocation around that window to protect approval speed and slot utilization.
+                Nhu cầu đạt đỉnh vào <span class="font-semibold text-primary"><%= peakDay.shortLabel %></span>. Hãy rà soát giá sân và phân bổ nhân sự quanh khung này để giữ tốc độ duyệt đơn và hiệu suất lấp đầy.
             </p>
         </div>
     </aside>

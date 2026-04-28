@@ -12,16 +12,16 @@
     </div>
 
     <div class="pt-14 md:pt-20 text-center">
-      <p class="kinetic-label text-on-surface-variant mb-4">The Kinetic Archive</p>
-      <h1 class="kinetic-display text-5xl md:text-7xl lg:text-8xl leading-[0.95] text-on-surface">REDEFINE</h1>
-      <h1 class="kinetic-display text-5xl md:text-7xl lg:text-8xl leading-[0.95] text-primary -mt-1 md:-mt-3">THE MATCH
+      <p class="kinetic-label text-on-surface-variant mb-4">Trải nghiệm đặt sân thế hệ mới</p>
+      <h1 class="kinetic-display italic text-5xl md:text-7xl lg:text-8xl leading-[0.95] text-on-surface">NÂNG TẦM</h1>
+      <h1 class="kinetic-display italic text-5xl md:text-7xl lg:text-8xl leading-[0.95] text-primary -mt-1 md:-mt-3">TRẬN ĐẤU
       </h1>
       <p class="max-w-2xl mx-auto mt-7 text-on-surface-variant font-light text-lg">
         Nâng tầm trận đấu của bạn với hệ thống sân bóng chất lượng cao và quy trình đặt sân thông minh, chuyên nghiệp.
       </p>
       <a href="/fields" id="hero-explore-cta"
         class="inline-flex items-center gap-2 mt-9 rounded-full bg-gradient-to-r from-primary to-primary-container text-white px-7 py-3.5 font-semibold transition-all duration-500 hover:-translate-y-1 hover:shadow-cta-glow">
-        Explore Venues
+        Khám phá sân
         <span class="material-symbols-outlined">arrow_outward</span>
       </a>
     </div>
@@ -32,11 +32,10 @@
   <div class="max-w-7xl mx-auto rounded-2xl bg-surface-container-low p-6 md:p-10">
     <div class="flex items-center justify-between gap-4 mb-8">
       <div>
-        <p class="kinetic-label text-on-surface-variant">Premier environments for elite play</p>
-        <h2 class="kinetic-headline text-3xl md:text-5xl text-on-surface">SELECTED ARENAS</h2>
+        <p class="kinetic-label text-on-surface-variant">Những sân nổi bật dành cho trận đấu chất lượng</p>
+        <h2 class="kinetic-headline text-2xl md:text-3xl text-on-surface">SÂN NỔI BẬT</h2>
       </div>
-      <a href="/fields" class="text-sm font-semibold text-primary hover:underline underline-offset-4">View all
-        directory</a>
+      <a href="/fields" class="text-sm font-semibold text-primary hover:underline underline-offset-4">Xem tất cả sân</a>
     </div>
 
     <% if (featuredFields && featuredFields.length> 0) { %>
@@ -57,7 +56,7 @@
             </div>
             <div class="p-5">
               <p class="kinetic-label text-on-surface-variant mb-1">
-                <%= field.type %> venue
+                Sân <%= field.type %>
               </p>
               <h3 class="text-2xl font-semibold text-on-surface mb-2">
                 <%= field.name %>
@@ -65,7 +64,7 @@
               <p class="text-sm text-on-surface-variant mb-4 line-clamp-2">
                 <%= field.address %>
               </p>
-              <p class="kinetic-label text-on-surface-variant">From <span
+              <p class="kinetic-label text-on-surface-variant">Chỉ từ <span
                   class="not-italic normal-case tracking-normal font-semibold text-on-surface ml-1">
                   <%= field.pricePerSlot.toLocaleString('vi-VN') %>d / slot
                 </span></p>
@@ -91,7 +90,7 @@
       class="grid grid-cols-1 md:grid-cols-[1fr_1fr_220px_64px] gap-3">
       <label class="flex items-center gap-2 rounded-full bg-white px-4 py-3 text-sm">
         <span class="material-symbols-outlined text-on-surface-variant">search</span>
-        <input name="keyword" type="text" placeholder="City, district, venue name"
+        <input name="keyword" type="text" placeholder="Thành phố, quận huyện, tên sân"
           class="w-full border-none focus:ring-0 p-0 bg-transparent" />
       </label>
       <label class="flex items-center gap-2 rounded-full bg-white px-4 py-3 text-sm">
@@ -103,7 +102,7 @@
       <label class="flex items-center gap-2 rounded-full bg-white px-4 py-3 text-sm">
         <span class="material-symbols-outlined text-on-surface-variant">groups</span>
         <select name="type" class="w-full border-none focus:ring-0 p-0 bg-transparent">
-          <option value="all">All formats</option>
+          <option value="all">Tất cả loại sân</option>
           <option value="5-a-side">5-a-side</option>
           <option value="7-a-side">7-a-side</option>
           <option value="11-a-side">11-a-side</option>
@@ -134,7 +133,7 @@
     const heroCTA = document.getElementById('hero-explore-cta');
     const heroVariant = window.DatSanAnalytics.getVariant('hero_cta_copy');
     if (heroCTA && heroVariant === 'B') {
-      heroCTA.firstChild.textContent = ' Kham pha san ngay ';
+      heroCTA.firstChild.textContent = ' Khám phá sân ngay ';
     }
     if (heroCTA) {
       heroCTA.addEventListener('click', function () {

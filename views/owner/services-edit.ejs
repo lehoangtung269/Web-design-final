@@ -2,18 +2,18 @@
     <section
         class="rounded-2xl bg-surface-container-low p-6 md:p-8 mb-8 shadow-ambient flex flex-col md:flex-row md:items-end md:justify-between gap-4">
         <div>
-            <p class="kinetic-label text-on-surface-variant mb-2">Editing service</p>
+            <p class="kinetic-label text-on-surface-variant mb-2">Chỉnh sửa dịch vụ</p>
             <h2 class="kinetic-display text-4xl md:text-5xl">
                 <%= service.name.toUpperCase() %>
             </h2>
-            <p class="mt-1 text-on-surface-variant text-sm">Last updated <%= new
+            <p class="mt-1 text-on-surface-variant text-sm">Cập nhật lần cuối <%= new
                     Date(service.updatedAt).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric'
                     }) %>
             </p>
         </div>
         <span
             class="self-start md:self-end rounded-full px-4 py-2 text-xs font-semibold <%= service.isActive ? 'bg-secondary-container text-secondary' : 'bg-surface-container text-on-surface-variant' %>">
-            <%= service.isActive ? 'Active' : 'Inactive' %>
+            <%= service.isActive ? 'Đang hoạt động' : 'Tạm tắt' %>
         </span>
     </section>
 
@@ -25,32 +25,32 @@
             <!-- Basic Info -->
             <fieldset>
                 <legend class="kinetic-label text-primary mb-5 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-base">info</span>Basic Information
+                    <span class="material-symbols-outlined text-base">info</span>Thông tin cơ bản
                 </legend>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="md:col-span-2">
-                        <label for="name" class="block text-sm font-semibold mb-1.5">Service Name <span
+                        <label for="name" class="block text-sm font-semibold mb-1.5">Tên dịch vụ <span
                                 class="text-error">*</span></label>
                         <input type="text" id="name" name="name" required maxlength="100" value="<%= service.name %>"
                             class="w-full rounded-xl border border-outline-variant px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50">
                     </div>
                     <div>
-                        <label for="category" class="block text-sm font-semibold mb-1.5">Category</label>
+                        <label for="category" class="block text-sm font-semibold mb-1.5">Danh mục</label>
                         <select id="category" name="category"
                             class="w-full rounded-xl border border-outline-variant bg-white px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50">
-                            <option value="beverage" <%=service.category==='beverage' ? 'selected' : '' %>>🥤 Beverage
+                            <option value="beverage" <%=service.category==='beverage' ? 'selected' : '' %>>🥤 Đồ uống
                             </option>
-                            <option value="equipment" <%=service.category==='equipment' ? 'selected' : '' %>>⚽ Equipment
+                            <option value="equipment" <%=service.category==='equipment' ? 'selected' : '' %>>⚽ Thiết bị
                             </option>
-                            <option value="rental" <%=service.category==='rental' ? 'selected' : '' %>>👟 Rental
+                            <option value="rental" <%=service.category==='rental' ? 'selected' : '' %>>👟 Cho thuê
                             </option>
-                            <option value="food" <%=service.category==='food' ? 'selected' : '' %>>🍔 Food</option>
+                            <option value="food" <%=service.category==='food' ? 'selected' : '' %>>🍔 Đồ ăn</option>
                             <option value="other" <%=(service.category==='other' || !service.category) ? 'selected' : ''
-                                %>>📦 Other</option>
+                                %>>📦 Khác</option>
                         </select>
                     </div>
                     <div>
-                        <label for="field" class="block text-sm font-semibold mb-1.5">Pitch <span
+                        <label for="field" class="block text-sm font-semibold mb-1.5">Sân <span
                                 class="text-error">*</span></label>
                         <select id="field" name="field" required
                             class="w-full rounded-xl border border-outline-variant bg-white px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50">
@@ -62,7 +62,7 @@
                         </select>
                     </div>
                     <div class="md:col-span-2">
-                        <label for="description" class="block text-sm font-semibold mb-1.5">Description</label>
+                        <label for="description" class="block text-sm font-semibold mb-1.5">Mô tả</label>
                         <textarea id="description" name="description" rows="3"
                             class="w-full rounded-xl border border-outline-variant px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"><%= service.description || '' %></textarea>
                     </div>
@@ -74,11 +74,11 @@
             <!-- Pricing -->
             <fieldset>
                 <legend class="kinetic-label text-secondary mb-5 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-base">payments</span>Pricing
+                    <span class="material-symbols-outlined text-base">payments</span>Giá bán
                 </legend>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
-                        <label for="price" class="block text-sm font-semibold mb-1.5">Price (VNĐ) <span
+                        <label for="price" class="block text-sm font-semibold mb-1.5">Giá (VNĐ) <span
                                 class="text-error">*</span></label>
                         <div class="relative">
                             <input type="number" id="price" name="price" required min="0" step="1000"
@@ -89,7 +89,7 @@
                         </div>
                     </div>
                     <div>
-                        <label for="unit" class="block text-sm font-semibold mb-1.5">Unit</label>
+                        <label for="unit" class="block text-sm font-semibold mb-1.5">Đơn vị</label>
                         <select id="unit" name="unit"
                             class="w-full rounded-xl border border-outline-variant bg-white px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50">
                             <option value="suất" <%=(service.unit==='suất' || !service.unit) ? 'selected' : '' %>>/ suất
@@ -102,9 +102,9 @@
                         </select>
                     </div>
                     <div>
-                        <label for="maxQuantity" class="block text-sm font-semibold mb-1.5">Max qty / booking</label>
+                        <label for="maxQuantity" class="block text-sm font-semibold mb-1.5">Số lượng tối đa / booking</label>
                         <input type="number" id="maxQuantity" name="maxQuantity" min="1"
-                            value="<%= service.maxQuantity || '' %>" placeholder="Unlimited"
+                            value="<%= service.maxQuantity || '' %>" placeholder="Không giới hạn"
                             class="w-full rounded-xl border border-outline-variant px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50">
                     </div>
                 </div>
@@ -115,18 +115,18 @@
             <!-- Image -->
             <fieldset>
                 <legend class="kinetic-label text-on-surface-variant mb-5 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-base">image</span>Photo
+                    <span class="material-symbols-outlined text-base">image</span>Ảnh minh họa
                 </legend>
                 <% if (service.image?.url) { %>
                     <div class="mb-4 text-center">
                         <img id="currentImage" src="<%= service.image.url %>" alt="<%= service.name %>"
                             class="max-h-48 mx-auto rounded-xl shadow-ambient">
-                        <p class="text-xs text-on-surface-variant mt-2">Upload a new photo below to replace this one</p>
+                        <p class="text-xs text-on-surface-variant mt-2">Tải ảnh mới bên dưới để thay thế ảnh hiện tại</p>
                     </div>
                     <% } %>
                         <input type="file" name="image" id="newImage" accept="image/*" onchange="previewNewImage(this)"
                             class="w-full text-sm text-on-surface-variant file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20">
-                        <p class="text-xs text-on-surface-variant mt-1">Leave empty to keep existing photo</p>
+                        <p class="text-xs text-on-surface-variant mt-1">Để trống nếu muốn giữ nguyên ảnh hiện tại</p>
             </fieldset>
 
             <hr class="border-outline-variant">
@@ -141,8 +141,8 @@
                     </div>
                 </label>
                 <div>
-                    <p class="font-semibold text-sm text-on-surface">Service is active</p>
-                    <p class="text-xs text-on-surface-variant">Customers can add this during checkout when active</p>
+                    <p class="font-semibold text-sm text-on-surface">Dịch vụ đang hoạt động</p>
+                    <p class="text-xs text-on-surface-variant">Khách có thể chọn dịch vụ này trong bước thanh toán khi được bật</p>
                 </div>
             </div>
 
@@ -150,16 +150,16 @@
             <div class="flex justify-between items-center pt-2">
                 <a href="/owner/services"
                     class="inline-flex items-center gap-2 rounded-full bg-surface-container-low text-on-surface px-6 py-2.5 text-sm font-semibold hover:-translate-y-0.5 transition-all">
-                    <span class="material-symbols-outlined text-[16px]">arrow_back</span>Back
+                    <span class="material-symbols-outlined text-[16px]">arrow_back</span>Quay lại
                 </a>
                 <div class="flex gap-3">
                     <button type="button" onclick="confirmDelete()"
                         class="inline-flex items-center gap-2 rounded-full bg-red-50 text-error px-6 py-2.5 text-sm font-semibold hover:bg-red-100 transition-colors">
-                        <span class="material-symbols-outlined text-[16px]">delete</span>Delete
+                        <span class="material-symbols-outlined text-[16px]">delete</span>Xóa
                     </button>
                     <button type="submit" id="saveBtn"
                         class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-primary-container text-white px-8 py-2.5 text-sm font-semibold shadow-cta hover:-translate-y-0.5 transition-all">
-                        <span class="material-symbols-outlined text-[16px]">save</span>Save Changes
+                        <span class="material-symbols-outlined text-[16px]">save</span>Lưu thay đổi
                     </button>
                 </div>
             </div>
@@ -175,7 +175,7 @@
     document.getElementById('editServiceForm').addEventListener('submit', async function (e) {
         e.preventDefault();
         const btn = document.getElementById('saveBtn');
-        btn.innerHTML = '<span class="material-symbols-outlined text-[16px]">progress_activity</span>Saving...';
+        btn.innerHTML = '<span class="material-symbols-outlined text-[16px]">progress_activity</span>Đang lưu...';
         btn.disabled = true;
 
         const formData = new FormData(this);
@@ -188,16 +188,16 @@
             const res = await fetch(`/owner/services/${serviceId}`, { method: 'PUT', body: formData });
             const data = await res.json();
             if (data.success) {
-                showAlert('success', '✓ Updated successfully! Redirecting...');
+                showAlert('success', '✓ Cập nhật thành công! Đang chuyển trang...');
                 setTimeout(() => window.location.href = data.redirectTo || '/owner/services', 1200);
             } else {
-                showAlert('danger', data.message || 'An error occurred.');
-                btn.innerHTML = '<span class="material-symbols-outlined text-[16px]">save</span>Save Changes';
+                showAlert('danger', data.message || 'Đã xảy ra lỗi.');
+                btn.innerHTML = '<span class="material-symbols-outlined text-[16px]">save</span>Lưu thay đổi';
                 btn.disabled = false;
             }
         } catch {
-            showAlert('danger', 'Connection error!');
-            btn.innerHTML = '<span class="material-symbols-outlined text-[16px]">save</span>Save Changes';
+            showAlert('danger', 'Lỗi kết nối!');
+            btn.innerHTML = '<span class="material-symbols-outlined text-[16px]">save</span>Lưu thay đổi';
             btn.disabled = false;
         }
     });
@@ -220,7 +220,7 @@
     }
 
     async function confirmDelete() {
-        if (!confirm(`Delete "${serviceName}"?\n\nIf customers have already booked this service, it will be hidden rather than permanently removed.`)) return;
+        if (!confirm(`Xóa "${serviceName}"?\n\nNếu khách đã từng đặt dịch vụ này, hệ thống sẽ ẩn thay vì xóa vĩnh viễn.`)) return;
         const res = await fetch(`/owner/services/${serviceId}`, { method: 'DELETE' });
         const data = await res.json();
         if (data.success) {

@@ -86,7 +86,7 @@ function summarizeFieldApprovals(fields) {
 
 async function getFreshOwnerName(ownerId, fallbackName) {
   const freshOwner = await User.findById(ownerId).select('name').lean();
-  return freshOwner?.name || fallbackName || 'Owner';
+  return freshOwner?.name || fallbackName || 'Chủ sân';
 }
 
 exports.getDashboard = async (req, res) => {
@@ -164,7 +164,7 @@ exports.getDashboard = async (req, res) => {
 
     res.render('owner/dashboard', {
       ...ownerLayout,
-      title: 'Owner Dashboard',
+      title: 'Bảng điều khiển chủ sân',
       activeNav: 'owner-dashboard',
       ownerName,
       stats: {
@@ -341,7 +341,7 @@ exports.getSchedule = async (req, res) => {
 
     res.render('owner/schedule', {
       ...ownerLayout,
-      title: 'Pitch Schedule',
+      title: 'Lịch sân',
       activeNav: 'schedule',
       fieldOptions: ownerFields,
       selectedField,
@@ -582,7 +582,7 @@ exports.createField = async (req, res) => {
       images: req.cloudinaryUrls || [],
       status: 'active',
       approvalStatus: APPROVAL_STATUS.PENDING,
-      approvalNote: 'Chờ admin duyệt sân mới từ owner portal.',
+      approvalNote: 'Chờ admin duyệt sân mới từ cổng chủ sân.',
       approvedBy: null,
       approvedAt: null,
       submittedByOwner: true,

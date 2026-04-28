@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title><%= title %> | DatSan.vn</title>
-  <meta name="description" content="DatSan.vn - Kinetic Editorial football booking experience." />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,700;0,900;1,900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <meta name="description" content="DatSan.vn - Nền tảng đặt sân bóng trực tuyến hiện đại và tiện lợi." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <script>
@@ -42,8 +42,8 @@
   <style>
     .material-symbols-outlined { font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24; }
     body { font-family: Inter, sans-serif; }
-    .kinetic-display { font-style: italic; font-weight: 900; letter-spacing: -0.05em; }
-    .kinetic-headline { font-style: italic; font-weight: 900; letter-spacing: -0.02em; }
+    .kinetic-display { font-style: normal; font-weight: 900; letter-spacing: -0.05em; }
+    .kinetic-headline { font-style: normal; font-weight: 900; letter-spacing: -0.02em; }
     .kinetic-label {
       font-family: "Space Grotesk", sans-serif;
       text-transform: uppercase;
@@ -128,7 +128,7 @@
 <body class="bg-background text-on-surface min-h-screen flex flex-col">
   <header class="fixed top-4 left-0 right-0 z-50 px-4 md:px-6">
     <nav class="max-w-7xl mx-auto rounded-full bg-white/80 backdrop-blur-md shadow-ambient px-4 md:px-6 py-3 flex items-center justify-between">
-      <a href="/" class="font-black italic tracking-tight text-lg md:text-xl text-on-surface">⚽ DatSan.vn</a>
+      <a href="/" class="font-black tracking-tight text-lg md:text-xl text-on-surface">⚽ DatSan.vn</a>
       <div class="hidden md:flex items-center gap-7 text-sm">
         <a href="/" class="<%= typeof activeNav !== 'undefined' && activeNav === 'home' ? 'text-primary border-b-2 border-primary pb-1' : 'text-on-surface-variant hover:text-primary' %> font-semibold transition-all duration-300">Trang chủ</a>
         <a href="/fields" class="<%= typeof activeNav !== 'undefined' && activeNav === 'fields' ? 'text-primary border-b-2 border-primary pb-1' : 'text-on-surface-variant hover:text-primary' %> font-semibold transition-all duration-300">Sân bóng</a>
@@ -247,8 +247,8 @@
 
         <!-- Brand -->
         <div>
-          <p class="text-3xl font-black italic text-white mb-3">DatSan.vn</p>
-          <p class="kinetic-label text-slate-500 mb-4">Premium Football Booking</p>
+          <p class="text-3xl font-black text-white mb-3">DatSan.vn</p>
+          <p class="kinetic-label text-slate-500 mb-4">Nền tảng đặt sân bóng cao cấp</p>
           <p class="text-sm text-slate-400 leading-relaxed">
             Nền tảng đặt sân bóng đá trực tuyến hàng đầu Việt Nam. Trải nghiệm đặt sân thông minh, nhanh chóng và chuyên nghiệp.
           </p>
@@ -320,7 +320,7 @@
     <!-- Bottom Bar -->
     <div class="border-t border-slate-800">
       <div class="max-w-7xl mx-auto px-6 py-5 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-        <p>© 2026 DatSan.vn. All rights reserved.</p>
+        <p>© 2026 DatSan.vn. Bảo lưu mọi quyền.</p>
         <div class="flex gap-6">
           <a href="/#policy" class="hover:text-white transition-colors">Điều khoản</a>
           <a href="/#policy" class="hover:text-white transition-colors">Bảo mật</a>

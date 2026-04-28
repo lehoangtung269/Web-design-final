@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %> | Kinetic Pitch Admin</title>
+    <title><%= title %> | Quản trị DatSan.vn</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -211,7 +211,7 @@
     <div class="lg:ml-64 min-h-screen">
         <header class="sticky top-0 z-40 h-16 px-4 lg:px-8 bg-background/80 backdrop-blur-xl border-b border-white/5 flex items-center justify-between">
             <div class="min-w-0">
-                <p class="label-sm text-on-surface-variant mb-1">The Kinetic Pitch</p>
+                <p class="label-sm text-on-surface-variant mb-1">Trung tâm điều hành DatSan.vn</p>
                 <h1 class="text-xl md:text-2xl font-extrabold headline-tight text-white truncate">
                     <%= typeof pageTitle !== 'undefined' ? pageTitle : title %>
                 </h1>
@@ -226,12 +226,12 @@
 
                 <a href="/" class="hidden lg:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-container text-on-surface-variant hover:text-white hover:bg-surface-container-high ghost-border transition-all">
                     <span class="material-symbols-outlined text-[18px]">public</span>
-                    <span class="text-sm font-semibold">View Site</span>
+                    <span class="text-sm font-semibold">Xem trang web</span>
                 </a>
 
                 <div class="hidden xl:flex items-center gap-2 rounded-full bg-surface-container px-4 py-2 ghost-border w-80 relative" id="admin-search-wrapper">
                     <span class="material-symbols-outlined text-on-surface-variant text-[18px]">search</span>
-                    <input type="text" id="admin-search-input" placeholder="Search admin workspace..." autocomplete="off"
+                    <input type="text" id="admin-search-input" placeholder="Tìm kiếm trong khu vực quản trị..." autocomplete="off"
                         class="w-full bg-transparent border-none p-0 text-sm text-on-surface placeholder:text-on-surface-variant/60 focus:ring-0" />
                     <kbd class="text-[10px] text-on-surface-variant bg-surface-container-high px-1.5 py-0.5 rounded font-mono">/</kbd>
                     <!-- Search Results Dropdown -->
@@ -258,7 +258,7 @@
                 <div class="flex items-center gap-3 pl-4 border-l border-white/10">
                     <div class="text-right hidden md:block">
                         <p class="text-sm font-semibold text-white"><%= currentUser.name %></p>
-                        <p class="text-[11px] text-on-surface-variant">Administrator</p>
+                        <p class="text-[11px] text-on-surface-variant">Quản trị viên</p>
                     </div>
                     <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold flex items-center justify-center shadow-glow">
                         <%= currentUser.name.charAt(0).toUpperCase() %>

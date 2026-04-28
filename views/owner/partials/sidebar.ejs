@@ -21,15 +21,15 @@
     </button>
 
     <div class="mb-8">
-      <p class="kinetic-label text-on-surface-variant mb-3">Owner navigation</p>
+      <p class="kinetic-label text-on-surface-variant mb-3">Điều hướng chủ sân</p>
       <div class="flex items-center gap-3">
         <div
           class="w-10 h-10 rounded-2xl bg-gradient-to-br from-primary to-primary-container flex items-center justify-center text-white">
           <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">sports_soccer</span>
         </div>
         <div>
-          <h2 class="kinetic-headline text-2xl text-on-surface">OWNER</h2>
-          <p class="text-xs text-on-surface-variant">Kinetic Portal</p>
+          <h2 class="kinetic-headline text-2xl text-on-surface">CHỦ SÂN</h2>
+          <p class="text-xs text-on-surface-variant">Cổng quản lý</p>
         </div>
       </div>
     </div>
@@ -45,34 +45,34 @@
                   <a href="/owner/dashboard"
                     class="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-300 <%= isDashboard ? 'bg-primary text-white shadow-cta' : 'bg-surface-container-low text-on-surface hover:-translate-y-0.5' %>">
                     <span class="material-symbols-outlined">dashboard</span>
-                    <span class="font-medium">Overview</span>
+                    <span class="font-medium">Tổng quan</span>
                   </a>
                   <a href="/owner/bookings"
                     class="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-300 <%= isBookings ? 'bg-primary text-white shadow-cta' : 'bg-surface-container-low text-on-surface hover:-translate-y-0.5' %>">
                     <span class="material-symbols-outlined">confirmation_number</span>
-                    <span class="font-medium">Bookings</span>
+                    <span class="font-medium">Đơn đặt sân</span>
                   </a>
                   <a href="/owner/schedule"
                     class="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-300 <%= isSchedule ? 'bg-primary text-white shadow-cta' : 'bg-surface-container-low text-on-surface hover:-translate-y-0.5' %>">
                     <span class="material-symbols-outlined">calendar_month</span>
-                    <span class="font-medium">Pitch Schedule</span>
+                    <span class="font-medium">Lịch sân</span>
                   </a>
                   <a href="/owner/fields"
                     class="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-300 <%= isFields ? 'bg-primary text-white shadow-cta' : 'bg-surface-container-low text-on-surface hover:-translate-y-0.5' %>">
                     <span class="material-symbols-outlined">stadium</span>
-                    <span class="font-medium">Your Pitches</span>
+                    <span class="font-medium">Sân của bạn</span>
                   </a>
                   <a href="/owner/services"
                     class="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-300 <%= isServices ? 'bg-primary text-white shadow-cta' : 'bg-surface-container-low text-on-surface hover:-translate-y-0.5' %>">
                     <span class="material-symbols-outlined">room_service</span>
-                    <span class="font-medium flex-1">Services</span>
+                    <span class="font-medium flex-1">Dịch vụ</span>
                     <span
-                      class="rounded-full bg-primary/20 text-primary text-[9px] font-bold px-2 py-0.5 <%= isServices ? 'bg-white/20 text-white' : '' %>">ADD-ON</span>
+                      class="rounded-full bg-primary/20 text-primary text-[9px] font-bold px-2 py-0.5 <%= isServices ? 'bg-white/20 text-white' : '' %>">BỔ SUNG</span>
                   </a>
                   <a href="/owner/notifications"
                     class="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-300 <%= isNotifications ? 'bg-primary text-white shadow-cta' : 'bg-surface-container-low text-on-surface hover:-translate-y-0.5' %>">
                     <span class="material-symbols-outlined">notifications</span>
-                    <span class="font-medium flex-1">Notifications</span>
+                    <span class="font-medium flex-1">Thông báo</span>
                     <% if (typeof ownerNotificationCount !=='undefined' && ownerNotificationCount> 0) { %>
                       <span
                         class="w-5 h-5 rounded-full bg-error text-white text-[10px] font-bold flex items-center justify-center animate-pulse">
@@ -83,20 +83,20 @@
                 </nav>
 
                 <div class="mt-8 rounded-2xl bg-surface-container p-4">
-                  <p class="kinetic-label text-on-surface-variant mb-2">System status</p>
+                  <p class="kinetic-label text-on-surface-variant mb-2">Trạng thái hệ thống</p>
                   <p class="text-sm font-medium text-on-surface flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-secondary"></span> Active and synced
+                    <span class="w-2 h-2 rounded-full bg-secondary"></span> Đang hoạt động và đồng bộ
                   </p>
                 </div>
 
                 <div class="mt-auto pt-6 space-y-2">
                   <a href="/"
                     class="flex items-center gap-3 rounded-2xl px-4 py-3 bg-surface-container-low text-on-surface hover:-translate-y-0.5 transition-all duration-300">
-                    <span class="material-symbols-outlined">home</span> Back to Web
+                    <span class="material-symbols-outlined">home</span> Về trang web
                   </a>
                   <a href="/auth/logout"
                     class="flex items-center gap-3 rounded-2xl px-4 py-3 bg-red-50 text-error hover:-translate-y-0.5 transition-all duration-300">
-                    <span class="material-symbols-outlined">logout</span> Logout
+                    <span class="material-symbols-outlined">logout</span> Đăng xuất
                   </a>
                 </div>
   </div>

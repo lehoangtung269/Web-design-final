@@ -6,9 +6,9 @@
     <div class="flex flex-col gap-6">
         <div class="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-6">
             <div>
-                <h2 class="text-3xl font-extrabold headline-tight text-white">Pitch Schedule</h2>
+                <h2 class="text-3xl font-extrabold headline-tight text-white">Lịch sân</h2>
                 <p class="text-sm text-on-surface-variant mt-2">
-                    <%= selectedField ? selectedField.name : 'All Fields' %> · Weekly operational grid built from actual booking slots.
+                    <%= selectedField ? selectedField.name : 'Tất cả sân' %> · lịch tuần được dựng từ các booking thực tế trong hệ thống.
                 </p>
             </div>
 
@@ -25,7 +25,7 @@
                     </a>
                 </div>
                 <a href="?date=<%= todayStr %><%= fieldSuffix %>" class="px-4 py-3 rounded-lg bg-surface-container-high text-white text-sm font-bold hover:bg-surface-variant transition-colors">
-                    Today
+                    Hôm nay
                 </a>
             </div>
         </div>
@@ -35,9 +35,9 @@
                 <input type="hidden" name="date" value="<%= currentDateStr %>">
                 <div class="flex flex-col md:flex-row md:items-center gap-4">
                     <div class="flex-1">
-                        <p class="text-[11px] font-bold uppercase tracking-[0.14em] text-on-surface-variant mb-2">Field Scope</p>
+                        <p class="text-[11px] font-bold uppercase tracking-[0.14em] text-on-surface-variant mb-2">Phạm vi sân</p>
                         <select name="fieldId" class="w-full rounded-lg bg-surface-container-high border-none text-sm text-white focus:ring-1 focus:ring-primary/30">
-                            <option value="all" <%= selectedFieldId === 'all' ? 'selected' : '' %>>All Fields</option>
+                            <option value="all" <%= selectedFieldId === 'all' ? 'selected' : '' %>>Tất cả sân</option>
                             <% fieldOptions.forEach((field) => { %>
                                 <option value="<%= field._id %>" <%= selectedFieldId === field._id.toString() ? 'selected' : '' %>>
                                     <%= field.name %> · <%= field.type %>
@@ -46,22 +46,22 @@
                         </select>
                     </div>
                     <button type="submit" class="px-5 py-3 rounded-lg bg-primary text-on-primary font-bold text-sm self-end">
-                        Apply Filter
+                        Áp dụng bộ lọc
                     </button>
                 </div>
             </form>
 
             <div class="grid grid-cols-3 gap-3">
                 <div class="rounded-xl bg-surface-container p-4">
-                    <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-on-surface-variant mb-2">Total</p>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-on-surface-variant mb-2">Tổng</p>
                     <p class="text-2xl font-bold headline-tight text-white"><%= weekStats.total %></p>
                 </div>
                 <div class="rounded-xl bg-surface-container p-4">
-                    <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-on-surface-variant mb-2">Confirmed</p>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-on-surface-variant mb-2">Đã duyệt</p>
                     <p class="text-2xl font-bold headline-tight text-primary"><%= weekStats.confirmed %></p>
                 </div>
                 <div class="rounded-xl bg-surface-container p-4">
-                    <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-on-surface-variant mb-2">Pending</p>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-on-surface-variant mb-2">Chờ duyệt</p>
                     <p class="text-2xl font-bold headline-tight text-secondary"><%= weekStats.pending %></p>
                 </div>
             </div>
@@ -70,19 +70,19 @@
         <div class="flex flex-wrap items-center gap-6">
             <div class="flex items-center gap-2">
                 <span class="w-2.5 h-2.5 rounded-full bg-primary shadow-glow"></span>
-                <span class="text-[10px] font-bold uppercase tracking-[0.14em] text-on-surface-variant">Confirmed</span>
+                <span class="text-[10px] font-bold uppercase tracking-[0.14em] text-on-surface-variant">Đã duyệt</span>
             </div>
             <div class="flex items-center gap-2">
                 <span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
-                <span class="text-[10px] font-bold uppercase tracking-[0.14em] text-on-surface-variant">Pending</span>
+                <span class="text-[10px] font-bold uppercase tracking-[0.14em] text-on-surface-variant">Chờ duyệt</span>
             </div>
             <div class="flex items-center gap-2">
                 <span class="w-2.5 h-2.5 rounded-full bg-surface-variant"></span>
-                <span class="text-[10px] font-bold uppercase tracking-[0.14em] text-on-surface-variant">Closed</span>
+                <span class="text-[10px] font-bold uppercase tracking-[0.14em] text-on-surface-variant">Đã đóng</span>
             </div>
             <% if (selectedField && selectedField.status === 'maintenance') { %>
                 <div class="px-3 py-1.5 rounded-full bg-error/10 text-error text-[10px] font-bold uppercase tracking-[0.14em]">
-                    Selected field is in maintenance mode
+                    Sân đang ở chế độ bảo trì
                 </div>
             <% } %>
         </div>
@@ -91,7 +91,7 @@
     <div class="overflow-auto rounded-xl bg-surface-container-low">
         <div class="min-w-[1120px]">
             <div class="grid grid-cols-[100px_repeat(7,minmax(0,1fr))] bg-surface-container-high/60">
-                <div class="px-4 py-4 text-[10px] font-bold uppercase tracking-[0.14em] text-on-surface-variant">Time</div>
+                <div class="px-4 py-4 text-[10px] font-bold uppercase tracking-[0.14em] text-on-surface-variant">Thời gian</div>
                 <% weekDays.forEach((day) => { %>
                     <div class="px-4 py-4 text-center <%= day.isToday ? 'bg-primary/8' : '' %>">
                         <p class="text-[10px] font-bold uppercase tracking-[0.12em] <%= day.isToday ? 'text-primary' : 'text-on-surface-variant' %>"><%= day.name %></p>
@@ -118,21 +118,28 @@
                                                 : booking.status === 'pending'
                                                     ? 'bg-secondary text-slate-900 border border-secondary/40'
                                                     : 'bg-surface-variant text-on-surface border border-white/10';
+                                            const bookingStatusLabel = booking.status === 'confirmed'
+                                                ? 'Đã duyệt'
+                                                : booking.status === 'pending'
+                                                    ? 'Chờ duyệt'
+                                                    : booking.status === 'rejected'
+                                                        ? 'Từ chối'
+                                                        : 'Đã hủy';
                                         %>
                                         <a href="/admin/bookings/<%= booking._id %>" class="block rounded-md p-2.5 <%= statusClass %>">
                                             <p class="text-[10px] font-bold uppercase tracking-[0.12em] opacity-80"><%= booking.startTime %> - <%= booking.endTime %></p>
                                             <p class="text-sm font-bold mt-1 truncate">
-                                                <%= selectedFieldId === 'all' ? (booking.field ? booking.field.name : 'Unknown Field') : (booking.user ? booking.user.name : 'Unknown User') %>
+                                                <%= selectedFieldId === 'all' ? (booking.field ? booking.field.name : 'Sân không xác định') : (booking.user ? booking.user.name : 'Người dùng không xác định') %>
                                             </p>
                                             <p class="text-[11px] mt-1 truncate opacity-80">
-                                                <%= selectedFieldId === 'all' ? (booking.user ? booking.user.name : 'Unknown User') : booking.status %>
+                                                <%= selectedFieldId === 'all' ? (booking.user ? booking.user.name : 'Người dùng không xác định') : bookingStatusLabel %>
                                             </p>
                                         </a>
                                     <% }) %>
                                 </div>
                             <% } else { %>
                                 <div class="h-full min-h-[96px] rounded-md border border-dashed border-white/5 flex items-center justify-center">
-                                    <span class="text-[10px] font-bold uppercase tracking-[0.14em] text-on-surface-variant/40">Open</span>
+                                    <span class="text-[10px] font-bold uppercase tracking-[0.14em] text-on-surface-variant/40">Trống</span>
                                 </div>
                             <% } %>
                         </div>

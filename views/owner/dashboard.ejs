@@ -1,17 +1,17 @@
 <section class="rounded-2xl bg-surface-container-low p-6 md:p-10 mb-8 shadow-ambient">
-  <p class="kinetic-label text-on-surface-variant mb-3">Owner Performance Overview</p>
+  <p class="kinetic-label text-on-surface-variant mb-3">Tổng quan hiệu suất chủ sân</p>
   <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
     <div>
-      <h2 class="kinetic-display text-5xl md:text-6xl text-on-surface leading-none">KINETIC</h2>
-      <h2 class="kinetic-display text-5xl md:text-6xl text-primary leading-none -mt-2">OWNER GRID</h2>
+      <h2 class="kinetic-display text-5xl md:text-6xl text-on-surface leading-none">BẢNG ĐIỀU HÀNH</h2>
+      <h2 class="kinetic-display text-5xl md:text-6xl text-primary leading-none -mt-2">CHỦ SÂN</h2>
       <p class="mt-4 text-on-surface-variant max-w-2xl">
-        <%= ownerName || (currentUser ? currentUser.name : 'Owner') %> đang quản lý <span class="font-semibold text-on-surface"><%= stats.totalFields %></span> sân.
-        Các sân mới do chủ sân tạo sẽ chỉ xuất hiện công khai sau khi admin duyệt. Nếu có sân bị từ chối, chi tiết sẽ nằm ở mục `Notifications`.
+        <%= ownerName || (currentUser ? currentUser.name : 'Chủ sân') %> đang quản lý <span class="font-semibold text-on-surface"><%= stats.totalFields %></span> sân.
+        Các sân mới do chủ sân tạo sẽ chỉ xuất hiện công khai sau khi admin duyệt. Nếu có sân bị từ chối, chi tiết sẽ nằm ở mục `Thông báo`.
       </p>
     </div>
     <div class="flex flex-wrap gap-3">
       <a href="/owner/schedule" class="rounded-full bg-white px-6 py-3 text-sm font-semibold text-on-surface shadow-ambient hover:-translate-y-1 transition-all duration-300">
-        Xem Pitch Schedule
+        Xem lịch sân
       </a>
       <a href="/owner/fields/create" class="rounded-full bg-gradient-to-r from-primary to-primary-container text-white px-7 py-3 text-sm font-semibold shadow-cta hover:-translate-y-1 transition-all duration-300">
         + Gửi sân mới
@@ -26,7 +26,7 @@
     <h3 class="kinetic-headline text-4xl"><%= stats.totalFields %></h3>
   </div>
   <div class="rounded-3xl bg-white p-6 shadow-ambient">
-    <p class="kinetic-label text-on-surface-variant mb-3">Sân đang live</p>
+    <p class="kinetic-label text-on-surface-variant mb-3">Sân đang hoạt động</p>
     <h3 class="kinetic-headline text-4xl text-secondary"><%= stats.liveFields %></h3>
   </div>
   <div class="rounded-3xl bg-white p-6 shadow-ambient">
@@ -43,7 +43,7 @@
   <section class="mb-8 rounded-2xl bg-red-50 px-6 py-5 shadow-ambient">
     <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
       <div>
-        <p class="kinetic-label text-error mb-2">Notifications</p>
+        <p class="kinetic-label text-error mb-2">Thông báo</p>
         <p class="text-sm text-error">
           Bạn có <span class="font-semibold"><%= stats.notificationCount %></span> thông báo từ admin về sân bị từ chối.
         </p>
@@ -59,12 +59,12 @@
 <section class="rounded-2xl bg-white p-6 md:p-8 shadow-ambient mb-8">
   <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
     <div>
-      <p class="kinetic-label text-on-surface-variant">Booking trends</p>
-      <h3 class="kinetic-headline text-3xl">7-Day Activity</h3>
+      <p class="kinetic-label text-on-surface-variant">Xu hướng đặt sân</p>
+      <h3 class="kinetic-headline text-3xl">Hoạt động 7 ngày</h3>
     </div>
     <div class="flex items-center gap-3">
       <div class="flex items-center gap-2 text-sm text-on-surface-variant">
-        <span class="w-3 h-3 rounded-full bg-primary"></span> Bookings
+        <span class="w-3 h-3 rounded-full bg-primary"></span> Lượt đặt
       </div>
     </div>
   </div>
@@ -91,11 +91,11 @@
 
   <div class="mt-5 rounded-xl bg-surface-container-low p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
     <div>
-      <p class="kinetic-label text-on-surface-variant mb-1">Peak Day</p>
-      <p class="text-sm text-on-surface"><%= peakDay.shortLabel %> recorded <span class="text-primary font-bold"><%= peakDay.count %></span> bookings.</p>
+      <p class="kinetic-label text-on-surface-variant mb-1">Ngày cao điểm</p>
+      <p class="text-sm text-on-surface"><%= peakDay.shortLabel %> ghi nhận <span class="text-primary font-bold"><%= peakDay.count %></span> lượt đặt.</p>
     </div>
     <a href="/owner/bookings" class="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline">
-      View all bookings
+      Xem tất cả đơn
       <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
     </a>
   </div>
@@ -106,8 +106,8 @@
   <div class="rounded-2xl bg-white p-6 md:p-8 shadow-ambient">
     <div class="flex items-center justify-between mb-5">
       <div>
-        <p class="kinetic-label text-on-surface-variant">Owned assets</p>
-        <h3 class="kinetic-headline text-3xl">Your fields</h3>
+        <p class="kinetic-label text-on-surface-variant">Tài sản đang quản lý</p>
+        <h3 class="kinetic-headline text-3xl">Sân của bạn</h3>
       </div>
       <a href="/owner/fields" class="text-primary text-sm font-semibold hover:underline">Quản lý sân</a>
     </div>
@@ -117,6 +117,11 @@
         <% ownedFields.forEach((field) => { %>
           <%
             const approvalStatus = field.approvalStatus || 'approved';
+            const approvalLabel = approvalStatus === 'approved'
+              ? 'Đã duyệt'
+              : approvalStatus === 'pending'
+                ? 'Chờ duyệt'
+                : 'Từ chối';
             const approvalBadgeClass = approvalStatus === 'approved'
               ? 'bg-secondary-container text-secondary'
               : approvalStatus === 'pending'
@@ -130,7 +135,7 @@
                 <h4 class="text-xl font-bold text-on-surface truncate"><%= field.name %></h4>
               </div>
               <span class="rounded-full px-3 py-1 text-[11px] font-semibold capitalize <%= approvalBadgeClass %>">
-                <%= approvalStatus %>
+                <%= approvalLabel %>
               </span>
             </div>
             <p class="text-sm text-on-surface-variant mt-3 line-clamp-2"><%= field.address %></p>
@@ -146,7 +151,7 @@
       </div>
     <% } else { %>
       <div class="rounded-3xl bg-surface-container-low p-10 text-center text-on-surface-variant">
-        Bạn chưa có sân nào được gán. Nếu admin đã vừa setup owner cho tài khoản này thì refresh lại và kiểm tra ở mục `Your Pitches`.
+        Bạn chưa có sân nào được gán. Nếu admin vừa thiết lập quyền chủ sân cho tài khoản này, hãy tải lại trang và kiểm tra ở mục `Sân của bạn`.
       </div>
     <% } %>
   </div>
@@ -154,8 +159,8 @@
   <div class="rounded-2xl bg-white p-6 md:p-8 shadow-ambient">
     <div class="flex items-center justify-between mb-5">
       <div>
-        <p class="kinetic-label text-on-surface-variant">Booking pulse</p>
-        <h3 class="kinetic-headline text-3xl">Ops snapshot</h3>
+        <p class="kinetic-label text-on-surface-variant">Nhịp đặt sân</p>
+        <h3 class="kinetic-headline text-3xl">Tóm tắt vận hành</h3>
       </div>
       <a href="/owner/bookings" class="text-primary text-sm font-semibold hover:underline">Xem booking</a>
     </div>
@@ -180,8 +185,8 @@
 <section class="rounded-2xl bg-white p-6 md:p-8 shadow-ambient">
   <div class="flex items-center justify-between mb-5">
     <div>
-      <p class="kinetic-label text-on-surface-variant">Recent operations</p>
-      <h3 class="kinetic-headline text-3xl">Latest bookings</h3>
+      <p class="kinetic-label text-on-surface-variant">Hoạt động gần đây</p>
+      <h3 class="kinetic-headline text-3xl">Đơn mới nhất</h3>
     </div>
     <a href="/owner/bookings" class="text-primary text-sm font-semibold hover:underline">Xem tất cả</a>
   </div>
@@ -192,8 +197,8 @@
         <article class="rounded-3xl bg-surface-container-low p-4 md:p-5 flex flex-col md:flex-row md:items-center gap-4 hover:-translate-y-0.5 transition-all duration-300">
           <div class="min-w-0 flex-1">
             <p class="kinetic-label text-on-surface-variant mb-1">#<%= booking._id.toString().slice(-6).toUpperCase() %></p>
-            <h4 class="text-lg font-semibold text-on-surface truncate"><%= booking.field ? booking.field.name : 'Unknown Field' %></h4>
-            <p class="text-sm text-on-surface-variant"><%= booking.user ? booking.user.name : 'Unknown User' %> - <%= booking.user ? booking.user.phone : '' %></p>
+            <h4 class="text-lg font-semibold text-on-surface truncate"><%= booking.field ? booking.field.name : 'Sân không xác định' %></h4>
+            <p class="text-sm text-on-surface-variant"><%= booking.user ? booking.user.name : 'Người dùng không xác định' %> - <%= booking.user ? booking.user.phone : '' %></p>
           </div>
           <div class="text-sm text-on-surface-variant">
             <p><%= new Date(booking.date).toLocaleDateString('vi-VN') %></p>
@@ -201,11 +206,11 @@
           </div>
           <div>
             <% if (booking.status === 'confirmed') { %>
-              <span class="rounded-full px-3 py-1 text-xs font-semibold bg-secondary-container text-secondary">CONFIRMED</span>
+              <span class="rounded-full px-3 py-1 text-xs font-semibold bg-secondary-container text-secondary">ĐÃ DUYỆT</span>
             <% } else if (booking.status === 'pending') { %>
-              <span class="rounded-full px-3 py-1 text-xs font-semibold bg-primary/10 text-primary">PENDING</span>
+              <span class="rounded-full px-3 py-1 text-xs font-semibold bg-primary/10 text-primary">CHỜ DUYỆT</span>
             <% } else { %>
-              <span class="rounded-full px-3 py-1 text-xs font-semibold bg-red-50 text-error">REJECTED</span>
+              <span class="rounded-full px-3 py-1 text-xs font-semibold bg-red-50 text-error">TỪ CHỐI</span>
             <% } %>
           </div>
           <a href="/owner/bookings/<%= booking._id %>" class="text-sm font-semibold text-primary hover:underline">Chi tiết</a>

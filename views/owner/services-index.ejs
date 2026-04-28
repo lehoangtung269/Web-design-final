@@ -5,36 +5,35 @@
     <section
         class="rounded-2xl bg-surface-container-low p-6 md:p-10 mb-8 shadow-ambient flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
         <div>
-            <p class="kinetic-label text-on-surface-variant mb-2">Service directory</p>
-            <h2 class="kinetic-display text-5xl md:text-6xl">YOUR SERVICES</h2>
+            <p class="kinetic-label text-on-surface-variant mb-2">Danh mục dịch vụ</p>
+            <h2 class="kinetic-display text-5xl md:text-6xl">DỊCH VỤ CỦA BẠN</h2>
             <p class="mt-3 text-on-surface-variant max-w-xl">
-                Manage add-on services for your pitches. Toggle visibility, track bookings, and analyse revenue per
-                service.
+                Quản lý các dịch vụ bổ sung cho sân của bạn. Bật tắt hiển thị, theo dõi lượt đặt và phân tích doanh thu theo từng dịch vụ.
             </p>
         </div>
         <a href="/owner/services/create"
             class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-primary-container text-white px-7 py-3 text-sm font-semibold shadow-cta hover:-translate-y-1 transition-all duration-300">
             <span class="material-symbols-outlined text-[18px]">add</span>
-            Add Service
+            Thêm dịch vụ
         </a>
     </section>
 
     <!-- Stats row -->
     <section class="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
         <div class="rounded-3xl bg-white p-5 shadow-ambient">
-            <p class="kinetic-label text-on-surface-variant mb-2">Total</p>
+            <p class="kinetic-label text-on-surface-variant mb-2">Tổng</p>
             <p class="text-3xl font-black text-on-surface">
                 <%= services.length %>
             </p>
         </div>
         <div class="rounded-3xl bg-white p-5 shadow-ambient">
-            <p class="kinetic-label text-on-surface-variant mb-2">Active</p>
+            <p class="kinetic-label text-on-surface-variant mb-2">Đang hoạt động</p>
             <p class="text-3xl font-black text-secondary">
                 <%= services.filter(s=> s.isActive).length %>
             </p>
         </div>
         <div class="rounded-3xl bg-white p-5 shadow-ambient col-span-2">
-            <p class="kinetic-label text-on-surface-variant mb-2">Top Booked</p>
+            <p class="kinetic-label text-on-surface-variant mb-2">Đặt nhiều nhất</p>
             <% if (serviceStats.length> 0) { %>
                 <div class="flex flex-wrap gap-2 mt-1">
                     <% serviceStats.slice(0, 3).forEach((stat, idx)=> {
@@ -42,12 +41,12 @@
                         %>
                         <span class="rounded-full bg-primary/10 text-primary px-3 py-1 text-xs font-semibold">
                             #<%= idx+1 %>
-                                <%= svc?.name || 'Unknown' %> · <%= stat.totalBookings %> bookings
+                                <%= svc?.name || 'Không xác định' %> · <%= stat.totalBookings %> lượt đặt
                         </span>
                         <% }) %>
                 </div>
                 <% } else { %>
-                    <p class="text-sm text-on-surface-variant mt-1">No booking data yet.</p>
+                    <p class="text-sm text-on-surface-variant mt-1">Chưa có dữ liệu đặt dịch vụ.</p>
                     <% } %>
         </div>
     </section>
@@ -56,10 +55,10 @@
     <section class="rounded-2xl bg-white shadow-ambient p-5 mb-6">
         <form action="/owner/services" method="GET" class="flex flex-wrap gap-3 items-end">
             <div class="flex-1 min-w-[160px]">
-                <label class="kinetic-label text-on-surface-variant mb-1 block">Pitch</label>
+                <label class="kinetic-label text-on-surface-variant mb-1 block">Sân</label>
                 <select name="fieldId"
                     class="w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50">
-                    <option value="">All pitches</option>
+                    <option value="">Tất cả sân</option>
                     <% fields.forEach(field=> { %>
                         <option value="<%= field._id %>" <%=selectedField===field._id.toString() ? 'selected' : '' %>>
                             <%= field.name %>
@@ -68,26 +67,26 @@
                 </select>
             </div>
             <div class="flex-1 min-w-[140px]">
-                <label class="kinetic-label text-on-surface-variant mb-1 block">Status</label>
+                <label class="kinetic-label text-on-surface-variant mb-1 block">Trạng thái</label>
                 <select name="status"
                     class="w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50">
-                    <option value="">All</option>
-                    <option value="active" <%=selectedStatus==='active' ? 'selected' : '' %>>Active</option>
-                    <option value="inactive" <%=selectedStatus==='inactive' ? 'selected' : '' %>>Inactive</option>
+                    <option value="">Tất cả</option>
+                    <option value="active" <%=selectedStatus==='active' ? 'selected' : '' %>>Đang hoạt động</option>
+                    <option value="inactive" <%=selectedStatus==='inactive' ? 'selected' : '' %>>Tạm tắt</option>
                 </select>
             </div>
             <div class="flex-1 min-w-[200px]">
-                <label class="kinetic-label text-on-surface-variant mb-1 block">Search</label>
-                <input type="text" name="search" value="<%= searchQuery %>" placeholder="Name or description..."
+                <label class="kinetic-label text-on-surface-variant mb-1 block">Tìm kiếm</label>
+                <input type="text" name="search" value="<%= searchQuery %>" placeholder="Tên hoặc mô tả dịch vụ..."
                     class="w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50">
             </div>
             <button type="submit"
                 class="rounded-full bg-primary text-white px-6 py-2.5 text-sm font-semibold hover:opacity-90 transition-opacity flex items-center gap-2">
-                <span class="material-symbols-outlined text-[16px]">search</span>Filter
+                <span class="material-symbols-outlined text-[16px]">search</span>Lọc
             </button>
             <% if (searchQuery || selectedField || selectedStatus) { %>
                 <a href="/owner/services"
-                    class="rounded-full bg-surface-container-low text-on-surface-variant px-5 py-2.5 text-sm font-semibold hover:bg-surface-container transition-colors">Clear</a>
+                    class="rounded-full bg-surface-container-low text-on-surface-variant px-5 py-2.5 text-sm font-semibold hover:bg-surface-container transition-colors">Xóa lọc</a>
                 <% } %>
         </form>
     </section>
@@ -98,12 +97,11 @@
             <div class="w-20 h-20 bg-surface-container-low rounded-full flex items-center justify-center mx-auto mb-6">
                 <span class="material-symbols-outlined text-4xl text-on-surface-variant">room_service</span>
             </div>
-            <h3 class="kinetic-headline text-2xl text-on-surface mb-2">NO SERVICES YET</h3>
-            <p class="text-on-surface-variant font-light mb-6">Add your first service to let customers book add-ons when
-                reserving your pitch.</p>
+            <h3 class="kinetic-headline text-2xl text-on-surface mb-2">CHƯA CÓ DỊCH VỤ NÀO</h3>
+            <p class="text-on-surface-variant font-light mb-6">Hãy thêm dịch vụ đầu tiên để khách có thể đặt kèm khi đặt sân.</p>
             <a href="/owner/services/create"
                 class="inline-flex items-center gap-2 bg-primary text-white px-8 py-3 rounded-full font-bold text-xs font-['Space_Grotesk'] uppercase tracking-widest hover:shadow-cta transition-all">
-                <span class="material-symbols-outlined text-[16px]">add</span>ADD SERVICE
+                <span class="material-symbols-outlined text-[16px]">add</span>THÊM DỊCH VỤ
             </a>
         </div>
         <% } else { %>
@@ -127,7 +125,7 @@
                                         <div class="absolute top-3 right-3">
                                             <span
                                                 class="rounded-full px-3 py-1 text-[11px] font-semibold <%= service.isActive ? 'bg-secondary-container text-secondary' : 'bg-surface-container text-on-surface-variant' %>">
-                                                <%= service.isActive ? 'Active' : 'Inactive' %>
+                                                <%= service.isActive ? 'Đang hoạt động' : 'Tạm tắt' %>
                                             </span>
                                         </div>
                         </div>
@@ -136,7 +134,7 @@
                             <!-- Category + name -->
                             <p class="kinetic-label text-on-surface-variant mb-1">
                                 <%= categoryLabels[service.category] || service.category %> · <%= service.field?.name
-                                        || 'N/A' %>
+                                        || 'Không xác định' %>
                             </p>
                             <h3 class="kinetic-headline text-2xl text-on-surface leading-tight">
                                 <%= service.name %>
@@ -158,10 +156,10 @@
                                     <!-- Stats mini row -->
                                     <div class="mt-3 flex gap-4 text-xs text-on-surface-variant">
                                         <span>
-                                            <%= stats.totalBookings || 0 %> bookings
+                                            <%= stats.totalBookings || 0 %> lượt đặt
                                         </span>
                                         <span class="text-secondary font-semibold">
-                                            <%= Number(stats.totalRevenue || 0).toLocaleString('vi-VN') %>đ revenue
+                                            <%= Number(stats.totalRevenue || 0).toLocaleString('vi-VN') %>đ doanh thu
                                         </span>
                                     </div>
 
@@ -175,18 +173,18 @@
                                             <span class="material-symbols-outlined text-[15px]">
                                                 <%= service.isActive ? 'toggle_on' : 'toggle_off' %>
                                             </span>
-                                            <%= service.isActive ? 'Deactivate' : 'Activate' %>
+                                            <%= service.isActive ? 'Tắt' : 'Bật' %>
                                         </button>
 
                                         <div class="flex gap-2">
                                             <a href="/owner/services/<%= service._id %>/edit"
                                                 class="w-9 h-9 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface hover:bg-primary hover:text-white transition-all"
-                                                title="Edit">
+                                                title="Chỉnh sửa">
                                                 <span class="material-symbols-outlined text-[16px]">edit</span>
                                             </a>
                                             <button
                                                 class="delete-service w-9 h-9 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface hover:bg-error hover:text-white transition-all"
-                                                title="Delete" data-id="<%= service._id %>"
+                                                title="Xóa" data-id="<%= service._id %>"
                                                 data-name="<%= service.name %>">
                                                 <span class="material-symbols-outlined text-[16px]">delete</span>
                                             </button>
@@ -213,12 +211,12 @@
                     document.querySelectorAll('.delete-service').forEach(btn => {
                         btn.addEventListener('click', async function () {
                             const name = this.dataset.name;
-                            if (!confirm(`Delete service "${name}"?\n\nIf it has booking history it will be hidden instead of permanently deleted.`)) return;
+                            if (!confirm(`Xóa dịch vụ "${name}"?\n\nNếu dịch vụ đã có lịch sử đặt, hệ thống sẽ ẩn thay vì xóa vĩnh viễn.`)) return;
                             const id = this.dataset.id;
                             const res = await fetch(`/owner/services/${id}`, { method: 'DELETE' });
                             const data = await res.json();
                             if (data.success) {
-                                alert(data.message + (data.softDelete ? ' (hidden — has booking history)' : ''));
+                                alert(data.message + (data.softDelete ? ' (đã ẩn vì có lịch sử đặt)' : ''));
                                 location.reload();
                             }
                         });

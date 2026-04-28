@@ -216,9 +216,9 @@ const getDashboard = async (req, res) => {
 
     res.render('admin/dashboard', {
       ...adminLayout,
-      title: 'Admin Dashboard',
+      title: 'Bảng điều khiển quản trị',
       activeNav: 'dashboard',
-      pageTitle: 'Tactical Dashboard',
+      pageTitle: 'Bảng điều hành',
       stats: {
         totalUsers,
         totalFields,
@@ -331,9 +331,9 @@ const getSchedule = async (req, res) => {
 
     res.render('admin/schedule', {
       ...adminLayout,
-      title: 'Pitch Schedule',
+      title: 'Lịch sân',
       activeNav: 'schedule',
-      pageTitle: 'Pitch Schedule',
+      pageTitle: 'Lịch sân',
       weekTitle,
       weekDays,
       scheduleRows,
@@ -431,7 +431,7 @@ const getBookings = async (req, res) => {
       ...adminLayout,
       title: 'Quản lý đơn đặt sân',
       activeNav: 'bookings',
-      pageTitle: 'Booking Ledger',
+      pageTitle: 'Sổ đơn đặt sân',
       bookings,
       currentStatus: status || 'all',
       currentFieldId: safeFieldId,
@@ -858,7 +858,7 @@ const deleteField = async (req, res) => {
       status: { $in: ['confirmed', 'pending'] },
     });
     if (activeBookings > 0) {
-      req.flash('error', `Không thể xóa sân vì còn ${activeBookings} đơn đặt đang hoạt động (confirmed/pending). Vui lòng xử lý hết trước!`);
+      req.flash('error', `Không thể xóa sân vì còn ${activeBookings} đơn đặt đang hoạt động (đã duyệt/chờ duyệt). Vui lòng xử lý hết trước!`);
       return res.redirect('/admin/fields');
     }
 
@@ -1017,12 +1017,12 @@ const updateUserPermissions = async (req, res) => {
     }
 
     if (safeRole === 'user') {
-      req.flash('success', `Đã chuyển ${user.name} về vai trò user và gỡ ${currentlyOwnedFields.length} sân đang sở hữu.`);
+      req.flash('success', `Đã chuyển ${user.name} về vai trò người dùng và gỡ ${currentlyOwnedFields.length} sân đang sở hữu.`);
       return res.redirect('/admin/users');
     }
 
     if (!assignedField && currentlyOwnedFields.length === 0) {
-      req.flash('success', `Đã cấp quyền owner cho ${user.name}. Bạn có thể gán sân ngay tại màn này hoặc từ trang Pitch Assets.`);
+      req.flash('success', `Đã cấp quyền chủ sân cho ${user.name}. Bạn có thể gán sân ngay tại màn này hoặc từ trang Quản lý sân.`);
       return res.redirect('/admin/users');
     }
 
@@ -1131,7 +1131,7 @@ const searchAdmin = async (req, res) => {
         type: 'booking',
         icon: 'event_available',
         title: `#${b._id.toString().slice(-6).toUpperCase()}`,
-        subtitle: `${b.field ? b.field.name : 'Unknown'} · ${b.startTime}-${b.endTime}`,
+        subtitle: `${b.field ? b.field.name : 'Không xác định'} · ${b.startTime}-${b.endTime}`,
         url: `/admin/bookings/${b._id}`,
         status: b.status,
       });
@@ -1140,7 +1140,7 @@ const searchAdmin = async (req, res) => {
     res.json({ results });
   } catch (error) {
     console.error('Admin Search Error:', error);
-    res.status(500).json({ results: [], error: 'Search failed' });
+    res.status(500).json({ results: [], error: 'Tìm kiếm thất bại' });
   }
 };
 
@@ -1167,7 +1167,7 @@ const exportBookingsCSV = async (req, res) => {
       const amount = b.finalTotal ?? b.totalPrice ?? 0;
       return [
         b._id.toString().slice(-6).toUpperCase(),
-        b.user ? b.user.name : 'Unknown',
+        b.user ? b.user.name : 'Không xác định',
         b.user ? b.user.email || '' : '',
         b.user ? b.user.phone || '' : '',
         b.field ? b.field.name : 'Deleted',

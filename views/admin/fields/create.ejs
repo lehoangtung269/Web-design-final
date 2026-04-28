@@ -2,19 +2,19 @@
 <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6">
     <div>
         <div class="flex items-center gap-2 text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-1">
-            <a href="/admin/fields" class="hover:text-white transition-colors">VENUES</a>
+            <a href="/admin/fields" class="hover:text-white transition-colors">SÂN BÓNG</a>
             <span class="material-symbols-outlined text-[10px]">chevron_right</span>
-            <span>ADD NEW FIELD</span>
+            <span>THÊM SÂN MỚI</span>
         </div>
-        <h1 class="text-3xl font-extrabold tracking-tight text-on-surface">Venue Specification</h1>
-        <p class="text-sm text-on-surface-variant font-medium mt-1 max-w-lg">Enter the technical details, facility amenities, and operational status for the new football pitch.</p>
+        <h1 class="text-3xl font-extrabold tracking-tight text-on-surface">Thông tin sân bóng</h1>
+        <p class="text-sm text-on-surface-variant font-medium mt-1 max-w-lg">Nhập thông tin kỹ thuật, tiện ích và trạng thái vận hành cho sân bóng mới.</p>
     </div>
     <div class="flex items-center gap-3">
         <a href="/admin/fields" class="px-5 py-2.5 text-sm font-semibold rounded-lg bg-surface-container-high text-on-surface hover:text-white hover:bg-surface-container-highest transition-colors">
-            Cancel
+            Hủy
         </a>
         <button type="button" onclick="document.getElementById('add-field-form').submit();" class="px-5 py-2.5 text-sm font-semibold rounded-lg bg-primary text-on-primary hover:opacity-90 transition-opacity">
-            Save Venue
+            Lưu sân
         </button>
     </div>
 </div>
@@ -27,37 +27,37 @@
         <!-- Basic Information -->
         <div class="bg-surface-container rounded-xl p-6 border border-outline-variant/10 shadow-sm">
             <h2 class="text-sm font-bold text-on-surface flex items-center gap-2 mb-6">
-                <span class="material-symbols-outlined text-sm text-primary">info</span> Basic Information
+                <span class="material-symbols-outlined text-sm text-primary">info</span> Thông tin cơ bản
             </h2>
             
             <div class="space-y-5">
                 <div>
-                    <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1.5 pl-1">Field Name</label>
-                    <input type="text" name="name" required class="w-full bg-surface-container-lowest border-none rounded-lg px-4 py-3 text-sm font-medium text-on-surface focus:ring-1 focus:ring-primary/50 placeholder-on-surface-variant/50 transition-all" placeholder="e.g. Etihad Arena A1">
+                    <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1.5 pl-1">Tên sân</label>
+                    <input type="text" name="name" required class="w-full bg-surface-container-lowest border-none rounded-lg px-4 py-3 text-sm font-medium text-on-surface focus:ring-1 focus:ring-primary/50 placeholder-on-surface-variant/50 transition-all" placeholder="Ví dụ: Sân A1">
                 </div>
                 
                 <div>
-                    <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1.5 pl-1">Address</label>
+                    <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1.5 pl-1">Địa chỉ</label>
                     <div class="relative">
                         <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">location_on</span>
-                        <input type="text" name="address" required class="w-full bg-surface-container-lowest border-none rounded-lg pl-9 pr-4 py-3 text-sm font-medium text-on-surface focus:ring-1 focus:ring-primary/50 placeholder-on-surface-variant/50 transition-all" placeholder="Full street address, district, city">
+                        <input type="text" name="address" required class="w-full bg-surface-container-lowest border-none rounded-lg pl-9 pr-4 py-3 text-sm font-medium text-on-surface focus:ring-1 focus:ring-primary/50 placeholder-on-surface-variant/50 transition-all" placeholder="Địa chỉ đầy đủ, quận huyện, thành phố">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
-                        <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1.5 pl-1">City</label>
-                        <input type="text" name="city" required class="w-full bg-surface-container-lowest border-none rounded-lg px-4 py-3 text-sm font-medium text-on-surface focus:ring-1 focus:ring-primary/50 placeholder-on-surface-variant/50 transition-all" placeholder="e.g. Ho Chi Minh City">
+                        <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1.5 pl-1">Thành phố</label>
+                        <input type="text" name="city" required class="w-full bg-surface-container-lowest border-none rounded-lg px-4 py-3 text-sm font-medium text-on-surface focus:ring-1 focus:ring-primary/50 placeholder-on-surface-variant/50 transition-all" placeholder="Ví dụ: TP. Hồ Chí Minh">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1.5 pl-1">District</label>
-                        <input type="text" name="district" required class="w-full bg-surface-container-lowest border-none rounded-lg px-4 py-3 text-sm font-medium text-on-surface focus:ring-1 focus:ring-primary/50 placeholder-on-surface-variant/50 transition-all" placeholder="e.g. District 1">
+                        <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1.5 pl-1">Quận / huyện</label>
+                        <input type="text" name="district" required class="w-full bg-surface-container-lowest border-none rounded-lg px-4 py-3 text-sm font-medium text-on-surface focus:ring-1 focus:ring-primary/50 placeholder-on-surface-variant/50 transition-all" placeholder="Ví dụ: Quận 1">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
-                        <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1.5 pl-1">Pitch Type</label>
+                        <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1.5 pl-1">Loại sân</label>
                         <select name="type" required class="w-full bg-surface-container-lowest border-none rounded-lg px-4 py-3 text-sm font-medium text-on-surface focus:ring-1 focus:ring-primary/50 transition-all">
                             <option value="5-a-side">5-a-side</option>
                             <option value="7-a-side">7-a-side</option>
@@ -65,7 +65,7 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1.5 pl-1">Price Per Hour (VND)</label>
+                        <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1.5 pl-1">Giá mỗi slot (VNĐ)</label>
                         <div class="relative">
                             <input type="number" name="pricePerSlot" required class="w-full bg-surface-container-lowest border-none rounded-lg pl-4 pr-12 py-3 text-sm font-medium text-on-surface focus:ring-1 focus:ring-primary/50 placeholder-on-surface-variant/50 transition-all text-right" placeholder="500,000">
                             <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-bold text-on-surface-variant">VND</span>
@@ -75,24 +75,23 @@
             </div>
         </div>
 
-        <!-- Pitch Description -->
         <div class="bg-surface-container rounded-xl p-6 border border-outline-variant/10 shadow-sm">
             <h2 class="text-sm font-bold text-on-surface flex items-center gap-2 mb-6">
-                <span class="material-symbols-outlined text-sm text-primary">description</span> Pitch Description
+                <span class="material-symbols-outlined text-sm text-primary">description</span> Mô tả sân
             </h2>
-            <textarea name="description" rows="4" class="w-full bg-surface-container-lowest border-none rounded-lg px-4 py-3 text-sm font-medium text-on-surface focus:ring-1 focus:ring-primary/50 placeholder-on-surface-variant/50 transition-all" placeholder="Describe the pitch quality, turf type, and specific rules..."></textarea>
+            <textarea name="description" rows="4" class="w-full bg-surface-container-lowest border-none rounded-lg px-4 py-3 text-sm font-medium text-on-surface focus:ring-1 focus:ring-primary/50 placeholder-on-surface-variant/50 transition-all" placeholder="Mô tả chất lượng mặt sân, loại cỏ và các quy định riêng..."></textarea>
         </div>
 
         <!-- Media Gallery -->
         <div class="bg-surface-container rounded-xl p-6 border border-outline-variant/10 shadow-sm">
             <h2 class="text-sm font-bold text-on-surface flex items-center gap-2 mb-6">
-                <span class="material-symbols-outlined text-sm text-primary">gallery_thumbnail</span> Media Gallery
+                <span class="material-symbols-outlined text-sm text-primary">gallery_thumbnail</span> Thư viện ảnh
             </h2>
             
             <div class="relative block w-full rounded-xl border-2 border-dashed border-outline-variant/30 bg-surface-container-lowest p-12 text-center hover:border-primary/50 hover:bg-primary/5 transition-colors group cursor-pointer" onclick="document.getElementById('file-upload').click()">
                 <span class="material-symbols-outlined text-4xl text-outline-variant mb-2 group-hover:text-primary transition-colors">add_photo_alternate</span>
-                <span class="block text-sm font-medium text-on-surface-variant">Click to browse or drop images here</span>
-                <span class="block text-xs text-on-surface-variant/70 mt-1">PNG, JPG up to 5MB</span>
+                <span class="block text-sm font-medium text-on-surface-variant">Bấm để chọn hoặc kéo ảnh vào đây</span>
+                <span class="block text-xs text-on-surface-variant/70 mt-1">PNG, JPG tối đa 5MB</span>
                 <input id="file-upload" type="file" name="images" multiple accept="image/*" class="hidden" onchange="previewFiles(this)">
             </div>
             <!-- Image Previews Container -->
@@ -126,10 +125,10 @@
         <!-- Status -->
         <div class="bg-surface-container rounded-xl p-6 border border-outline-variant/10 shadow-sm">
             <h2 class="text-sm font-bold text-on-surface flex items-center gap-2 mb-4">
-                <span class="material-symbols-outlined text-sm text-primary">person</span> Field Owner
+                <span class="material-symbols-outlined text-sm text-primary">person</span> Chủ sân
             </h2>
             <select name="owner" class="w-full bg-surface-container-lowest border-none rounded-lg px-4 py-3 text-sm font-medium text-on-surface focus:ring-1 focus:ring-primary/50 transition-all">
-                <option value="">-- Chưa gán owner --</option>
+                <option value="">-- Chưa gán chủ sân --</option>
                 <% (owners || []).forEach((ownerUser) => { %>
                     <option value="<%= ownerUser._id %>"><%= ownerUser.name %> - <%= ownerUser.email %></option>
                 <% }) %>
@@ -138,21 +137,21 @@
 
         <div class="bg-surface-container rounded-xl p-6 border border-outline-variant/10 shadow-sm">
             <div class="flex items-center justify-between mb-4">
-                <h2 class="text-sm font-bold text-on-surface">Status</h2>
-                <div class="px-2 py-0.5 rounded text-[9px] font-bold tracking-widest uppercase bg-primary/20 text-primary">Live</div>
+                <h2 class="text-sm font-bold text-on-surface">Trạng thái</h2>
+                <div class="px-2 py-0.5 rounded text-[9px] font-bold tracking-widest uppercase bg-primary/20 text-primary">Đang mở</div>
             </div>
             
             <div class="flex items-center bg-surface-container-lowest rounded-lg p-1 border border-outline-variant/10">
                 <label class="flex-1 text-center cursor-pointer">
                     <input type="radio" name="status" value="active" checked class="peer hidden">
                     <div class="py-2 text-xs font-bold rounded-md peer-checked:bg-primary/10 peer-checked:text-primary text-on-surface-variant transition-colors flex items-center justify-center gap-1.5">
-                        <span class="w-1.5 h-1.5 rounded-full bg-primary peer-checked:animate-pulse"></span> Active
+                        <span class="w-1.5 h-1.5 rounded-full bg-primary peer-checked:animate-pulse"></span> Hoạt động
                     </div>
                 </label>
                 <label class="flex-1 text-center cursor-pointer">
                     <input type="radio" name="status" value="maintenance" class="peer hidden">
                     <div class="py-2 text-xs font-bold rounded-md peer-checked:bg-surface-container-highest peer-checked:text-on-surface text-on-surface-variant transition-colors flex items-center justify-center gap-1.5">
-                        <span class="material-symbols-outlined text-[12px]">build</span> Inactive
+                        <span class="material-symbols-outlined text-[12px]">build</span> Bảo trì
                     </div>
                 </label>
             </div>
@@ -161,14 +160,14 @@
         <!-- Facilities -->
         <div class="bg-surface-container rounded-xl p-6 border border-outline-variant/10 shadow-sm">
             <h2 class="text-sm font-bold text-on-surface flex items-center gap-2 mb-6">
-                <span class="material-symbols-outlined text-sm text-primary">bolt</span> Facilities
+                <span class="material-symbols-outlined text-sm text-primary">bolt</span> Tiện ích
             </h2>
             
             <div class="space-y-4">
                 <label class="flex items-center justify-between group cursor-pointer p-2 -mx-2 rounded-lg hover:bg-surface-container-high transition-colors">
                     <div class="flex items-center gap-3">
                         <span class="material-symbols-outlined text-on-surface-variant group-hover:text-on-surface transition-colors">lightbulb</span>
-                        <span class="text-sm font-medium text-on-surface">Night Lights</span>
+                        <span class="text-sm font-medium text-on-surface">Đèn sân ban đêm</span>
                     </div>
                     <input type="checkbox" name="facilities" value="night_lights" class="w-4 h-4 rounded border-outline-variant/30 text-primary bg-surface-container-lowest focus:ring-primary/50 focus:ring-offset-surface">
                 </label>
@@ -176,7 +175,7 @@
                 <label class="flex items-center justify-between group cursor-pointer p-2 -mx-2 rounded-lg hover:bg-surface-container-high transition-colors">
                     <div class="flex items-center gap-3">
                         <span class="material-symbols-outlined text-on-surface-variant group-hover:text-on-surface transition-colors">stadium</span>
-                        <span class="text-sm font-medium text-on-surface">Spectator Stands</span>
+                        <span class="text-sm font-medium text-on-surface">Khán đài</span>
                     </div>
                     <input type="checkbox" name="facilities" value="spectator_stands" class="w-4 h-4 rounded border-outline-variant/30 text-primary bg-surface-container-lowest focus:ring-primary/50 focus:ring-offset-surface">
                 </label>
@@ -184,7 +183,7 @@
                 <label class="flex items-center justify-between group cursor-pointer p-2 -mx-2 rounded-lg hover:bg-surface-container-high transition-colors">
                     <div class="flex items-center gap-3">
                         <span class="material-symbols-outlined text-on-surface-variant group-hover:text-on-surface transition-colors">wc</span>
-                        <span class="text-sm font-medium text-on-surface">Restrooms</span>
+                        <span class="text-sm font-medium text-on-surface">Nhà vệ sinh</span>
                     </div>
                     <input type="checkbox" name="facilities" value="restrooms" class="w-4 h-4 rounded border-outline-variant/30 text-primary bg-surface-container-lowest focus:ring-primary/50 focus:ring-offset-surface">
                 </label>
@@ -192,7 +191,7 @@
                 <label class="flex items-center justify-between group cursor-pointer p-2 -mx-2 rounded-lg hover:bg-surface-container-high transition-colors">
                     <div class="flex items-center gap-3">
                         <span class="material-symbols-outlined text-on-surface-variant group-hover:text-on-surface transition-colors">shower</span>
-                        <span class="text-sm font-medium text-on-surface">Showers</span>
+                        <span class="text-sm font-medium text-on-surface">Phòng tắm</span>
                     </div>
                     <input type="checkbox" name="facilities" value="showers" class="w-4 h-4 rounded border-outline-variant/30 text-primary bg-surface-container-lowest focus:ring-primary/50 focus:ring-offset-surface">
                 </label>
@@ -200,7 +199,7 @@
                 <label class="flex items-center justify-between group cursor-pointer p-2 -mx-2 rounded-lg hover:bg-surface-container-high transition-colors">
                     <div class="flex items-center gap-3">
                         <span class="material-symbols-outlined text-on-surface-variant group-hover:text-on-surface transition-colors">ac_unit</span>
-                        <span class="text-sm font-medium text-on-surface">Lounge AC</span>
+                        <span class="text-sm font-medium text-on-surface">Phòng chờ máy lạnh</span>
                     </div>
                     <input type="checkbox" name="facilities" value="lounge_ac" class="w-4 h-4 rounded border-outline-variant/30 text-primary bg-surface-container-lowest focus:ring-primary/50 focus:ring-offset-surface">
                 </label>
@@ -208,7 +207,7 @@
                 <label class="flex items-center justify-between group cursor-pointer p-2 -mx-2 rounded-lg hover:bg-surface-container-high transition-colors">
                     <div class="flex items-center gap-3">
                         <span class="material-symbols-outlined text-on-surface-variant group-hover:text-on-surface transition-colors">wifi</span>
-                        <span class="text-sm font-medium text-on-surface">Free Wifi</span>
+                        <span class="text-sm font-medium text-on-surface">Wifi miễn phí</span>
                     </div>
                     <input type="checkbox" name="facilities" value="free_wifi" class="w-4 h-4 rounded border-outline-variant/30 text-primary bg-surface-container-lowest focus:ring-primary/50 focus:ring-offset-surface">
                 </label>
@@ -219,10 +218,10 @@
         <div class="bg-gradient-to-br from-secondary-container/20 to-surface-container-lowest border border-secondary/20 rounded-xl p-5 shadow-sm">
             <div class="flex items-center gap-2 text-secondary mb-3">
                 <span class="material-symbols-outlined text-sm">tips_and_updates</span>
-                <span class="text-[10px] font-bold uppercase tracking-widest">Tactical Tip</span>
+                <span class="text-[10px] font-bold uppercase tracking-widest">Gợi ý vận hành</span>
             </div>
             <p class="text-xs text-on-surface leading-relaxed">
-                Pitches with <span class="font-bold text-white">"Night Lights"</span> and <span class="font-bold text-white">"Showers"</span> typically see 40% higher booking rates in urban areas.
+                Những sân có <span class="font-bold text-white">"Đèn sân ban đêm"</span> và <span class="font-bold text-white">"Phòng tắm"</span> thường có tỷ lệ đặt cao hơn khoảng 40% tại khu vực đô thị.
             </p>
         </div>
 
