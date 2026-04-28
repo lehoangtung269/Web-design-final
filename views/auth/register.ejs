@@ -1,93 +1,104 @@
-<div class="flex items-center justify-center min-h-[70vh] px-4 py-12 relative overflow-hidden">
-  
+<div class="flex items-center justify-center min-h-[70vh] px-4 py-12">
   <div class="w-full max-w-lg z-10">
+
     <!-- Brand -->
-    <div class="mb-8 text-center animate-fade-in">
+    <div class="mb-8 text-center">
       <h2 class="kinetic-display text-4xl text-on-surface mb-2 tracking-tighter">ĐĂNG KÝ</h2>
       <p class="kinetic-label text-on-surface-variant font-medium">BẮT ĐẦU VỚI DATSAN.VN</p>
     </div>
 
-    <!-- Registration Card -->
-    <div class="bg-surface-container-lowest rounded-3xl shadow-ambient overflow-hidden animate-fade-in animate-delay-1 transition-shadow duration-300">
+    <!-- Card -->
+    <div class="bg-surface-container-lowest rounded-3xl shadow-ambient overflow-hidden">
       <div class="p-8 md:p-10">
 
-        <form action="/auth/register" method="POST" class="space-y-6">
-          <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>" />
-          
-          <div class="space-y-4">
-            <!-- Full Name -->
-            <div class="space-y-2">
-              <label class="kinetic-label text-on-surface-variant flex items-center gap-2" for="name">
-                Họ và Tên
-              </label>
-              <input id="name" name="name" type="text" required
-                class="w-full bg-surface-container-low border border-outline-variant rounded-2xl px-5 py-4 text-on-surface font-medium placeholder-gray-400 focus:border-primary focus:bg-white focus:ring-1 focus:ring-primary focus:outline-none transition-all"
-                placeholder="Nguyễn Văn A" />
-            </div>
+        <form action="/auth/register" method="POST" class="space-y-5">
+          <!-- CSRF protection -->
+          <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+          <!-- Role always = user (hidden) -->
+          <input type="hidden" name="role" value="user">
 
-            <!-- Email -->
-            <div class="space-y-2">
-              <label class="kinetic-label text-on-surface-variant flex items-center gap-2" for="email">
-                Email
-              </label>
-              <input id="email" name="email" type="email" required
-                class="w-full bg-surface-container-low border border-outline-variant rounded-2xl px-5 py-4 text-on-surface font-medium placeholder-gray-400 focus:border-primary focus:bg-white focus:ring-1 focus:ring-primary focus:outline-none transition-all"
-                placeholder="ban@vidu.com" />
-            </div>
+          <!-- Họ và Tên -->
+          <div class="space-y-2">
+            <label class="kinetic-label text-on-surface-variant" for="name">Họ và Tên</label>
+            <input id="name" name="name" type="text" required minlength="2" maxlength="50"
+              class="w-full bg-surface-container-low border border-outline-variant rounded-2xl px-5 py-4 text-on-surface font-medium placeholder-gray-400 focus:border-primary focus:bg-white focus:ring-1 focus:ring-primary focus:outline-none transition-all"
+              placeholder="Nguyễn Văn A" />
           </div>
 
+          <!-- Email -->
+          <div class="space-y-2">
+            <label class="kinetic-label text-on-surface-variant" for="email">Email</label>
+            <input id="email" name="email" type="email" required
+              class="w-full bg-surface-container-low border border-outline-variant rounded-2xl px-5 py-4 text-on-surface font-medium placeholder-gray-400 focus:border-primary focus:bg-white focus:ring-1 focus:ring-primary focus:outline-none transition-all"
+              placeholder="ban@vidu.com" />
+          </div>
+
+          <!-- Số điện thoại -->
+          <div class="space-y-2">
+            <label class="kinetic-label text-on-surface-variant" for="phone">Số điện thoại</label>
+            <input id="phone" name="phone" type="tel" required
+              class="w-full bg-surface-container-low border border-outline-variant rounded-2xl px-5 py-4 text-on-surface font-medium placeholder-gray-400 focus:border-primary focus:bg-white focus:ring-1 focus:ring-primary focus:outline-none transition-all"
+              placeholder="0912345678" />
+            <p class="text-xs text-on-surface-variant">Bắt đầu bằng 03, 05, 07, 08 hoặc 09</p>
+          </div>
+
+          <!-- Mật khẩu + Xác nhận (2 cột) -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- Password -->
             <div class="space-y-2">
-              <label class="kinetic-label text-on-surface-variant flex items-center gap-2" for="password">
-                Mật khẩu
-              </label>
+              <label class="kinetic-label text-on-surface-variant" for="password">Mật khẩu</label>
               <input id="password" name="password" type="password" required minlength="6"
                 class="w-full bg-surface-container-low border border-outline-variant rounded-2xl px-5 py-4 text-on-surface font-medium placeholder-gray-400 focus:border-primary focus:bg-white focus:ring-1 focus:ring-primary focus:outline-none transition-all"
                 placeholder="••••••••" />
             </div>
-
-            <!-- Role Selector -->
             <div class="space-y-2">
-              <label class="kinetic-label text-on-surface-variant flex items-center gap-2" for="role">
-                Vai trò
-              </label>
-              <div class="relative">
-                <select id="role" name="role" required
-                  class="w-full bg-surface-container-low border border-outline-variant rounded-2xl px-5 py-4 text-on-surface font-medium focus:border-primary focus:bg-white focus:ring-1 focus:ring-primary focus:outline-none transition-all appearance-none">
-                  <option value="user">Khách Đặt Sân</option>
-                  <option value="field_owner">Chủ Sân Bóng</option>
-                </select>
-                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-on-surface-variant">
-                  <span class="material-symbols-outlined text-xl">expand_more</span>
-                </div>
-              </div>
+              <label class="kinetic-label text-on-surface-variant" for="confirmPassword">Xác nhận mật khẩu</label>
+              <input id="confirmPassword" name="confirmPassword" type="password" required minlength="6"
+                class="w-full bg-surface-container-low border border-outline-variant rounded-2xl px-5 py-4 text-on-surface font-medium placeholder-gray-400 focus:border-primary focus:bg-white focus:ring-1 focus:ring-primary focus:outline-none transition-all"
+                placeholder="••••••••" />
             </div>
           </div>
 
-          <!-- Terms Checkbox -->
-          <div class="flex items-start gap-3 mt-2">
-            <input id="terms" type="checkbox" required class="mt-1 w-5 h-5 rounded text-primary focus:ring-primary border-outline-variant" />
+          <!-- Terms -->
+          <div class="flex items-start gap-3 pt-1">
+            <input id="terms" type="checkbox" required
+              class="mt-1 w-5 h-5 rounded text-primary focus:ring-primary border-outline-variant flex-shrink-0" />
             <label for="terms" class="text-sm text-on-surface-variant leading-tight">
-              Tôi đồng ý với <a href="/terms" class="text-primary font-bold hover:underline">Điều khoản</a> và <a href="/privacy" class="text-primary font-bold hover:underline">Chính sách bảo mật</a>
+              Tôi đồng ý với <a href="#" class="text-primary font-bold hover:underline">Điều khoản dịch vụ</a>
+              và <a href="#" class="text-primary font-bold hover:underline">Chính sách bảo mật</a>
             </label>
           </div>
 
           <!-- Submit -->
           <button type="submit"
-            class="w-full bg-primary text-white font-semibold py-4 rounded-full shadow-cta-glow hover:-translate-y-1 hover:bg-primary-container hover:text-primary transition-all duration-300 flex items-center justify-center gap-2 group">
-            <span class="kinetic-label text-white group-hover:text-primary">TẠO TÀI KHOẢN</span>
-            <span class="material-symbols-outlined text-white group-hover:text-primary group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            class="w-full bg-primary text-white font-semibold py-4 rounded-full shadow-cta hover:-translate-y-1 hover:opacity-90 transition-all duration-300 flex items-center justify-center gap-2 group mt-2">
+            <span class="kinetic-label text-white">TẠO TÀI KHOẢN</span>
+            <span
+              class="material-symbols-outlined text-white group-hover:translate-x-1 transition-transform">arrow_forward</span>
           </button>
         </form>
 
-        <div class="mt-8 text-center">
-          <p class="text-sm text-on-surface-variant antialiased border-t border-outline-variant pt-6">
-            Đã có tài khoản? 
-            <a href="/auth/login" class="text-primary font-bold hover:underline underline-offset-4 ml-1 transition-all">Đăng nhập ngay</a>
+        <div class="mt-8 text-center border-t border-outline-variant pt-6">
+          <p class="text-sm text-on-surface-variant">
+            Đã có tài khoản?
+            <a href="/auth/login" class="text-primary font-bold hover:underline underline-offset-4 ml-1">Đăng nhập
+              ngay</a>
           </p>
         </div>
+
       </div>
     </div>
   </div>
 </div>
+
+<script>
+  // Client-side: check passwords match before submit
+  document.querySelector('form').addEventListener('submit', function (e) {
+    const pw = document.getElementById('password').value;
+    const cpw = document.getElementById('confirmPassword').value;
+    if (pw !== cpw) {
+      e.preventDefault();
+      alert('Mật khẩu xác nhận không khớp!');
+      document.getElementById('confirmPassword').focus();
+    }
+  });
+</script>

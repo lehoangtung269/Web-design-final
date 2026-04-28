@@ -12,9 +12,8 @@ const showRegister = (req, res) => {
 // ================================
 const register = async (req, res) => {
   try {
-    const { name, email, password, confirmPassword, phone, role } = req.body;
-    const allowedRoles = ['user', 'field_owner'];
-    const safeRole = allowedRoles.includes(role) ? role : 'user';
+    const { name, email, password, confirmPassword, phone } = req.body;
+    const safeRole = 'user'; // Đăng ký công khai luôn là user
 
     // Kiểm tra mật khẩu xác nhận
     if (password !== confirmPassword) {
