@@ -27,6 +27,12 @@ const apiRoutes = require('./routes');
 // ================================
 const app = express();
 
+// Trust reverse proxy (Render, Heroku, Railway, Nginx...)
+// Cần thiết để secure cookies hoạt động đúng khi deploy
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
+}
+
 // ================================
 // Kết nối Database
 // ================================
