@@ -81,7 +81,7 @@
                         <label for="price" class="block text-sm font-semibold mb-1.5">Giá (VNĐ) <span
                                 class="text-error">*</span></label>
                         <div class="relative">
-                            <input type="number" id="price" name="price" required min="0" step="1000"
+                            <input type="number" id="price" name="price" required min="0" step="any"
                                 value="<%= service.price %>"
                                 class="w-full rounded-xl border border-outline-variant px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 pr-10">
                             <span
@@ -102,7 +102,8 @@
                         </select>
                     </div>
                     <div>
-                        <label for="maxQuantity" class="block text-sm font-semibold mb-1.5">Số lượng tối đa / booking</label>
+                        <label for="maxQuantity" class="block text-sm font-semibold mb-1.5">Số lượng tối đa /
+                            booking</label>
                         <input type="number" id="maxQuantity" name="maxQuantity" min="1"
                             value="<%= service.maxQuantity || '' %>" placeholder="Không giới hạn"
                             class="w-full rounded-xl border border-outline-variant px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50">
@@ -121,7 +122,8 @@
                     <div class="mb-4 text-center">
                         <img id="currentImage" src="<%= service.image.url %>" alt="<%= service.name %>"
                             class="max-h-48 mx-auto rounded-xl shadow-ambient">
-                        <p class="text-xs text-on-surface-variant mt-2">Tải ảnh mới bên dưới để thay thế ảnh hiện tại</p>
+                        <p class="text-xs text-on-surface-variant mt-2">Tải ảnh mới bên dưới để thay thế ảnh hiện tại
+                        </p>
                     </div>
                     <% } %>
                         <input type="file" name="image" id="newImage" accept="image/*" onchange="previewNewImage(this)"
@@ -142,7 +144,8 @@
                 </label>
                 <div>
                     <p class="font-semibold text-sm text-on-surface">Dịch vụ đang hoạt động</p>
-                    <p class="text-xs text-on-surface-variant">Khách có thể chọn dịch vụ này trong bước thanh toán khi được bật</p>
+                    <p class="text-xs text-on-surface-variant">Khách có thể chọn dịch vụ này trong bước thanh toán khi
+                        được bật</p>
                 </div>
             </div>
 

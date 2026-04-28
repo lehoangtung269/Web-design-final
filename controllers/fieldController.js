@@ -150,7 +150,20 @@ const getFieldDetail = async (req, res) => {
     const slots = await TimeSlot.generateSlotsForDate(id, selectedDate);
 
     // Sắp xếp theo giờ bắt đầu
-    const sortedSlots = slots.sort((a, b) => a.startTime.localeCompare(b.startTime));
+    let sortedSlots = slots.sort((a, b) => a.startTime.localeCompare(b.startTime));
+
+    // Lọc bỏ các slot đã hết giờ (nếu đang xem hôm nay)
+    const now = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const selectedDateStart = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
+    if (selectedDateStart.getTime() === todayStart.getTime()) {
+      sortedSlots = sortedSlots.filter(slot => {
+        const [endHours, endMinutes] = slot.endTime.split(':').map(Number);
+        const slotEndDate = new Date(selectedDate);
+        slotEndDate.setHours(endHours, endMinutes, 0, 0);
+        return slotEndDate > now; // Chỉ giữ slot có giờ kết thúc > thời gian hiện tại
+      });
+    }
 
     res.render('fields/detail', {
       title: field.name,
@@ -194,7 +207,20 @@ const getSlotsByDate = async (req, res) => {
 
     // Tạo slots nếu chưa có
     const slots = await TimeSlot.generateSlotsForDate(id, selectedDate);
-    const sortedSlots = slots.sort((a, b) => a.startTime.localeCompare(b.startTime));
+    let sortedSlots = slots.sort((a, b) => a.startTime.localeCompare(b.startTime));
+
+    // Lọc bỏ các slot đã hết giờ (nếu đang xem hôm nay)
+    const now = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const selectedDateStart = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
+    if (selectedDateStart.getTime() === todayStart.getTime()) {
+      sortedSlots = sortedSlots.filter(slot => {
+        const [endHours, endMinutes] = slot.endTime.split(':').map(Number);
+        const slotEndDate = new Date(selectedDate);
+        slotEndDate.setHours(endHours, endMinutes, 0, 0);
+        return slotEndDate > now; // Chỉ giữ slot có giờ kết thúc > thời gian hiện tại
+      });
+    }
 
     res.json({
       success: true,
