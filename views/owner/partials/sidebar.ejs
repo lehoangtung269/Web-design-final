@@ -1,23 +1,30 @@
 <!-- Mobile Hamburger Button -->
-<button id="owner-mobile-menu-btn" class="fixed top-5 left-4 z-[60] lg:hidden w-11 h-11 rounded-2xl bg-white shadow-ambient flex items-center justify-center text-on-surface hover:bg-surface-container-low transition-all" aria-label="Mở menu điều hướng">
+<button id="owner-mobile-menu-btn"
+  class="fixed top-5 left-4 z-[60] lg:hidden w-11 h-11 rounded-2xl bg-white shadow-ambient flex items-center justify-center text-on-surface hover:bg-surface-container-low transition-all"
+  aria-label="Mở menu điều hướng">
   <span class="material-symbols-outlined" id="owner-menu-icon">menu</span>
 </button>
 
 <!-- Mobile Backdrop Overlay -->
-<div id="owner-sidebar-backdrop" class="fixed inset-0 z-[55] bg-black/40 backdrop-blur-sm hidden lg:hidden transition-opacity duration-300 opacity-0"></div>
+<div id="owner-sidebar-backdrop"
+  class="fixed inset-0 z-[55] bg-black/40 backdrop-blur-sm hidden lg:hidden transition-opacity duration-300 opacity-0">
+</div>
 
 <!-- Sidebar (desktop: always visible, mobile: slide-in) -->
-<aside id="owner-sidebar" class="h-screen w-72 fixed left-0 top-0 p-5 z-[60] overflow-y-auto hidden lg:flex transition-transform duration-300 -translate-x-full lg:translate-x-0">
+<aside id="owner-sidebar"
+  class="h-screen w-72 fixed left-0 top-0 p-5 z-[60] overflow-y-auto hidden lg:flex transition-transform duration-300 -translate-x-full lg:translate-x-0">
   <div class="w-full rounded-2xl bg-white shadow-ambient p-5 flex flex-col">
     <!-- Close button for mobile -->
-    <button id="owner-sidebar-close" class="lg:hidden absolute top-7 right-7 w-9 h-9 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-all">
+    <button id="owner-sidebar-close"
+      class="lg:hidden absolute top-7 right-7 w-9 h-9 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-all">
       <span class="material-symbols-outlined text-lg">close</span>
     </button>
 
     <div class="mb-8">
       <p class="kinetic-label text-on-surface-variant mb-3">Owner navigation</p>
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-primary to-primary-container flex items-center justify-center text-white">
+        <div
+          class="w-10 h-10 rounded-2xl bg-gradient-to-br from-primary to-primary-container flex items-center justify-center text-white">
           <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">sports_soccer</span>
         </div>
         <div>
@@ -27,117 +34,135 @@
       </div>
     </div>
 
-    <% const isDashboard = typeof activeNav !== 'undefined' && activeNav === 'owner-dashboard'; %>
-    <% const isBookings = typeof activeNav !== 'undefined' && activeNav === 'bookings'; %>
-    <% const isSchedule = typeof activeNav !== 'undefined' && activeNav === 'schedule'; %>
-    <% const isFields = typeof activeNav !== 'undefined' && activeNav === 'fields'; %>
-    <% const isNotifications = typeof activeNav !== 'undefined' && activeNav === 'notifications'; %>
+    <% const isDashboard=typeof activeNav !=='undefined' && activeNav==='owner-dashboard' ; %>
+      <% const isBookings=typeof activeNav !=='undefined' && activeNav==='bookings' ; %>
+        <% const isSchedule=typeof activeNav !=='undefined' && activeNav==='schedule' ; %>
+          <% const isFields=typeof activeNav !=='undefined' && activeNav==='fields' ; %>
+            <% const isServices=typeof activeNav !=='undefined' && activeNav==='services' ; %>
+              <% const isNotifications=typeof activeNav !=='undefined' && activeNav==='notifications' ; %>
 
-    <nav class="space-y-2">
-      <a href="/owner/dashboard" class="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-300 <%= isDashboard ? 'bg-primary text-white shadow-cta' : 'bg-surface-container-low text-on-surface hover:-translate-y-0.5' %>">
-        <span class="material-symbols-outlined">dashboard</span>
-        <span class="font-medium">Overview</span>
-      </a>
-      <a href="/owner/bookings" class="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-300 <%= isBookings ? 'bg-primary text-white shadow-cta' : 'bg-surface-container-low text-on-surface hover:-translate-y-0.5' %>">
-        <span class="material-symbols-outlined">confirmation_number</span>
-        <span class="font-medium">Bookings</span>
-      </a>
-      <a href="/owner/schedule" class="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-300 <%= isSchedule ? 'bg-primary text-white shadow-cta' : 'bg-surface-container-low text-on-surface hover:-translate-y-0.5' %>">
-        <span class="material-symbols-outlined">calendar_month</span>
-        <span class="font-medium">Pitch Schedule</span>
-      </a>
-      <a href="/owner/fields" class="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-300 <%= isFields ? 'bg-primary text-white shadow-cta' : 'bg-surface-container-low text-on-surface hover:-translate-y-0.5' %>">
-        <span class="material-symbols-outlined">stadium</span>
-        <span class="font-medium">Your Pitches</span>
-      </a>
-      <a href="/owner/notifications" class="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-300 <%= isNotifications ? 'bg-primary text-white shadow-cta' : 'bg-surface-container-low text-on-surface hover:-translate-y-0.5' %>">
-        <span class="material-symbols-outlined">notifications</span>
-        <span class="font-medium flex-1">Notifications</span>
-        <% if (typeof ownerNotificationCount !== 'undefined' && ownerNotificationCount > 0) { %>
-          <span class="w-5 h-5 rounded-full bg-error text-white text-[10px] font-bold flex items-center justify-center animate-pulse"><%= ownerNotificationCount %></span>
-        <% } %>
-      </a>
-    </nav>
+                <nav class="space-y-2">
+                  <a href="/owner/dashboard"
+                    class="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-300 <%= isDashboard ? 'bg-primary text-white shadow-cta' : 'bg-surface-container-low text-on-surface hover:-translate-y-0.5' %>">
+                    <span class="material-symbols-outlined">dashboard</span>
+                    <span class="font-medium">Overview</span>
+                  </a>
+                  <a href="/owner/bookings"
+                    class="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-300 <%= isBookings ? 'bg-primary text-white shadow-cta' : 'bg-surface-container-low text-on-surface hover:-translate-y-0.5' %>">
+                    <span class="material-symbols-outlined">confirmation_number</span>
+                    <span class="font-medium">Bookings</span>
+                  </a>
+                  <a href="/owner/schedule"
+                    class="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-300 <%= isSchedule ? 'bg-primary text-white shadow-cta' : 'bg-surface-container-low text-on-surface hover:-translate-y-0.5' %>">
+                    <span class="material-symbols-outlined">calendar_month</span>
+                    <span class="font-medium">Pitch Schedule</span>
+                  </a>
+                  <a href="/owner/fields"
+                    class="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-300 <%= isFields ? 'bg-primary text-white shadow-cta' : 'bg-surface-container-low text-on-surface hover:-translate-y-0.5' %>">
+                    <span class="material-symbols-outlined">stadium</span>
+                    <span class="font-medium">Your Pitches</span>
+                  </a>
+                  <a href="/owner/services"
+                    class="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-300 <%= isServices ? 'bg-primary text-white shadow-cta' : 'bg-surface-container-low text-on-surface hover:-translate-y-0.5' %>">
+                    <span class="material-symbols-outlined">room_service</span>
+                    <span class="font-medium flex-1">Services</span>
+                    <span
+                      class="rounded-full bg-primary/20 text-primary text-[9px] font-bold px-2 py-0.5 <%= isServices ? 'bg-white/20 text-white' : '' %>">ADD-ON</span>
+                  </a>
+                  <a href="/owner/notifications"
+                    class="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-300 <%= isNotifications ? 'bg-primary text-white shadow-cta' : 'bg-surface-container-low text-on-surface hover:-translate-y-0.5' %>">
+                    <span class="material-symbols-outlined">notifications</span>
+                    <span class="font-medium flex-1">Notifications</span>
+                    <% if (typeof ownerNotificationCount !=='undefined' && ownerNotificationCount> 0) { %>
+                      <span
+                        class="w-5 h-5 rounded-full bg-error text-white text-[10px] font-bold flex items-center justify-center animate-pulse">
+                        <%= ownerNotificationCount %>
+                      </span>
+                      <% } %>
+                  </a>
+                </nav>
 
-    <div class="mt-8 rounded-2xl bg-surface-container p-4">
-      <p class="kinetic-label text-on-surface-variant mb-2">System status</p>
-      <p class="text-sm font-medium text-on-surface flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-secondary"></span> Active and synced
-      </p>
-    </div>
+                <div class="mt-8 rounded-2xl bg-surface-container p-4">
+                  <p class="kinetic-label text-on-surface-variant mb-2">System status</p>
+                  <p class="text-sm font-medium text-on-surface flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-secondary"></span> Active and synced
+                  </p>
+                </div>
 
-    <div class="mt-auto pt-6 space-y-2">
-      <a href="/" class="flex items-center gap-3 rounded-2xl px-4 py-3 bg-surface-container-low text-on-surface hover:-translate-y-0.5 transition-all duration-300">
-        <span class="material-symbols-outlined">home</span> Back to Web
-      </a>
-      <a href="/auth/logout" class="flex items-center gap-3 rounded-2xl px-4 py-3 bg-red-50 text-error hover:-translate-y-0.5 transition-all duration-300">
-        <span class="material-symbols-outlined">logout</span> Logout
-      </a>
-    </div>
+                <div class="mt-auto pt-6 space-y-2">
+                  <a href="/"
+                    class="flex items-center gap-3 rounded-2xl px-4 py-3 bg-surface-container-low text-on-surface hover:-translate-y-0.5 transition-all duration-300">
+                    <span class="material-symbols-outlined">home</span> Back to Web
+                  </a>
+                  <a href="/auth/logout"
+                    class="flex items-center gap-3 rounded-2xl px-4 py-3 bg-red-50 text-error hover:-translate-y-0.5 transition-all duration-300">
+                    <span class="material-symbols-outlined">logout</span> Logout
+                  </a>
+                </div>
   </div>
 </aside>
 
 <script>
-(function() {
-  const btn = document.getElementById('owner-mobile-menu-btn');
-  const sidebar = document.getElementById('owner-sidebar');
-  const backdrop = document.getElementById('owner-sidebar-backdrop');
-  const closeBtn = document.getElementById('owner-sidebar-close');
-  const menuIcon = document.getElementById('owner-menu-icon');
-  if (!btn || !sidebar || !backdrop) return;
+  (function () {
+    const btn = document.getElementById('owner-mobile-menu-btn');
+    const sidebar = document.getElementById('owner-sidebar');
+    const backdrop = document.getElementById('owner-sidebar-backdrop');
+    const closeBtn = document.getElementById('owner-sidebar-close');
+    const menuIcon = document.getElementById('owner-menu-icon');
+    if (!btn || !sidebar || !backdrop) return;
 
-  function openSidebar() {
-    sidebar.classList.remove('hidden', '-translate-x-full');
-    sidebar.classList.add('flex', 'translate-x-0');
-    backdrop.classList.remove('hidden', 'opacity-0');
-    backdrop.classList.add('opacity-100');
-    menuIcon.textContent = 'close';
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeSidebar() {
-    sidebar.classList.add('-translate-x-full');
-    sidebar.classList.remove('translate-x-0');
-    backdrop.classList.add('opacity-0');
-    setTimeout(function() {
-      if (window.innerWidth < 1024) {
-        sidebar.classList.remove('flex');
-        sidebar.classList.add('hidden');
-      }
-      backdrop.classList.add('hidden');
-    }, 300);
-    menuIcon.textContent = 'menu';
-    document.body.style.overflow = '';
-  }
-
-  btn.addEventListener('click', function() {
-    const isOpen = sidebar.classList.contains('translate-x-0') && !sidebar.classList.contains('-translate-x-full');
-    isOpen ? closeSidebar() : openSidebar();
-  });
-
-  backdrop.addEventListener('click', closeSidebar);
-  if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
-
-  // Close on nav link click (mobile)
-  sidebar.querySelectorAll('a').forEach(function(link) {
-    link.addEventListener('click', function() {
-      if (window.innerWidth < 1024) closeSidebar();
-    });
-  });
-
-  // Handle resize: restore desktop state
-  window.addEventListener('resize', function() {
-    if (window.innerWidth >= 1024) {
+    function openSidebar() {
       sidebar.classList.remove('hidden', '-translate-x-full');
       sidebar.classList.add('flex', 'translate-x-0');
-      backdrop.classList.add('hidden', 'opacity-0');
-      document.body.style.overflow = '';
-    } else {
-      if (sidebar.classList.contains('translate-x-0')) {
-        sidebar.classList.add('-translate-x-full', 'hidden');
-        sidebar.classList.remove('translate-x-0', 'flex');
-      }
+      backdrop.classList.remove('hidden', 'opacity-0');
+      backdrop.classList.add('opacity-100');
+      menuIcon.textContent = 'close';
+      document.body.style.overflow = 'hidden';
     }
-  });
-})();
+
+    function closeSidebar() {
+      sidebar.classList.add('-translate-x-full');
+      sidebar.classList.remove('translate-x-0');
+      backdrop.classList.add('opacity-0');
+      setTimeout(function () {
+        if (window.innerWidth < 1024) {
+          sidebar.classList.remove('flex');
+          sidebar.classList.add('hidden');
+        }
+        backdrop.classList.add('hidden');
+      }, 300);
+      menuIcon.textContent = 'menu';
+      document.body.style.overflow = '';
+    }
+
+    btn.addEventListener('click', function () {
+      const isOpen = sidebar.classList.contains('translate-x-0') && !sidebar.classList.contains('-translate-x-full');
+      isOpen ? closeSidebar() : openSidebar();
+    });
+
+    backdrop.addEventListener('click', closeSidebar);
+    if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
+
+    // Close on nav link click (mobile)
+    sidebar.querySelectorAll('a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        if (window.innerWidth < 1024) closeSidebar();
+      });
+    });
+
+    // Handle resize: restore desktop state
+    window.addEventListener('resize', function () {
+      if (window.innerWidth >= 1024) {
+        sidebar.classList.remove('hidden', '-translate-x-full');
+        sidebar.classList.add('flex', 'translate-x-0');
+        backdrop.classList.add('hidden', 'opacity-0');
+        document.body.style.overflow = '';
+      } else {
+        if (sidebar.classList.contains('translate-x-0')) {
+          sidebar.classList.add('-translate-x-full', 'hidden');
+          sidebar.classList.remove('translate-x-0', 'flex');
+        }
+      }
+    });
+  })();
 </script>

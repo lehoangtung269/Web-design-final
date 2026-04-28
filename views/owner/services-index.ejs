@@ -1,0 +1,226 @@
+<% const categoryLabels={ beverage: '🥤 Đồ uống' , equipment: '⚽ Thiết bị' , rental: '👟 Cho thuê' , food: '🍔 Đồ ăn' ,
+    other: '📦 Khác' }; %>
+
+    <!-- Page hero -->
+    <section
+        class="rounded-2xl bg-surface-container-low p-6 md:p-10 mb-8 shadow-ambient flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+        <div>
+            <p class="kinetic-label text-on-surface-variant mb-2">Service directory</p>
+            <h2 class="kinetic-display text-5xl md:text-6xl">YOUR SERVICES</h2>
+            <p class="mt-3 text-on-surface-variant max-w-xl">
+                Manage add-on services for your pitches. Toggle visibility, track bookings, and analyse revenue per
+                service.
+            </p>
+        </div>
+        <a href="/owner/services/create"
+            class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-primary-container text-white px-7 py-3 text-sm font-semibold shadow-cta hover:-translate-y-1 transition-all duration-300">
+            <span class="material-symbols-outlined text-[18px]">add</span>
+            Add Service
+        </a>
+    </section>
+
+    <!-- Stats row -->
+    <section class="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
+        <div class="rounded-3xl bg-white p-5 shadow-ambient">
+            <p class="kinetic-label text-on-surface-variant mb-2">Total</p>
+            <p class="text-3xl font-black text-on-surface">
+                <%= services.length %>
+            </p>
+        </div>
+        <div class="rounded-3xl bg-white p-5 shadow-ambient">
+            <p class="kinetic-label text-on-surface-variant mb-2">Active</p>
+            <p class="text-3xl font-black text-secondary">
+                <%= services.filter(s=> s.isActive).length %>
+            </p>
+        </div>
+        <div class="rounded-3xl bg-white p-5 shadow-ambient col-span-2">
+            <p class="kinetic-label text-on-surface-variant mb-2">Top Booked</p>
+            <% if (serviceStats.length> 0) { %>
+                <div class="flex flex-wrap gap-2 mt-1">
+                    <% serviceStats.slice(0, 3).forEach((stat, idx)=> {
+                        const svc = services.find(s => s._id.toString() === stat._id.toString());
+                        %>
+                        <span class="rounded-full bg-primary/10 text-primary px-3 py-1 text-xs font-semibold">
+                            #<%= idx+1 %>
+                                <%= svc?.name || 'Unknown' %> · <%= stat.totalBookings %> bookings
+                        </span>
+                        <% }) %>
+                </div>
+                <% } else { %>
+                    <p class="text-sm text-on-surface-variant mt-1">No booking data yet.</p>
+                    <% } %>
+        </div>
+    </section>
+
+    <!-- Filters -->
+    <section class="rounded-2xl bg-white shadow-ambient p-5 mb-6">
+        <form action="/owner/services" method="GET" class="flex flex-wrap gap-3 items-end">
+            <div class="flex-1 min-w-[160px]">
+                <label class="kinetic-label text-on-surface-variant mb-1 block">Pitch</label>
+                <select name="fieldId"
+                    class="w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50">
+                    <option value="">All pitches</option>
+                    <% fields.forEach(field=> { %>
+                        <option value="<%= field._id %>" <%=selectedField===field._id.toString() ? 'selected' : '' %>>
+                            <%= field.name %>
+                        </option>
+                        <% }) %>
+                </select>
+            </div>
+            <div class="flex-1 min-w-[140px]">
+                <label class="kinetic-label text-on-surface-variant mb-1 block">Status</label>
+                <select name="status"
+                    class="w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50">
+                    <option value="">All</option>
+                    <option value="active" <%=selectedStatus==='active' ? 'selected' : '' %>>Active</option>
+                    <option value="inactive" <%=selectedStatus==='inactive' ? 'selected' : '' %>>Inactive</option>
+                </select>
+            </div>
+            <div class="flex-1 min-w-[200px]">
+                <label class="kinetic-label text-on-surface-variant mb-1 block">Search</label>
+                <input type="text" name="search" value="<%= searchQuery %>" placeholder="Name or description..."
+                    class="w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50">
+            </div>
+            <button type="submit"
+                class="rounded-full bg-primary text-white px-6 py-2.5 text-sm font-semibold hover:opacity-90 transition-opacity flex items-center gap-2">
+                <span class="material-symbols-outlined text-[16px]">search</span>Filter
+            </button>
+            <% if (searchQuery || selectedField || selectedStatus) { %>
+                <a href="/owner/services"
+                    class="rounded-full bg-surface-container-low text-on-surface-variant px-5 py-2.5 text-sm font-semibold hover:bg-surface-container transition-colors">Clear</a>
+                <% } %>
+        </form>
+    </section>
+
+    <!-- Service list -->
+    <% if (services.length===0) { %>
+        <div class="rounded-2xl bg-white p-14 text-center shadow-ambient">
+            <div class="w-20 h-20 bg-surface-container-low rounded-full flex items-center justify-center mx-auto mb-6">
+                <span class="material-symbols-outlined text-4xl text-on-surface-variant">room_service</span>
+            </div>
+            <h3 class="kinetic-headline text-2xl text-on-surface mb-2">NO SERVICES YET</h3>
+            <p class="text-on-surface-variant font-light mb-6">Add your first service to let customers book add-ons when
+                reserving your pitch.</p>
+            <a href="/owner/services/create"
+                class="inline-flex items-center gap-2 bg-primary text-white px-8 py-3 rounded-full font-bold text-xs font-['Space_Grotesk'] uppercase tracking-widest hover:shadow-cta transition-all">
+                <span class="material-symbols-outlined text-[16px]">add</span>ADD SERVICE
+            </a>
+        </div>
+        <% } else { %>
+            <section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+                <% services.forEach(service=> {
+                    const stats = serviceStats.find(s => s._id.toString() === service._id.toString()) || {};
+                    %>
+                    <article id="service-<%= service._id %>"
+                        class="rounded-2xl bg-white shadow-ambient overflow-hidden hover:-translate-y-1 transition-all duration-300">
+                        <!-- Thumbnail -->
+                        <div class="h-40 bg-surface-container relative">
+                            <% if (service.image?.url) { %>
+                                <img src="<%= service.image.url %>" alt="<%= service.name %>"
+                                    class="w-full h-full object-cover">
+                                <% } else { %>
+                                    <div class="w-full h-full flex items-center justify-center text-on-surface-variant">
+                                        <span class="material-symbols-outlined text-5xl">room_service</span>
+                                    </div>
+                                    <% } %>
+                                        <!-- Active badge overlay -->
+                                        <div class="absolute top-3 right-3">
+                                            <span
+                                                class="rounded-full px-3 py-1 text-[11px] font-semibold <%= service.isActive ? 'bg-secondary-container text-secondary' : 'bg-surface-container text-on-surface-variant' %>">
+                                                <%= service.isActive ? 'Active' : 'Inactive' %>
+                                            </span>
+                                        </div>
+                        </div>
+
+                        <div class="p-5">
+                            <!-- Category + name -->
+                            <p class="kinetic-label text-on-surface-variant mb-1">
+                                <%= categoryLabels[service.category] || service.category %> · <%= service.field?.name
+                                        || 'N/A' %>
+                            </p>
+                            <h3 class="kinetic-headline text-2xl text-on-surface leading-tight">
+                                <%= service.name %>
+                            </h3>
+                            <% if (service.description) { %>
+                                <p class="text-sm text-on-surface-variant mt-1 line-clamp-2">
+                                    <%= service.description %>
+                                </p>
+                                <% } %>
+
+                                    <!-- Price -->
+                                    <div class="mt-3 flex items-baseline gap-1">
+                                        <span class="text-xl font-black text-primary">
+                                            <%= Number(service.price).toLocaleString('vi-VN') %>đ
+                                        </span>
+                                        <span class="text-xs text-on-surface-variant">/ <%= service.unit %></span>
+                                    </div>
+
+                                    <!-- Stats mini row -->
+                                    <div class="mt-3 flex gap-4 text-xs text-on-surface-variant">
+                                        <span>
+                                            <%= stats.totalBookings || 0 %> bookings
+                                        </span>
+                                        <span class="text-secondary font-semibold">
+                                            <%= Number(stats.totalRevenue || 0).toLocaleString('vi-VN') %>đ revenue
+                                        </span>
+                                    </div>
+
+                                    <!-- Actions -->
+                                    <div class="mt-4 flex items-center justify-between gap-2">
+                                        <!-- Toggle -->
+                                        <button
+                                            class="toggle-status flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold transition-all
+              <%= service.isActive ? 'bg-secondary-container text-secondary hover:bg-secondary hover:text-white' : 'bg-surface-container-low text-on-surface-variant hover:bg-primary/10 hover:text-primary' %>"
+                                            data-id="<%= service._id %>">
+                                            <span class="material-symbols-outlined text-[15px]">
+                                                <%= service.isActive ? 'toggle_on' : 'toggle_off' %>
+                                            </span>
+                                            <%= service.isActive ? 'Deactivate' : 'Activate' %>
+                                        </button>
+
+                                        <div class="flex gap-2">
+                                            <a href="/owner/services/<%= service._id %>/edit"
+                                                class="w-9 h-9 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface hover:bg-primary hover:text-white transition-all"
+                                                title="Edit">
+                                                <span class="material-symbols-outlined text-[16px]">edit</span>
+                                            </a>
+                                            <button
+                                                class="delete-service w-9 h-9 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface hover:bg-error hover:text-white transition-all"
+                                                title="Delete" data-id="<%= service._id %>"
+                                                data-name="<%= service.name %>">
+                                                <span class="material-symbols-outlined text-[16px]">delete</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                        </div>
+                    </article>
+                    <% }) %>
+            </section>
+            <% } %>
+
+                <script>
+                    // Toggle status
+                    document.querySelectorAll('.toggle-status').forEach(btn => {
+                        btn.addEventListener('click', async function () {
+                            const id = this.dataset.id;
+                            const res = await fetch(`/owner/services/${id}/toggle`, { method: 'PATCH' });
+                            const data = await res.json();
+                            if (data.success) location.reload();
+                        });
+                    });
+
+                    // Delete
+                    document.querySelectorAll('.delete-service').forEach(btn => {
+                        btn.addEventListener('click', async function () {
+                            const name = this.dataset.name;
+                            if (!confirm(`Delete service "${name}"?\n\nIf it has booking history it will be hidden instead of permanently deleted.`)) return;
+                            const id = this.dataset.id;
+                            const res = await fetch(`/owner/services/${id}`, { method: 'DELETE' });
+                            const data = await res.json();
+                            if (data.success) {
+                                alert(data.message + (data.softDelete ? ' (hidden — has booking history)' : ''));
+                                location.reload();
+                            }
+                        });
+                    });
+                </script>

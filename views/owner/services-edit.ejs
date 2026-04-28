@@ -1,0 +1,243 @@
+<div class="max-w-2xl mx-auto">
+    <section
+        class="rounded-2xl bg-surface-container-low p-6 md:p-8 mb-8 shadow-ambient flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+        <div>
+            <p class="kinetic-label text-on-surface-variant mb-2">Editing service</p>
+            <h2 class="kinetic-display text-4xl md:text-5xl">
+                <%= service.name.toUpperCase() %>
+            </h2>
+            <p class="mt-1 text-on-surface-variant text-sm">Last updated <%= new
+                    Date(service.updatedAt).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric'
+                    }) %>
+            </p>
+        </div>
+        <span
+            class="self-start md:self-end rounded-full px-4 py-2 text-xs font-semibold <%= service.isActive ? 'bg-secondary-container text-secondary' : 'bg-surface-container text-on-surface-variant' %>">
+            <%= service.isActive ? 'Active' : 'Inactive' %>
+        </span>
+    </section>
+
+    <div id="alertContainer" class="mb-4"></div>
+
+    <div class="rounded-2xl bg-white shadow-ambient overflow-hidden">
+        <form id="editServiceForm" enctype="multipart/form-data" class="p-6 md:p-8 space-y-8">
+
+            <!-- Basic Info -->
+            <fieldset>
+                <legend class="kinetic-label text-primary mb-5 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-base">info</span>Basic Information
+                </legend>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="md:col-span-2">
+                        <label for="name" class="block text-sm font-semibold mb-1.5">Service Name <span
+                                class="text-error">*</span></label>
+                        <input type="text" id="name" name="name" required maxlength="100" value="<%= service.name %>"
+                            class="w-full rounded-xl border border-outline-variant px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50">
+                    </div>
+                    <div>
+                        <label for="category" class="block text-sm font-semibold mb-1.5">Category</label>
+                        <select id="category" name="category"
+                            class="w-full rounded-xl border border-outline-variant bg-white px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50">
+                            <option value="beverage" <%=service.category==='beverage' ? 'selected' : '' %>>🥤 Beverage
+                            </option>
+                            <option value="equipment" <%=service.category==='equipment' ? 'selected' : '' %>>⚽ Equipment
+                            </option>
+                            <option value="rental" <%=service.category==='rental' ? 'selected' : '' %>>👟 Rental
+                            </option>
+                            <option value="food" <%=service.category==='food' ? 'selected' : '' %>>🍔 Food</option>
+                            <option value="other" <%=(service.category==='other' || !service.category) ? 'selected' : ''
+                                %>>📦 Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="field" class="block text-sm font-semibold mb-1.5">Pitch <span
+                                class="text-error">*</span></label>
+                        <select id="field" name="field" required
+                            class="w-full rounded-xl border border-outline-variant bg-white px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50">
+                            <% fields.forEach(field=> { %>
+                                <option value="<%= field._id %>" <%=service.field._id.toString()===field._id.toString()
+                                    ? 'selected' : '' %>><%= field.name %>
+                                </option>
+                                <% }) %>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="description" class="block text-sm font-semibold mb-1.5">Description</label>
+                        <textarea id="description" name="description" rows="3"
+                            class="w-full rounded-xl border border-outline-variant px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"><%= service.description || '' %></textarea>
+                    </div>
+                </div>
+            </fieldset>
+
+            <hr class="border-outline-variant">
+
+            <!-- Pricing -->
+            <fieldset>
+                <legend class="kinetic-label text-secondary mb-5 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-base">payments</span>Pricing
+                </legend>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label for="price" class="block text-sm font-semibold mb-1.5">Price (VNĐ) <span
+                                class="text-error">*</span></label>
+                        <div class="relative">
+                            <input type="number" id="price" name="price" required min="0" step="1000"
+                                value="<%= service.price %>"
+                                class="w-full rounded-xl border border-outline-variant px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 pr-10">
+                            <span
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">đ</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="unit" class="block text-sm font-semibold mb-1.5">Unit</label>
+                        <select id="unit" name="unit"
+                            class="w-full rounded-xl border border-outline-variant bg-white px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50">
+                            <option value="suất" <%=(service.unit==='suất' || !service.unit) ? 'selected' : '' %>>/ suất
+                            </option>
+                            <option value="giờ" <%=service.unit==='giờ' ? 'selected' : '' %>>/ giờ</option>
+                            <option value="cái" <%=service.unit==='cái' ? 'selected' : '' %>>/ cái</option>
+                            <option value="lon" <%=service.unit==='lon' ? 'selected' : '' %>>/ lon</option>
+                            <option value="chai" <%=service.unit==='chai' ? 'selected' : '' %>>/ chai</option>
+                            <option value="bộ" <%=service.unit==='bộ' ? 'selected' : '' %>>/ bộ</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="maxQuantity" class="block text-sm font-semibold mb-1.5">Max qty / booking</label>
+                        <input type="number" id="maxQuantity" name="maxQuantity" min="1"
+                            value="<%= service.maxQuantity || '' %>" placeholder="Unlimited"
+                            class="w-full rounded-xl border border-outline-variant px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50">
+                    </div>
+                </div>
+            </fieldset>
+
+            <hr class="border-outline-variant">
+
+            <!-- Image -->
+            <fieldset>
+                <legend class="kinetic-label text-on-surface-variant mb-5 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-base">image</span>Photo
+                </legend>
+                <% if (service.image?.url) { %>
+                    <div class="mb-4 text-center">
+                        <img id="currentImage" src="<%= service.image.url %>" alt="<%= service.name %>"
+                            class="max-h-48 mx-auto rounded-xl shadow-ambient">
+                        <p class="text-xs text-on-surface-variant mt-2">Upload a new photo below to replace this one</p>
+                    </div>
+                    <% } %>
+                        <input type="file" name="image" id="newImage" accept="image/*" onchange="previewNewImage(this)"
+                            class="w-full text-sm text-on-surface-variant file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20">
+                        <p class="text-xs text-on-surface-variant mt-1">Leave empty to keep existing photo</p>
+            </fieldset>
+
+            <hr class="border-outline-variant">
+
+            <!-- Status toggle -->
+            <div class="flex items-center gap-4">
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="isActive" name="isActive" value="true" <%=service.isActive ? 'checked'
+                        : '' %> class="sr-only peer">
+                    <div
+                        class="w-11 h-6 bg-outline-variant rounded-full peer peer-checked:bg-primary transition-colors after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-5">
+                    </div>
+                </label>
+                <div>
+                    <p class="font-semibold text-sm text-on-surface">Service is active</p>
+                    <p class="text-xs text-on-surface-variant">Customers can add this during checkout when active</p>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex justify-between items-center pt-2">
+                <a href="/owner/services"
+                    class="inline-flex items-center gap-2 rounded-full bg-surface-container-low text-on-surface px-6 py-2.5 text-sm font-semibold hover:-translate-y-0.5 transition-all">
+                    <span class="material-symbols-outlined text-[16px]">arrow_back</span>Back
+                </a>
+                <div class="flex gap-3">
+                    <button type="button" onclick="confirmDelete()"
+                        class="inline-flex items-center gap-2 rounded-full bg-red-50 text-error px-6 py-2.5 text-sm font-semibold hover:bg-red-100 transition-colors">
+                        <span class="material-symbols-outlined text-[16px]">delete</span>Delete
+                    </button>
+                    <button type="submit" id="saveBtn"
+                        class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-primary-container text-white px-8 py-2.5 text-sm font-semibold shadow-cta hover:-translate-y-0.5 transition-all">
+                        <span class="material-symbols-outlined text-[16px]">save</span>Save Changes
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const serviceId = '<%= service._id %>';
+    const serviceName = <% - JSON.stringify(service.name) %>;
+
+    // AJAX form submit (PUT)
+    document.getElementById('editServiceForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const btn = document.getElementById('saveBtn');
+        btn.innerHTML = '<span class="material-symbols-outlined text-[16px]">progress_activity</span>Saving...';
+        btn.disabled = true;
+
+        const formData = new FormData(this);
+        // Ensure unchecked checkbox sends false
+        if (!document.getElementById('isActive').checked) {
+            formData.set('isActive', 'false');
+        }
+
+        try {
+            const res = await fetch(`/owner/services/${serviceId}`, { method: 'PUT', body: formData });
+            const data = await res.json();
+            if (data.success) {
+                showAlert('success', '✓ Updated successfully! Redirecting...');
+                setTimeout(() => window.location.href = data.redirectTo || '/owner/services', 1200);
+            } else {
+                showAlert('danger', data.message || 'An error occurred.');
+                btn.innerHTML = '<span class="material-symbols-outlined text-[16px]">save</span>Save Changes';
+                btn.disabled = false;
+            }
+        } catch {
+            showAlert('danger', 'Connection error!');
+            btn.innerHTML = '<span class="material-symbols-outlined text-[16px]">save</span>Save Changes';
+            btn.disabled = false;
+        }
+    });
+
+    function previewNewImage(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                let img = document.getElementById('currentImage');
+                if (!img) {
+                    img = document.createElement('img');
+                    img.id = 'currentImage';
+                    img.className = 'max-h-48 mx-auto rounded-xl shadow-ambient mb-4';
+                    input.parentNode.insertBefore(img, input);
+                }
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    async function confirmDelete() {
+        if (!confirm(`Delete "${serviceName}"?\n\nIf customers have already booked this service, it will be hidden rather than permanently removed.`)) return;
+        const res = await fetch(`/owner/services/${serviceId}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.success) {
+            alert(data.message);
+            window.location.href = '/owner/services';
+        }
+    }
+
+    function showAlert(type, message) {
+        const color = type === 'success' ? 'bg-primary/10 text-primary' : 'bg-red-50 text-error';
+        document.getElementById('alertContainer').innerHTML = `
+    <div class="rounded-2xl ${color} px-5 py-4 text-sm font-medium shadow-ambient flex items-center gap-2">
+      <span class="material-symbols-outlined text-base">${type === 'success' ? 'check_circle' : 'warning'}</span>
+      <span class="flex-1">${message}</span>
+      <button onclick="this.parentElement.remove()" class="p-1 rounded-full hover:bg-black/5 transition-colors">
+        <span class="material-symbols-outlined text-[16px]">close</span>
+      </button>
+    </div>`;
+    }
+</script>

@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const ownerController = require('../controllers/ownerController');
+const serviceController = require('../controllers/serviceController');
 const { isAuthenticated } = require('../middlewares/authMiddleware');
 const { authorizeRole } = require('../middlewares/roleMiddleware');
 const asyncHandler = require('../middlewares/asyncHandler');
-const { uploadFieldImages } = require('../middlewares/uploadMiddleware');
+const { uploadFieldImages, uploadServiceImage } = require('../middlewares/uploadMiddleware');
 const Field = require('../models/Field');
 
 router.use(isAuthenticated, authorizeRole('field_owner'));
@@ -37,5 +38,17 @@ router.get('/fields/create', asyncHandler(ownerController.showCreateField));
 router.post('/fields', uploadFieldImages, asyncHandler(ownerController.createField));
 router.get('/fields/:id/edit', asyncHandler(ownerController.showEditField));
 router.post('/fields/:id', uploadFieldImages, asyncHandler(ownerController.updateField));
+
+// ============================================
+// SERVICE MANAGEMENT ROUTES
+// ============================================
+router.get('/services/stats', asyncHandler(serviceController.getServiceStats));
+router.get('/services', asyncHandler(serviceController.getServices));
+router.get('/services/create', asyncHandler(serviceController.getCreateService));
+router.post('/services', uploadServiceImage, asyncHandler(serviceController.createService));
+router.get('/services/:id/edit', asyncHandler(serviceController.getEditService));
+router.put('/services/:id', uploadServiceImage, asyncHandler(serviceController.updateService));
+router.delete('/services/:id', asyncHandler(serviceController.deleteService));
+router.patch('/services/:id/toggle', asyncHandler(serviceController.toggleServiceStatus));
 
 module.exports = router;

@@ -61,4 +61,41 @@ const uploadFieldImages = (req, res, next) => {
   });
 };
 
-module.exports = { uploadFieldImages };
+// ================================
+// Middleware: Upload 1 ảnh dịch vụ lên Cloudinary
+// ================================
+const uploadServiceImage = (req, res, next) => {
+  const multerUpload = upload.single('image');
+
+  multerUpload(req, res, async (err) => {
+    if (err) {
+      const message = err.code === 'LIMIT_FILE_SIZE'
+        ? 'File quá lớn! Tối đa 5MB.'
+        : err.message || 'Lỗi upload file!';
+      req.flash('error', message);
+      return res.redirect('back');
+    }
+
+    if (!req.file) return next(); // Không có file → tiếp tục
+
+    try {
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: 'services',
+        transformation: [{ width: 600, height: 400, crop: 'fill', quality: 'auto' }]
+      });
+
+      req.cloudinaryUrl = result.secure_url;
+      req.cloudinaryPublicId = result.public_id;
+
+      fs.unlink(req.file.path, () => { });
+      next();
+    } catch (uploadError) {
+      console.error('Cloudinary Service Upload Error:', uploadError);
+      try { fs.unlinkSync(req.file.path); } catch (e) { }
+      req.flash('error', 'Lỗi upload ảnh dịch vụ!');
+      return res.redirect('back');
+    }
+  });
+};
+
+module.exports = { uploadFieldImages, uploadServiceImage };
