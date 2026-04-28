@@ -277,7 +277,7 @@ exports.getSchedule = async (req, res) => {
       .populate('user', 'name phone')
       .sort({ date: 1, startTime: 1 });
 
-    const dayLabels = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+    const dayLabels = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
     const todayKey = toLocalDateString(new Date());
     const weekDays = Array.from({ length: 7 }, (_, index) => {
       const currentDate = new Date(startOfWeek);
@@ -308,7 +308,7 @@ exports.getSchedule = async (req, res) => {
       })),
     }));
 
-    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const monthNames = ['Thg 1', 'Thg 2', 'Thg 3', 'Thg 4', 'Thg 5', 'Thg 6', 'Thg 7', 'Thg 8', 'Thg 9', 'Thg 10', 'Thg 11', 'Thg 12'];
     let weekTitle = `${monthNames[startOfWeek.getMonth()]} ${startOfWeek.getDate()}`;
     weekTitle += startOfWeek.getMonth() === endOfWeek.getMonth()
       ? ` — ${endOfWeek.getDate()}`
@@ -335,7 +335,7 @@ exports.getSchedule = async (req, res) => {
     const nextDay = new Date(baseDateClamped);
     nextDay.setDate(baseDateClamped.getDate() + 1);
 
-    // Day title (e.g. "Thứ 2, 28 Apr")
+    // Day title (e.g. "Thứ 2, 28 Thg 4")
     const dayNames = ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
     const dayTitle = `${dayNames[baseDateClamped.getDay()]}, ${baseDateClamped.getDate()} ${monthNames[baseDateClamped.getMonth()]}`;
 

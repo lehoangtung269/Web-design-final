@@ -67,28 +67,34 @@
         <span class="material-symbols-outlined text-on-surface-variant">search</span>
         <input name="keyword" value="<%= queryKeyword %>" type="text" placeholder="Tên sân, địa chỉ..." class="w-full border-none focus:ring-0 p-0 bg-transparent" />
       </label>
-      <label class="flex items-center gap-2 rounded-full bg-white px-4 py-3 text-sm">
-        <span class="material-symbols-outlined text-on-surface-variant">calendar_today</span>
-        <input name="date" value="<%= queryDate %>" type="date" class="w-full border-none focus:ring-0 p-0 bg-transparent" />
+      <label class="picker-shell" data-picker-shell>
+        <span class="material-symbols-outlined text-primary">calendar_today</span>
+        <div class="picker-meta">
+          <span class="picker-caption">Ngày đá</span>
+          <input data-picker-input name="date" value="<%= queryDate %>" type="date" class="picker-input" />
+        </div>
       </label>
-      <label class="flex items-center gap-2 rounded-full bg-white px-4 py-3 text-sm">
-        <span class="material-symbols-outlined text-on-surface-variant">schedule</span>
-        <input name="time" value="<%= queryTime %>" type="time" class="w-full border-none focus:ring-0 p-0 bg-transparent" />
+      <label class="picker-shell" data-picker-shell>
+        <span class="material-symbols-outlined text-primary">schedule</span>
+        <div class="picker-meta">
+          <span class="picker-caption">Giờ mong muốn</span>
+          <input data-picker-input name="time" value="<%= queryTime %>" type="time" class="picker-input" />
+        </div>
       </label>
-      <select name="city" class="rounded-full bg-white border-none px-4 py-3 text-sm">
+      <select name="city" class="rounded-full bg-white border border-outline-variant/30 px-4 py-3 text-sm shadow-[0_8px_22px_-18px_rgba(11,28,48,0.35)]">
         <option value="all">Tất cả thành phố</option>
         <% (cities || []).forEach((item) => { %>
           <option value="<%= item %>" <%= queryCity === item ? 'selected' : '' %>><%= item %></option>
         <% }) %>
       </select>
-      <select name="district" class="rounded-full bg-white border-none px-4 py-3 text-sm">
+      <select name="district" class="rounded-full bg-white border border-outline-variant/30 px-4 py-3 text-sm shadow-[0_8px_22px_-18px_rgba(11,28,48,0.35)]">
         <option value="all">Tất cả quận/huyện</option>
         <% (districts || []).forEach((item) => { %>
           <option value="<%= item %>" <%= queryDistrict === item ? 'selected' : '' %>><%= item %></option>
         <% }) %>
       </select>
       <div class="flex gap-2">
-        <select name="type" class="rounded-full bg-white border-none px-4 py-3 text-sm w-full">
+        <select name="type" class="rounded-full bg-white border border-outline-variant/30 px-4 py-3 text-sm w-full shadow-[0_8px_22px_-18px_rgba(11,28,48,0.35)]">
           <option value="all" <%= queryType === 'all' ? 'selected' : '' %>>Tất cả loại sân</option>
           <option value="5-a-side" <%= queryType === '5-a-side' ? 'selected' : '' %>>Sân 5</option>
           <option value="7-a-side" <%= queryType === '7-a-side' ? 'selected' : '' %>>Sân 7</option>

@@ -87,19 +87,36 @@
 <section class="px-6 md:px-10 pb-20">
   <div class="max-w-7xl mx-auto rounded-2xl bg-surface-container p-5 md:p-7">
     <form action="/search" method="GET" id="home-search-form"
-      class="grid grid-cols-1 md:grid-cols-[1fr_1fr_220px_64px] gap-3">
+      class="grid grid-cols-1 md:grid-cols-[1.15fr_0.95fr_0.95fr_220px_64px] gap-3">
       <label class="flex items-center gap-2 rounded-full bg-white px-4 py-3 text-sm">
         <span class="material-symbols-outlined text-on-surface-variant">search</span>
         <input name="keyword" type="text" placeholder="Thành phố, quận huyện, tên sân"
           class="w-full border-none focus:ring-0 p-0 bg-transparent" />
       </label>
-      <label class="flex items-center gap-2 rounded-full bg-white px-4 py-3 text-sm">
-        <span class="material-symbols-outlined text-on-surface-variant">calendar_today</span>
-        <input name="date" type="date"
-          value="<%= (() => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); })() %>"
-          class="w-full border-none focus:ring-0 p-0 bg-transparent" />
+      <label class="picker-shell" data-picker-shell>
+        <span class="material-symbols-outlined text-primary">calendar_today</span>
+        <div class="picker-meta">
+          <span class="picker-caption">Ngày đá</span>
+          <input
+            data-picker-input
+            name="date"
+            type="date"
+            value="<%= (() => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); })() %>"
+            class="picker-input" />
+        </div>
       </label>
-      <label class="flex items-center gap-2 rounded-full bg-white px-4 py-3 text-sm">
+      <label class="picker-shell" data-picker-shell>
+        <span class="material-symbols-outlined text-primary">schedule</span>
+        <div class="picker-meta">
+          <span class="picker-caption">Giờ mong muốn</span>
+          <input
+            data-picker-input
+            name="time"
+            type="time"
+            class="picker-input" />
+        </div>
+      </label>
+      <label class="flex items-center gap-2 rounded-full bg-white px-4 py-3 text-sm border border-outline-variant/30 shadow-[0_8px_22px_-18px_rgba(11,28,48,0.35)]">
         <span class="material-symbols-outlined text-on-surface-variant">groups</span>
         <select name="type" class="w-full border-none focus:ring-0 p-0 bg-transparent">
           <option value="all">Tất cả loại sân</option>

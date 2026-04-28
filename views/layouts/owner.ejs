@@ -46,6 +46,70 @@
     .kinetic-headline { font-family: 'Inter', sans-serif; font-style: normal; font-weight: 900; letter-spacing: -0.02em; }
     .kinetic-label { font-family: 'Space Grotesk', sans-serif; text-transform: uppercase; letter-spacing: .15em; font-size: 11px; }
     .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+    .picker-shell {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      border-radius: 1.35rem;
+      background: #eef4ff;
+      border: 1px solid rgba(145, 164, 200, 0.35);
+      padding: 0.95rem 1rem;
+      cursor: pointer;
+      transition: all 220ms ease;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.65);
+    }
+    .picker-shell:hover {
+      transform: translateY(-1px);
+      border-color: rgba(106, 55, 211, 0.3);
+      background: #ffffff;
+      box-shadow: 0 14px 24px -18px rgba(11, 28, 48, 0.25);
+    }
+    .picker-shell:focus-within {
+      border-color: rgba(106, 55, 211, 0.5);
+      box-shadow: 0 0 0 4px rgba(106, 55, 211, 0.1);
+      background: #ffffff;
+    }
+    .picker-shell[data-picker-shell] * {
+      pointer-events: none;
+    }
+    .picker-shell[data-picker-shell] input,
+    .picker-shell[data-picker-shell] select {
+      pointer-events: auto;
+    }
+    .picker-meta {
+      display: flex;
+      flex: 1;
+      min-width: 0;
+      flex-direction: column;
+      gap: 0.18rem;
+    }
+    .picker-caption {
+      font-size: 0.68rem;
+      line-height: 1;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: #64748b;
+    }
+    .picker-input {
+      width: 100%;
+      min-width: 0;
+      border: none;
+      background: transparent;
+      padding: 0;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #0b1c30;
+      cursor: pointer;
+    }
+    .picker-input:focus {
+      outline: none;
+      box-shadow: none;
+    }
+    .picker-input::-webkit-calendar-picker-indicator {
+      cursor: pointer;
+      opacity: 0.85;
+    }
   </style>
 </head>
 <body class="text-on-surface overflow-x-hidden bg-background">
@@ -101,6 +165,39 @@
         setTimeout(function () { el.remove(); }, 420);
       });
     }, 8000);
+
+    document.querySelectorAll('[data-picker-shell]').forEach(function (shell) {
+      if (shell.dataset.pickerBound === '1') return;
+      shell.dataset.pickerBound = '1';
+
+      const input = shell.querySelector('[data-picker-input]');
+      if (!input) return;
+
+      const openPicker = function () {
+        if (typeof input.showPicker === 'function') {
+          try {
+            input.showPicker();
+            return;
+          } catch (error) {
+            // fallback
+          }
+        }
+        input.focus();
+        input.click();
+      };
+
+      shell.setAttribute('tabindex', shell.getAttribute('tabindex') || '0');
+      shell.addEventListener('click', function (event) {
+        if (event.target === input) return;
+        openPicker();
+      });
+      shell.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          openPicker();
+        }
+      });
+    });
   </script>
 </body>
 </html>

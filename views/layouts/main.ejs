@@ -50,6 +50,68 @@
       letter-spacing: 0.15em;
       font-size: 0.72rem;
     }
+    .picker-shell {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      border-radius: 1.25rem;
+      background: #ffffff;
+      border: 1px solid rgba(165, 180, 207, 0.45);
+      padding: 0.9rem 1rem;
+      cursor: pointer;
+      transition: all 220ms ease;
+      box-shadow: 0 8px 22px -18px rgba(11, 28, 48, 0.35);
+    }
+    .picker-shell:hover {
+      transform: translateY(-1px);
+      border-color: rgba(106, 55, 211, 0.35);
+      box-shadow: 0 16px 28px -20px rgba(106, 55, 211, 0.3);
+    }
+    .picker-shell:focus-within {
+      border-color: rgba(106, 55, 211, 0.55);
+      box-shadow: 0 0 0 4px rgba(106, 55, 211, 0.1);
+    }
+    .picker-shell[data-picker-shell] * {
+      pointer-events: none;
+    }
+    .picker-shell[data-picker-shell] input,
+    .picker-shell[data-picker-shell] select {
+      pointer-events: auto;
+    }
+    .picker-meta {
+      display: flex;
+      flex: 1;
+      min-width: 0;
+      flex-direction: column;
+      gap: 0.18rem;
+    }
+    .picker-caption {
+      font-size: 0.68rem;
+      line-height: 1;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: #64748b;
+    }
+    .picker-input {
+      width: 100%;
+      min-width: 0;
+      border: none;
+      background: transparent;
+      padding: 0;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #0b1c30;
+      cursor: pointer;
+    }
+    .picker-input:focus {
+      outline: none;
+      box-shadow: none;
+    }
+    .picker-input::-webkit-calendar-picker-indicator {
+      cursor: pointer;
+      opacity: 0.85;
+    }
 
     /* ── Unified Button System ── */
     .btn-unified {
@@ -389,6 +451,39 @@
         setTimeout(function () { el.remove(); }, 500);
       });
     }, 8000);
+
+    document.querySelectorAll('[data-picker-shell]').forEach(function (shell) {
+      if (shell.dataset.pickerBound === '1') return;
+      shell.dataset.pickerBound = '1';
+
+      const input = shell.querySelector('[data-picker-input]');
+      if (!input) return;
+
+      const openPicker = function () {
+        if (typeof input.showPicker === 'function') {
+          try {
+            input.showPicker();
+            return;
+          } catch (error) {
+            // Fall back below when showPicker is unsupported
+          }
+        }
+        input.focus();
+        input.click();
+      };
+
+      shell.setAttribute('tabindex', shell.getAttribute('tabindex') || '0');
+      shell.addEventListener('click', function (event) {
+        if (event.target === input) return;
+        openPicker();
+      });
+      shell.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          openPicker();
+        }
+      });
+    });
   </script>
 </body>
 </html>

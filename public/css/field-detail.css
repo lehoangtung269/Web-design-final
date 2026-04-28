@@ -28,22 +28,23 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  background: #f8fafc;
-  border: 2px solid #e2e8f0;
-  border-radius: 14px;
-  padding: 12px 16px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  border: 1px solid rgba(165, 180, 207, 0.45);
+  border-radius: 18px;
+  padding: 14px 16px;
   cursor: pointer;
   transition: all 0.25s ease;
   user-select: none;
   color: #0f172a;
   font-weight: 600;
   font-size: 15px;
+  box-shadow: 0 16px 28px -24px rgba(11, 28, 48, 0.35);
 }
 .calendar-input-btn:hover {
   border-color: #6a37d3;
   background: #ffffff;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(16,185,129,0.15);
+  box-shadow: 0 18px 32px -22px rgba(106, 55, 211, 0.26);
 }
 .calendar-input-btn .cal-icon {
   color: #6a37d3;
@@ -63,10 +64,10 @@
   top: calc(100% + 8px);
   left: 0;
   right: 0;
-  background: white;
-  border-radius: 20px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.14), 0 4px 16px rgba(16,185,129,0.1);
-  border: 1px solid #e2e8f0;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  border-radius: 24px;
+  box-shadow: 0 24px 60px rgba(11,28,48,0.16), 0 4px 16px rgba(106,55,211,0.08);
+  border: 1px solid rgba(165, 180, 207, 0.3);
   z-index: 100;
   overflow: hidden;
   animation: fadeSlideUp 0.25s ease;
@@ -78,8 +79,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 20px 12px;
-  background: linear-gradient(135deg, #0b1c30, #0b1c30);
+  padding: 18px 20px 14px;
+  background: linear-gradient(135deg, #0b1c30, #243b63);
   color: white;
 }
 .cal-nav-btn {
@@ -105,7 +106,7 @@
 }
 
 .cal-grid {
-  padding: 12px 16px 16px;
+  padding: 14px 16px 18px;
 }
 .cal-weekdays {
   display: grid;
@@ -126,26 +127,27 @@
 .cal-days {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 2px;
+  gap: 6px;
 }
 .cal-day {
   aspect-ratio: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
+  border-radius: 16px;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
   color: #374151;
-  border: 2px solid transparent;
+  border: 1px solid transparent;
   position: relative;
 }
 .cal-day:hover:not(.disabled):not(.empty) {
   background: #ebf1ff;
   color: #0b1c30;
-  transform: scale(1.1);
+  transform: translateY(-1px);
+  box-shadow: 0 12px 22px -18px rgba(11, 28, 48, 0.28);
 }
 .cal-day.today {
   border-color: #6a37d3;
@@ -153,11 +155,11 @@
   font-weight: 800;
 }
 .cal-day.selected {
-  background: #6a37d3;
+  background: linear-gradient(135deg, #6a37d3, #8b5cf6);
   color: white !important;
   font-weight: 800;
   border-color: #6a37d3;
-  box-shadow: 0 3px 12px rgba(16,185,129,0.4);
+  box-shadow: 0 16px 28px -18px rgba(106, 55, 211, 0.45);
   animation: selectedPulse 2s infinite;
 }
 .cal-day.disabled {
