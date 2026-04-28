@@ -135,12 +135,16 @@ const getFieldDetail = async (req, res) => {
       return res.redirect('/fields');
     }
 
-    // Ngày mặc định = hôm nay (local timezone)
-    let selectedDate = date ? parseLocalDate(date) : new Date();
+    // Chuyển đối current "now" cho múi giờ Việt Nam
+    const nowStr = new Date().toLocaleString("en-US", { timeZone: "Asia/Ho_Chi_Minh" });
+    const nowVN = new Date(nowStr);
+
+    // Ngày định dạng lấy theo VN Time
+    let selectedDate = date ? parseLocalDate(date) : new Date(nowVN.getFullYear(), nowVN.getMonth(), nowVN.getDate());
     selectedDate.setHours(0, 0, 0, 0);
 
-    // Chặn xem ngày quá khứ — clamp về hôm nay
-    const today = new Date();
+    // Chặn xem ngày quá khứ — clamp về hôm nay (theo VN Time)
+    const today = new Date(nowVN.getFullYear(), nowVN.getMonth(), nowVN.getDate());
     today.setHours(0, 0, 0, 0);
     if (selectedDate < today) {
       selectedDate = today;
@@ -152,16 +156,15 @@ const getFieldDetail = async (req, res) => {
     // Sắp xếp theo giờ bắt đầu
     let sortedSlots = slots.sort((a, b) => a.startTime.localeCompare(b.startTime));
 
-    // Lọc bỏ các slot đã hết giờ (nếu đang xem hôm nay)
-    const now = new Date();
-    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    // Lọc bỏ các slot đã hết giờ (nếu đang xem hôm nay, dùng nowVN)
+    const todayStart = today;
     const selectedDateStart = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
     if (selectedDateStart.getTime() === todayStart.getTime()) {
       sortedSlots = sortedSlots.filter(slot => {
         const [endHours, endMinutes] = slot.endTime.split(':').map(Number);
-        const slotEndDate = new Date(selectedDate);
+        const slotEndDate = new Date(nowVN);
         slotEndDate.setHours(endHours, endMinutes, 0, 0);
-        return slotEndDate > now; // Chỉ giữ slot có giờ kết thúc > thời gian hiện tại
+        return slotEndDate > nowVN; // Chỉ giữ slot có giờ kết thúc > thời gian hiện tại ở VN
       });
     }
 
@@ -199,7 +202,11 @@ const getSlotsByDate = async (req, res) => {
 
     const selectedDate = parseLocalDate(date);
 
-    const today = new Date();
+    // Chuyển đổi timezone cho VN
+    const nowStr = new Date().toLocaleString("en-US", { timeZone: "Asia/Ho_Chi_Minh" });
+    const nowVN = new Date(nowStr);
+
+    const today = new Date(nowVN.getFullYear(), nowVN.getMonth(), nowVN.getDate());
     today.setHours(0, 0, 0, 0);
     if (selectedDate < today) {
       return res.status(400).json({ success: false, message: 'Không thể xem hoặc đặt sân trong quá khứ!' });
@@ -210,15 +217,14 @@ const getSlotsByDate = async (req, res) => {
     let sortedSlots = slots.sort((a, b) => a.startTime.localeCompare(b.startTime));
 
     // Lọc bỏ các slot đã hết giờ (nếu đang xem hôm nay)
-    const now = new Date();
-    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const todayStart = today;
     const selectedDateStart = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
     if (selectedDateStart.getTime() === todayStart.getTime()) {
       sortedSlots = sortedSlots.filter(slot => {
         const [endHours, endMinutes] = slot.endTime.split(':').map(Number);
-        const slotEndDate = new Date(selectedDate);
+        const slotEndDate = new Date(nowVN);
         slotEndDate.setHours(endHours, endMinutes, 0, 0);
-        return slotEndDate > now; // Chỉ giữ slot có giờ kết thúc > thời gian hiện tại
+        return slotEndDate > nowVN; // Chỉ giữ slot có giờ kết thúc > thời gian hiện tại ở VN
       });
     }
 
